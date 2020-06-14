@@ -1,0 +1,39 @@
+import React from 'react';
+
+import BigNumber from 'bignumber.js';
+
+type BlanceBlockProps = {
+  asset: string,
+  balance: BigNumber | string | number
+  suffix?: string
+}
+
+function BalanceBlock({ asset, balance, suffix="" }: BlanceBlockProps) {
+  let integer = '0';
+  let digits = '0';
+  if (new BigNumber(balance).gt(new BigNumber(0))) {
+    const str = new BigNumber(balance).toString();
+    const split = str.split('.');
+    integer = split[0];
+    digits = split.length > 1 ? str.split('.')[1] : '0';
+    digits = digits.length > 2 ? digits.substr(0, 2) : digits
+  }
+
+  return (
+    <>
+      <div style={{ fontSize: 14, padding: 3 }}>{asset}</div>
+      <div style={{ padding: 3 }}>
+        <span style={{ fontSize: 24 }}>{integer}</span>
+        .
+        <span style={{ fontSize: 18 }}>
+          {' '}
+          {digits}
+          {' '}
+        </span>
+        {suffix === "" ? '' : <span style={{ fontSize: 18 }}>{' ' + suffix}</span> }
+      </div>
+    </>
+  );
+}
+
+export default BalanceBlock;
