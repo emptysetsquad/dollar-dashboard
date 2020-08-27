@@ -7,6 +7,7 @@ import {ESDS} from "../../constants/tokens";
 import AdvanceEpoch from './AdvanceEpoch';
 import EpochPageHeader from "./Header";
 import IconHeader from "../common/IconHeader";
+import {BOOTSTRAPPING_EPOCH_SPEEDUP, BOOTSTRAPPING_EPOCHS, BOOTSTRAPPING_ORACLE_PRICE} from "../../constants/values";
 
 function EpochDetail({ user }: {user: string}) {
 
@@ -59,7 +60,7 @@ function EpochDetail({ user }: {user: string}) {
         epoch={epoch}
         epochTime={epochTime}
         epochStart={epochStart}
-        epochPeriod={epochPeriod}
+        epochPeriod={epoch <= BOOTSTRAPPING_EPOCHS ? (epochPeriod / BOOTSTRAPPING_EPOCH_SPEEDUP) : epochPeriod}
       />
 
       <Header primary="Advance Epoch" />
