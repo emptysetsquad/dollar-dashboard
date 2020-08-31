@@ -3,6 +3,11 @@ simple dashboard for interacting with the døllar protocol.
 
 forked from [Opyn Monitor](https://opynmonitor.xyz).
 
+## ipfs
+for convenience, the current build of døllar dashboard has been uploaded to IPFS and can be accessed here:
+
+[QmQa6AFnREJmx59utDBNsaWASTLFX3BeKzy8seFmJR6qZE](https://gateway.pinata.cloud/ipfs/QmQa6AFnREJmx59utDBNsaWASTLFX3BeKzy8seFmJR6qZE/#/).
+
 ## screenshot
 ![image](https://user-images.githubusercontent.com/62496341/90950891-b2469f00-e40a-11ea-90ae-680683462d9f.png)
 
