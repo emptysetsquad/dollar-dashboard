@@ -5,7 +5,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { approve } from '../../utils/web3';
 
-import {ESD, UNI, USDC} from "../../constants/tokens";
+import {UNI} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import {UniswapV2Router02} from "../../constants/contracts";
 

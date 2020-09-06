@@ -4,7 +4,7 @@ import {
   Box, Button, IconRight,
 } from '@aragon/ui';
 
-import {getCouponEpochs} from '../../utils/web3';
+import {getCouponEpochs} from '../../utils/infura';
 import {ESDS} from "../../constants/tokens";
 import TextBlock from "../common/TextBlock";
 

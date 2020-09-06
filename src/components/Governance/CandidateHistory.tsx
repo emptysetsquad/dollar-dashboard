@@ -4,13 +4,15 @@ import {
   Box, Button, IconRight
 } from '@aragon/ui';
 
-import { getAllProposals } from '../../utils/web3';
+import { getAllProposals } from '../../utils/infura';
 import { ESDS } from "../../constants/tokens";
 import BigNumber from "bignumber.js";
 import NumberBlock from "../common/NumberBlock";
 import {AddressBlock} from "../common";
 
-type CandidateHistoryProps = { };
+type CandidateHistoryProps = {
+  user: string;
+};
 
 type Proposal = {
   candidate: string,
@@ -19,7 +21,7 @@ type Proposal = {
   period: BigNumber
 }
 
-function CandidateHistory({}: CandidateHistoryProps) {
+function CandidateHistory({user}: CandidateHistoryProps) {
   const history = useHistory();
   const [proposals, setProposals] = useState<Proposal[]>([]);
 
@@ -43,7 +45,7 @@ function CandidateHistory({}: CandidateHistoryProps) {
       isCancelled = true;
       clearInterval(id);
     };
-  });
+  }, [user]);
 
   return (
     <Box heading="Candidates">

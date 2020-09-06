@@ -63,7 +63,7 @@ function Governance({ user }: {user: string}) {
       isCancelled = true;
       clearInterval(id);
     };
-  });
+  }, [user]);
 
   return (
     <>

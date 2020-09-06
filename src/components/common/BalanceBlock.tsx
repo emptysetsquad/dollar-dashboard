@@ -39,7 +39,7 @@ function delineate(nIntegerStr) {
   let result = "";
   let group = 0;
   for (let i = nIntegerStr.length - 1; i >= 0; i--) {
-    if (group == 3) {
+    if (group === 3) {
       result = "," + result;
       group = 0;
     }

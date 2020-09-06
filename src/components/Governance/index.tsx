@@ -52,11 +52,6 @@ function Governance({ user }: {user: string}) {
   }, [user]);
 
   useEffect(() => {
-    if (user === '') {
-      setTotalStake(new BigNumber(0));
-      setImplementation("0x")
-      return;
-    }
     let isCancelled = false;
 
     async function updateUserInfo() {
@@ -78,7 +73,7 @@ function Governance({ user }: {user: string}) {
       isCancelled = true;
       clearInterval(id);
     };
-  });
+  }, [user]);
 
   return (
     <>
@@ -102,7 +97,7 @@ function Governance({ user }: {user: string}) {
 
       <Header primary="Candidate History" />
 
-      <CandidateHistory/>
+      <CandidateHistory user={user}/>
     </>
   );
 }

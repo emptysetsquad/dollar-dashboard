@@ -299,58 +299,6 @@ export const commit = async (dao, candidate) => {
     });
 };
 
-/**
- *
- * @param {string} dao
- * @return {Promise<number[]>}
- */
-export const getCouponEpochs = async (dao) => {
-  const account = await checkConnectedAndGetAddress();
-  const daoContract = new window.web3.eth.Contract(daoAbi, dao);
-  const events = await daoContract.getPastEvents('CouponPurchase', {
-    filter: { account },
-    fromBlock: 0,
-  });
-  return Array.from(
-    new Set(
-      events.map((event) => parseInt(event.returnValues.epoch, 10)),
-    ),
-  ).sort();
-};
-
-/**
- *
- * @param {string} dao
- * @return {Promise<any[]>}
- */
-export const getAllProposals = async (dao) => {
-  const daoContract = new window.web3.eth.Contract(daoAbi, dao);
-  const payload = (await daoContract.getPastEvents('Proposal', {
-    fromBlock: 0,
-  })).map((event) => event.returnValues);
-  return payload.sort((a, b) => b.start - a.start);
-};
-
-/**
- *
- * @param {string} dao
- * @return {Promise<any[]>}
- */
-export const getAllRegulations = async (dao) => {
-  const daoContract = new window.web3.eth.Contract(daoAbi, dao);
-  const increaseP = daoContract.getPastEvents('SupplyIncrease', { fromBlock: 0 });
-  const decreaseP = daoContract.getPastEvents('SupplyDecrease', { fromBlock: 0 });
-  const neutralP = daoContract.getPastEvents('SupplyNeutral', { fromBlock: 0 });
-
-  const [increase, decrease, neutral] = await Promise.all([increaseP, decreaseP, neutralP]);
-
-  const events = increase.map((e) => ({ type: 'INCREASE', data: e.returnValues }))
-    .concat(decrease.map((e) => ({ type: 'DECREASE', data: e.returnValues })))
-    .concat(neutral.map((e) => ({ type: 'NEUTRAL', data: e.returnValues })));
-
-  return events.sort((a, b) => b.data.epoch - a.data.epoch);
-};
-
 /* UNI-V2 Incentivization Pool */
 export const depositPool = async (pool, amount) => {
   const account = await checkConnectedAndGetAddress();

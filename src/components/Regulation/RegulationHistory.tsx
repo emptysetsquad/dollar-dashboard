@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { DataView } from '@aragon/ui';
 
-import {getAllRegulations} from '../../utils/web3';
+import {getAllRegulations} from '../../utils/infura';
 import {ESD, ESDS} from "../../constants/tokens";
 import {toTokenUnitsBN} from "../../utils/number";
 import BigNumber from "bignumber.js";
@@ -66,7 +66,6 @@ function RegulationHistory({
 
   //Update User balances
   useEffect(() => {
-    if (user === '') return;
     let isCancelled = false;
 
     async function updateUserInfo() {

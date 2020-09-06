@@ -117,7 +117,7 @@ function UniswapPool({ user }: {user: string}) {
       isCancelled = true;
       clearInterval(id);
     };
-  });
+  }, [user]);
 
   return (
     <>

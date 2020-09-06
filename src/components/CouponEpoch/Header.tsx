@@ -1,7 +1,6 @@
 import React from 'react';
 
 import BigNumber from "bignumber.js";
-import { IconBlank } from "@aragon/ui";
 import { BalanceBlock } from "../common";
 
 type CouponEpochHeaderProps = {

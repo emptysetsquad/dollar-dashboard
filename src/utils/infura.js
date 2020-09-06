@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import { UniswapV2Router02 } from '../constants/contracts';
 import { ESD, UNI, USDC } from '../constants/tokens';
+import {checkConnectedAndGetAddress} from "./web3";
 
 const dollarAbi = require('../constants/abi/Dollar.json');
 const daoAbi = require('../constants/abi/Implementation.json');
@@ -267,6 +268,58 @@ export const getCouponPremium = async (dao, amount) => {
 export const getImplementation = async (dao) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
   return daoContract.methods.implementation().call();
+};
+
+/**
+ *
+ * @param {string} dao
+ * @return {Promise<number[]>}
+ */
+export const getCouponEpochs = async (dao) => {
+  const account = await checkConnectedAndGetAddress();
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  const events = await daoContract.getPastEvents('CouponPurchase', {
+    filter: { account },
+    fromBlock: 0,
+  });
+  return Array.from(
+    new Set(
+      events.map((event) => parseInt(event.returnValues.epoch, 10)),
+    ),
+  ).sort();
+};
+
+/**
+ *
+ * @param {string} dao
+ * @return {Promise<any[]>}
+ */
+export const getAllProposals = async (dao) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  const payload = (await daoContract.getPastEvents('Proposal', {
+    fromBlock: 0,
+  })).map((event) => event.returnValues);
+  return payload.sort((a, b) => b.start - a.start);
+};
+
+/**
+ *
+ * @param {string} dao
+ * @return {Promise<any[]>}
+ */
+export const getAllRegulations = async (dao) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  const increaseP = daoContract.getPastEvents('SupplyIncrease', { fromBlock: 0 });
+  const decreaseP = daoContract.getPastEvents('SupplyDecrease', { fromBlock: 0 });
+  const neutralP = daoContract.getPastEvents('SupplyNeutral', { fromBlock: 0 });
+
+  const [increase, decrease, neutral] = await Promise.all([increaseP, decreaseP, neutralP]);
+
+  const events = increase.map((e) => ({ type: 'INCREASE', data: e.returnValues }))
+    .concat(decrease.map((e) => ({ type: 'DECREASE', data: e.returnValues })))
+    .concat(neutral.map((e) => ({ type: 'NEUTRAL', data: e.returnValues })));
+
+  return events.sort((a, b) => b.data.epoch - a.data.epoch);
 };
 
 // Uniswap Protocol
