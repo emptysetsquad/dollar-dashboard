@@ -22,30 +22,23 @@ function Governance({ user }: {user: string}) {
   const [userStatus, setUserStatus] = useState(0);
   const [implementation, setImplementation] = useState("0x");
 
-  //Update User balances
   useEffect(() => {
     if (user === '') {
       setStake(new BigNumber(0));
-      setTotalStake(new BigNumber(0));
       setUserStatus(0);
-      setImplementation("0x")
       return;
     }
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [statusStr, stakeStr, totalStakeStr, implementationStr] = await Promise.all([
+      const [statusStr, stakeStr] = await Promise.all([
         getStatusOf(ESDS.addr, user),
         getTokenBalance(ESDS.addr, user),
-        getTokenTotalSupply(ESDS.addr),
-        getImplementation(ESDS.addr),
       ]);
 
       if (!isCancelled) {
         setStake(toTokenUnitsBN(stakeStr, ESDS.decimals));
-        setTotalStake(toTokenUnitsBN(totalStakeStr, ESDS.decimals));
         setUserStatus(parseInt(statusStr, 10));
-        setImplementation(implementationStr)
       }
     }
     updateUserInfo();
@@ -57,6 +50,35 @@ function Governance({ user }: {user: string}) {
       clearInterval(id);
     };
   }, [user]);
+
+  useEffect(() => {
+    if (user === '') {
+      setTotalStake(new BigNumber(0));
+      setImplementation("0x")
+      return;
+    }
+    let isCancelled = false;
+
+    async function updateUserInfo() {
+      const [totalStakeStr, implementationStr] = await Promise.all([
+        getTokenTotalSupply(ESDS.addr),
+        getImplementation(ESDS.addr),
+      ]);
+
+      if (!isCancelled) {
+        setTotalStake(toTokenUnitsBN(totalStakeStr, ESDS.decimals));
+        setImplementation(implementationStr)
+      }
+    }
+    updateUserInfo();
+    const id = setInterval(updateUserInfo, 15000);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      isCancelled = true;
+      clearInterval(id);
+    };
+  });
 
   return (
     <>
@@ -80,9 +102,7 @@ function Governance({ user }: {user: string}) {
 
       <Header primary="Candidate History" />
 
-      <CandidateHistory
-        user={user}
-      />
+      <CandidateHistory/>
     </>
   );
 }

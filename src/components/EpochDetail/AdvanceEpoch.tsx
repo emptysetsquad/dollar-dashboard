@@ -7,11 +7,13 @@ import NumberBlock from "../common/NumberBlock";
 import {ESDS} from "../../constants/tokens";
 
 type AdvanceEpochProps = {
+  user: string,
   epoch: number,
   epochTime: number,
 }
 
 function AdvanceEpoch({
+  user,
   epoch,
   epochTime,
 }: AdvanceEpochProps) {
@@ -32,7 +34,7 @@ function AdvanceEpoch({
             onClick={() => {
               advance(ESDS.addr);
             }}
-            disabled={epoch >= epochTime}
+            disabled={user === '' || epoch >= epochTime}
           />
         </div>
       </div>

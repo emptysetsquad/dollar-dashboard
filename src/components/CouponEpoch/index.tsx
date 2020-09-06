@@ -21,30 +21,21 @@ function CouponEpoch({ user }: {user: string}) {
   const [outstandingCouponForEpoch, setOutstandingCouponForEpoch] = useState(new BigNumber(0));
   const [userCouponBalance, setUserCouponBalance] = useState(new BigNumber(0));
 
-  //Update User balances
   useEffect(() => {
     if (user === '') {
-      setRedeemable(new BigNumber(0));
-      setOutstandingCouponForEpoch(new BigNumber(0));
       setUserCouponBalance(new BigNumber(0));
       return;
     }
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [redeemableStr, outstandingStr, balanceStr] = await Promise.all([
-        getTotalRedeemable(ESDS.addr),
-        getOutstandingCoupons(ESDS.addr, epoch),
+      const [balanceStr] = await Promise.all([
         getBalanceOfCoupons(ESDS.addr, user, epoch)
       ]);
 
-      const totalRedeemable = toTokenUnitsBN(redeemableStr, ESD.decimals);
-      const outstandingCoupons = toTokenUnitsBN(outstandingStr, ESD.decimals);
       const couponBalance = toTokenUnitsBN(balanceStr, ESD.decimals);
 
       if (!isCancelled) {
-        setRedeemable(new BigNumber(totalRedeemable));
-        setOutstandingCouponForEpoch(new BigNumber(outstandingCoupons));
         setUserCouponBalance(new BigNumber(couponBalance));
       }
     }
@@ -57,6 +48,33 @@ function CouponEpoch({ user }: {user: string}) {
       clearInterval(id);
     };
   }, [user, epoch]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function updateUserInfo() {
+      const [redeemableStr, outstandingStr] = await Promise.all([
+        getTotalRedeemable(ESDS.addr),
+        getOutstandingCoupons(ESDS.addr, epoch),
+      ]);
+
+      const totalRedeemable = toTokenUnitsBN(redeemableStr, ESD.decimals);
+      const outstandingCoupons = toTokenUnitsBN(outstandingStr, ESD.decimals);
+
+      if (!isCancelled) {
+        setRedeemable(new BigNumber(totalRedeemable));
+        setOutstandingCouponForEpoch(new BigNumber(outstandingCoupons));
+      }
+    }
+    updateUserInfo();
+    const id = setInterval(updateUserInfo, 15000);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      isCancelled = true;
+      clearInterval(id);
+    };
+  }, [epoch]);
 
   return (
     <>

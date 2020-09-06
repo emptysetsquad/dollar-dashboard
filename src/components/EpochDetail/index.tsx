@@ -7,7 +7,7 @@ import {ESDS} from "../../constants/tokens";
 import AdvanceEpoch from './AdvanceEpoch';
 import EpochPageHeader from "./Header";
 import IconHeader from "../common/IconHeader";
-import {BOOTSTRAPPING_EPOCH_SPEEDUP, BOOTSTRAPPING_EPOCHS, BOOTSTRAPPING_ORACLE_PRICE} from "../../constants/values";
+import {BOOTSTRAPPING_EPOCH_SPEEDUP, BOOTSTRAPPING_EPOCHS} from "../../constants/values";
 
 function EpochDetail({ user }: {user: string}) {
 
@@ -16,15 +16,7 @@ function EpochDetail({ user }: {user: string}) {
   const [epochStart, setEpochStart] = useState(0);
   const [epochPeriod, setEpochPeriod] = useState(0);
 
-  //Update User balances
   useEffect(() => {
-    if (user === '') {
-      setEpoch(0);
-      setEpochTime(0);
-      setEpochStart(0);
-      setEpochPeriod(0);
-      return;
-    }
     let isCancelled = false;
 
     async function updateUserInfo() {
@@ -50,7 +42,7 @@ function EpochDetail({ user }: {user: string}) {
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  });
 
   return (
     <>
@@ -66,6 +58,7 @@ function EpochDetail({ user }: {user: string}) {
       <Header primary="Advance Epoch" />
 
       <AdvanceEpoch
+        user={user}
         epoch={epoch}
         epochTime={epochTime}
       />

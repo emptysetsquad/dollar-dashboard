@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Link } from '@aragon/ui';
 
 function Footer({ theme } : { theme:string }) {
   const history = useHistory();

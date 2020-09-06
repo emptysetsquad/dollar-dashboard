@@ -10,9 +10,7 @@ import BigNumber from "bignumber.js";
 import NumberBlock from "../common/NumberBlock";
 import {AddressBlock} from "../common";
 
-type CandidateHistoryProps = {
-  user: string,
-};
+type CandidateHistoryProps = { };
 
 type Proposal = {
   candidate: string,
@@ -21,15 +19,11 @@ type Proposal = {
   period: BigNumber
 }
 
-function CandidateHistory({
-  user,
-}: CandidateHistoryProps) {
+function CandidateHistory({}: CandidateHistoryProps) {
   const history = useHistory();
   const [proposals, setProposals] = useState<Proposal[]>([]);
 
-  //Update User balances
   useEffect(() => {
-    if (user === '') return;
     let isCancelled = false;
 
     async function updateUserInfo() {
@@ -49,7 +43,7 @@ function CandidateHistory({
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  });
 
   return (
     <Box heading="Candidates">

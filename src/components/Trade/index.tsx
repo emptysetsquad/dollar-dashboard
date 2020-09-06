@@ -45,12 +45,8 @@ function UniswapPool({ user }: {user: string}) {
   const [userAllowanceUNI, setUserAllowanceUNI] = useState(new BigNumber(0));
   const [pairTotalSupplyUNI, setPairTotalSupplyUNI] = useState(new BigNumber(0));
 
-  // Update Uniswap Pair Info
   useEffect(() => {
     if (user === '') {
-      setPairBalanceESD(new BigNumber(0));
-      setPairBalanceUSDC(new BigNumber(0));
-      setPairTotalSupplyUNI(new BigNumber(0));
       setUserBalanceESD(new BigNumber(0));
       setUserBalanceUSDC(new BigNumber(0));
       setUserBalanceUNI(new BigNumber(0));
@@ -63,13 +59,9 @@ function UniswapPool({ user }: {user: string}) {
 
     async function updateUserInfo() {
       const [
-        pairBalanceESDStr, pairBalanceUSDCStr, pairTotalSupplyUNIStr,
         userBalanceESDStr, userBalanceUSDCStr, userBalanceUNIStr,
         userAllowanceESDStr, userAllowanceUSDCStr, userAllowanceUNIStr
       ] = await Promise.all([
-        getTokenBalance(ESD.addr, UNI.addr),
-        getTokenBalance(USDC.addr, UNI.addr),
-        getTokenTotalSupply(UNI.addr),
         getTokenBalance(ESD.addr, user),
         getTokenBalance(USDC.addr, user),
         getTokenBalance(UNI.addr, user),
@@ -79,9 +71,6 @@ function UniswapPool({ user }: {user: string}) {
       ]);
 
       if (!isCancelled) {
-        setPairBalanceESD(toTokenUnitsBN(pairBalanceESDStr, ESD.decimals));
-        setPairBalanceUSDC(toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals));
-        setPairTotalSupplyUNI(toTokenUnitsBN(pairTotalSupplyUNIStr, UNI.decimals));
         setUserBalanceESD(toTokenUnitsBN(userBalanceESDStr, ESD.decimals));
         setUserBalanceUSDC(toTokenUnitsBN(userBalanceUSDCStr, USDC.decimals));
         setUserBalanceUNI(toTokenUnitsBN(userBalanceUNIStr, UNI.decimals));
@@ -100,6 +89,35 @@ function UniswapPool({ user }: {user: string}) {
       clearInterval(id);
     };
   }, [user]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function updateUserInfo() {
+      const [
+        pairBalanceESDStr, pairBalanceUSDCStr, pairTotalSupplyUNIStr,
+      ] = await Promise.all([
+        getTokenBalance(ESD.addr, UNI.addr),
+        getTokenBalance(USDC.addr, UNI.addr),
+        getTokenTotalSupply(UNI.addr),
+      ]);
+
+      if (!isCancelled) {
+        setPairBalanceESD(toTokenUnitsBN(pairBalanceESDStr, ESD.decimals));
+        setPairBalanceUSDC(toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals));
+        setPairTotalSupplyUNI(toTokenUnitsBN(pairTotalSupplyUNIStr, UNI.decimals));
+      }
+    }
+
+    updateUserInfo();
+    const id = setInterval(updateUserInfo, 15000);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      isCancelled = true;
+      clearInterval(id);
+    };
+  });
 
   return (
     <>

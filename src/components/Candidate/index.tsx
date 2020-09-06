@@ -17,6 +17,7 @@ import VoteHeader from "./VoteHeader";
 import CommitHeader from "./CommitHeader";
 import Commit from "./Commit";
 import IconHeader from "../common/IconHeader";
+import {GOVERNANCE_QUORUM} from "../../constants/values";
 
 function approved(
   epoch: number, start: number, period: number,
@@ -25,7 +26,7 @@ function approved(
   if (epoch < (start + period)) {
     return false; // Not ended
   }
-  if (approve.plus(reject).dividedBy(totalStake).comparedTo(new BigNumber("0.60")) < 0) {
+  if (approve.plus(reject).dividedBy(totalStake).comparedTo(GOVERNANCE_QUORUM) < 0) {
     return false; // Didn't meet quorum
   }
   return approve.comparedTo(reject) > 0;
@@ -44,32 +45,48 @@ function Candidate({ user }: {user: string}) {
   const [periodEpoch, setPeriodEpoch] = useState(0);
   const [initialized, setInitialized] = useState(false);
 
-  //Update User balances
   useEffect(() => {
     if (user === '') {
-      setApproveFor(new BigNumber(0));
-      setRejectFor(new BigNumber(0));
-      setTotalStake(new BigNumber(0));
       setVote(0);
       setUserStake(new BigNumber(0));
-      setEpoch(0);
-      setStartEpoch(0);
-      setPeriodEpoch(0);
-      setInitialized(false);
       return;
     }
     let isCancelled = false;
 
     async function updateUserInfo() {
       const [
-        approveForStr, rejectForStr, totalStakeStr, voteStr, userStakeStr,
+        voteStr, userStakeStr,
+      ] = await Promise.all([
+        getRecordedVote(ESDS.addr, user, candidate),
+        getTokenBalance(ESDS.addr, user),
+      ]);
+
+      if (!isCancelled) {
+        setVote(parseInt(voteStr, 10));
+        setUserStake(toTokenUnitsBN(userStakeStr, ESDS.decimals));
+      }
+    }
+    updateUserInfo();
+    const id = setInterval(updateUserInfo, 15000);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      isCancelled = true;
+      clearInterval(id);
+    };
+  }, [user, candidate]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function updateUserInfo() {
+      const [
+        approveForStr, rejectForStr, totalStakeStr,
         epochStr, startForStr, periodForStr, isInitialized
       ] = await Promise.all([
         getApproveFor(ESDS.addr, candidate),
         getRejectFor(ESDS.addr, candidate),
         getTokenTotalSupply(ESDS.addr),
-        getRecordedVote(ESDS.addr, user, candidate),
-        getTokenBalance(ESDS.addr, user),
         getEpoch(ESDS.addr),
         getStartFor(ESDS.addr, candidate),
         getPeriodFor(ESDS.addr, candidate),
@@ -80,8 +97,6 @@ function Candidate({ user }: {user: string}) {
         setApproveFor(toTokenUnitsBN(approveForStr, ESDS.decimals));
         setRejectFor(toTokenUnitsBN(rejectForStr, ESDS.decimals));
         setTotalStake(toTokenUnitsBN(totalStakeStr, ESDS.decimals));
-        setVote(parseInt(voteStr, 10));
-        setUserStake(toTokenUnitsBN(userStakeStr, ESDS.decimals));
         setEpoch(parseInt(epochStr, 10));
         setStartEpoch(parseInt(startForStr, 10));
         setPeriodEpoch(parseInt(periodForStr, 10));
@@ -96,7 +111,7 @@ function Candidate({ user }: {user: string}) {
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user, candidate]);
+  }, [candidate]);
 
   return (
     <>

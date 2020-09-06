@@ -22,32 +22,50 @@ function CouponMarket({ user }: {user: string}) {
   const [supply, setSupply] = useState(new BigNumber(0));
   const [debt, setDebt] = useState(new BigNumber(0));
 
-  //Update User balances
   useEffect(() => {
     if (user === '') {
       setBalance(new BigNumber(0));
       setAllowance(new BigNumber(0));
-      setSupply(new BigNumber(0));
-      setDebt(new BigNumber(0));
       return;
     }
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [balanceStr, allowanceStr, supplyStr, debtStr] = await Promise.all([
+      const [balanceStr, allowanceStr] = await Promise.all([
         getTokenBalance(ESD.addr, user),
         getTokenAllowance(ESD.addr, user, ESDS.addr),
-        getTokenTotalSupply(ESD.addr),
-        getTotalDebt(ESDS.addr),
       ]);
 
       const userBalance = toTokenUnitsBN(balanceStr, ESD.decimals);
-      const totalSupply = toTokenUnitsBN(supplyStr, ESD.decimals);
-      const totalDebt = toTokenUnitsBN(debtStr, ESD.decimals);
 
       if (!isCancelled) {
         setBalance(new BigNumber(userBalance));
         setAllowance(new BigNumber(allowanceStr));
+      }
+    }
+    updateUserInfo();
+    const id = setInterval(updateUserInfo, 15000);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      isCancelled = true;
+      clearInterval(id);
+    };
+  }, [user]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function updateUserInfo() {
+      const [supplyStr, debtStr] = await Promise.all([
+        getTokenTotalSupply(ESD.addr),
+        getTotalDebt(ESDS.addr),
+      ]);
+
+      const totalSupply = toTokenUnitsBN(supplyStr, ESD.decimals);
+      const totalDebt = toTokenUnitsBN(debtStr, ESD.decimals);
+
+      if (!isCancelled) {
         setSupply(new BigNumber(totalSupply));
         setDebt(new BigNumber(totalDebt));
       }
@@ -60,7 +78,7 @@ function CouponMarket({ user }: {user: string}) {
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  });
 
   return (
     <>

@@ -33,17 +33,7 @@ function Governance({ user }: {user: string}) {
   const [price, setPrice] = useState(new BigNumber(0));
   const [epoch, setEpoch] = useState(0);
 
-  //Update User balances
   useEffect(() => {
-    if (user === '') {
-      setTotalSupply(new BigNumber(0));
-      setTotalBonded(new BigNumber(0));
-      setTotalStaged(new BigNumber(0));
-      setTotalRedeemable(new BigNumber(0));
-      setPrice(new BigNumber(0));
-      setEpoch(0);
-      return;
-    }
     let isCancelled = false;
 
     async function updateUserInfo() {
@@ -73,7 +63,7 @@ function Governance({ user }: {user: string}) {
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  });
 
   return (
     <>

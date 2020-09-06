@@ -3,6 +3,7 @@ import React from 'react';
 import BigNumber from "bignumber.js";
 import {AddressBlock, BalanceBlock} from "../common";
 import TextBlock from "../common/TextBlock";
+import {ownership} from "../../utils/number";
 
 type GovernanceHeaderProps = {
   stake: BigNumber,
@@ -18,7 +19,7 @@ const GovernanceHeader = ({
 }: GovernanceHeaderProps) => (
   <div style={{ padding: '2%', display: 'flex', alignItems: 'center' }}>
     <div style={{ width: '25%' }}>
-      <BalanceBlock asset="My Stake" balance={stake.multipliedBy(10000).dividedToIntegerBy(totalStake).dividedBy(100)} suffix="%" />
+      <BalanceBlock asset="DAO Ownership" balance={ownership(stake, totalStake)} suffix="%" />
     </div>
     <div style={{ width: '25%' }}>
       <BalanceBlock asset="Proposal Threshold" balance={new BigNumber("1.00")} suffix="%" />
