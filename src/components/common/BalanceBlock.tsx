@@ -20,9 +20,7 @@ function extractNum(nDecimalStr, start, len) {
 }
 
 function round(nDecimalStr, precision) {
-  const value = Math.round(parseInt(extractNum(nDecimalStr, 0, precision + 1)) / 10).toString()
-  console.log(value);
-  return value;
+  return Math.round(parseInt(extractNum(nDecimalStr, 0, precision + 1)) / 10).toString();
 }
 
 function sigfigs(nDecimalStr, sigfigs) {
@@ -51,7 +49,7 @@ function delineate(nIntegerStr) {
   return result;
 }
 
-function BalanceBlock({ asset, balance, suffix="" }: BlanceBlockProps) {
+function BalanceBlock({ asset, balance, suffix=""}: BlanceBlockProps) {
   let integer = '0';
   let digits = '0';
   if (new BigNumber(balance).gt(new BigNumber(0))) {
@@ -76,7 +74,7 @@ function BalanceBlock({ asset, balance, suffix="" }: BlanceBlockProps) {
           {digits}
           {' '}
         </span>
-        {suffix === "" ? '' : <span style={{ fontSize: 18 }}>{' ' + suffix}</span> }
+        {suffix === "" ? '' : <span style={{ fontSize: 18 }}>{suffix}</span> }
       </div>
     </>
   );

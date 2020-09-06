@@ -6,7 +6,7 @@ import {
   getBalanceBonded,
   getBalanceOfStaged,
   getStatusOf, getTokenAllowance,
-  getTokenBalance,
+  getTokenBalance, getTokenTotalSupply,
 } from '../../utils/infura';
 import {ESD, ESDS} from "../../constants/tokens";
 import { toTokenUnitsBN } from '../../utils/number';
@@ -25,6 +25,7 @@ function AccountDetail({ user }: {user: string}) {
   const [userESDBalance, setUserESDBalance] = useState(new BigNumber(0));
   const [userESDAllowance, setUserESDAllowance] = useState(new BigNumber(0));
   const [userESDSBalance, setUserESDSBalance] = useState(new BigNumber(0));
+  const [totalESDSSupply, setTotalESDSSupply] = useState(new BigNumber(0));
   const [userStagedBalance, setUserStagedBalance] = useState(new BigNumber(0));
   const [userBondedBalance, setUserBondedBalance] = useState(new BigNumber(0));
   const [userStatus, setUserStatus] = useState(0);
@@ -35,6 +36,7 @@ function AccountDetail({ user }: {user: string}) {
       setUserESDBalance(new BigNumber(0));
       setUserESDAllowance(new BigNumber(0));
       setUserESDSBalance(new BigNumber(0));
+      setTotalESDSSupply(new BigNumber(0));
       setUserStagedBalance(new BigNumber(0));
       setUserBondedBalance(new BigNumber(0));
       setUserStatus(0);
@@ -43,10 +45,11 @@ function AccountDetail({ user }: {user: string}) {
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [esdBalance, esdAllowance, esdsBalance, stagedBalance, bondedBalance, status] = await Promise.all([
+      const [esdBalance, esdAllowance, esdsBalance, esdsSupply, stagedBalance, bondedBalance, status] = await Promise.all([
         getTokenBalance(ESD.addr, user),
         getTokenAllowance(ESD.addr, user, ESDS.addr),
         getTokenBalance(ESDS.addr, user),
+        getTokenTotalSupply(ESDS.addr),
         getBalanceOfStaged(ESDS.addr, user),
         getBalanceBonded(ESDS.addr, user),
         getStatusOf(ESDS.addr, user),
@@ -54,6 +57,7 @@ function AccountDetail({ user }: {user: string}) {
 
       const userESDBalance = toTokenUnitsBN(esdBalance, ESD.decimals);
       const userESDSBalance = toTokenUnitsBN(esdsBalance, ESDS.decimals);
+      const totalESDSSupply = toTokenUnitsBN(esdsSupply, ESDS.decimals);
       const userStagedBalance = toTokenUnitsBN(stagedBalance, ESDS.decimals);
       const userBondedBalance = toTokenUnitsBN(bondedBalance, ESDS.decimals);
       const userStatus = parseInt(status, 10);
@@ -62,6 +66,7 @@ function AccountDetail({ user }: {user: string}) {
         setUserESDBalance(new BigNumber(userESDBalance));
         setUserESDAllowance(new BigNumber(esdAllowance));
         setUserESDSBalance(new BigNumber(userESDSBalance));
+        setTotalESDSSupply(new BigNumber(totalESDSSupply));
         setUserStagedBalance(new BigNumber(userStagedBalance));
         setUserBondedBalance(new BigNumber(userBondedBalance));
         setUserStatus(userStatus);
@@ -84,6 +89,7 @@ function AccountDetail({ user }: {user: string}) {
       <AccountPageHeader
         accountESDBalance={userESDBalance}
         accountESDSBalance={userESDSBalance}
+        totalESDSSupply={totalESDSSupply}
         accountStagedBalance={userStagedBalance}
         accountBondedBalance={userBondedBalance}
         accountStatus={userStatus}

@@ -44,6 +44,7 @@ function App() {
           <Route path="/governance/"><Governance user={user} /></Route>
           <Route path="/trade/"><Trade user={user} /></Route>
           <Route path="/regulation/"><Regulation user={user} /></Route>
+          <Route path="/pool/:override"><Pool user={user} /></Route>
           <Route path="/pool/"><Pool user={user} /></Route>
           <Route path="/"><HomePage /></Route>
         </Switch>

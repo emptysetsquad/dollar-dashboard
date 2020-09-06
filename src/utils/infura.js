@@ -353,3 +353,14 @@ export const getPoolBalanceOfClaimable = async (pool, account) => {
   const poolContract = new web3.eth.Contract(poolAbi, pool);
   return poolContract.methods.balanceOfClaimable(account).call();
 };
+
+/**
+ *
+ * @param {string} pool address
+ * @param {string} account address
+ * @return {Promise<string>}
+ */
+export const getPoolTotalBonded = async (pool) => {
+  const poolContract = new web3.eth.Contract(poolAbi, pool);
+  return poolContract.methods.totalBonded().call();
+};

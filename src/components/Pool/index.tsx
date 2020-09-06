@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from '@aragon/ui';
+import { useParams } from 'react-router-dom';
 
 import BigNumber from 'bignumber.js';
 import {
   getPoolBalanceOfBonded, getPoolBalanceOfClaimable,
   getPoolBalanceOfRewarded,
   getPoolBalanceOfStaged,
-  getPoolStatusOf,
+  getPoolStatusOf, getPoolTotalBonded,
   getTokenAllowance,
   getTokenBalance,
 } from '../../utils/infura';
@@ -22,7 +22,12 @@ import {DollarPool} from "../../constants/contracts";
 import IconHeader from "../common/IconHeader";
 
 function Pool({ user }: {user: string}) {
+  const { override } = useParams();
+  if (override) {
+    user = override;
+  }
 
+  const [poolTotalBonded, setPoolTotalBonded] = useState(new BigNumber(0));
   const [pairBalanceESD, setPairBalanceESD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
   const [userUNIBalance, setUserUNIBalance] = useState(new BigNumber(0));
@@ -38,6 +43,7 @@ function Pool({ user }: {user: string}) {
   //Update User balances
   useEffect(() => {
     if (user === '') {
+      setPoolTotalBonded(new BigNumber(0));
       setPairBalanceESD(new BigNumber(0));
       setPairBalanceUSDC(new BigNumber(0));
       setUserUNIBalance(new BigNumber(0));
@@ -55,10 +61,11 @@ function Pool({ user }: {user: string}) {
 
     async function updateUserInfo() {
       const [
-        pairBalanceESDStr, pairBalanceUSDCStr, balance, usdcBalance,
+        poolTotalBondedStr, pairBalanceESDStr, pairBalanceUSDCStr, balance, usdcBalance,
         allowance, usdcAllowance, stagedBalance, bondedBalance,
         rewardedBalance, claimableBalance, status
       ] = await Promise.all([
+        getPoolTotalBonded(DollarPool),
         getTokenBalance(ESD.addr, UNI.addr),
         getTokenBalance(USDC.addr, UNI.addr),
         getTokenBalance(UNI.addr, user),
@@ -72,6 +79,7 @@ function Pool({ user }: {user: string}) {
         getPoolStatusOf(DollarPool, user)
       ]);
 
+      const poolTotalBonded = toTokenUnitsBN(poolTotalBondedStr, ESD.decimals);
       const pairESDBalance = toTokenUnitsBN(pairBalanceESDStr, ESD.decimals);
       const pairUSDCBalance = toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals);
       const userUNIBalance = toTokenUnitsBN(balance, UNI.decimals);
@@ -83,6 +91,7 @@ function Pool({ user }: {user: string}) {
       const userStatus = parseInt(status, 10);
 
       if (!isCancelled) {
+        setPoolTotalBonded(new BigNumber(poolTotalBonded));
         setPairBalanceESD(new BigNumber(pairESDBalance));
         setPairBalanceUSDC(new BigNumber(pairUSDCBalance));
         setUserUNIBalance(new BigNumber(userUNIBalance));
@@ -112,8 +121,10 @@ function Pool({ user }: {user: string}) {
 
       <PoolPageHeader
         accountUNIBalance={userUNIBalance}
+        accountBondedBalance={userBondedBalance}
         accountRewardedESDBalance={userRewardedBalance}
         accountClaimableESDBalance={userClaimableBalance}
+        poolTotalBonded={poolTotalBonded}
         accountPoolStatus={userStatus}
       />
 

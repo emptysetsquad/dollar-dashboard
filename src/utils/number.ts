@@ -22,3 +22,7 @@ export const toTokenUnitsBN = (tokenAmount:string|number|BigNumber, tokenDecimal
 export const isPos = (amount: BigNumber): boolean => {
   return !amount.isZero() && amount.isPositive();
 };
+
+export const ownership = (balance: BigNumber, totalSupply: BigNumber): BigNumber => {
+  return balance.multipliedBy(new BigNumber(100)).dividedBy(totalSupply);
+}
