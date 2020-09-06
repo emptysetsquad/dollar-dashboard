@@ -62,6 +62,7 @@ function WithdrawDeposit({
                     depositPool(
                       DollarPool,
                       toBaseUnitBN(depositAmount, UNI.decimals),
+                      (hash) => setDepositAmount(new BigNumber(0))
                     );
                   }}
                   disabled={status === 1 || !isPos(depositAmount)}
@@ -97,6 +98,7 @@ function WithdrawDeposit({
                     withdrawPool(
                       DollarPool,
                       toBaseUnitBN(withdrawAmount, UNI.decimals),
+                      (hash) => setWithdrawAmount(new BigNumber(0))
                     );
                   }}
                   disabled={status === 1 || !isPos(withdrawAmount)}

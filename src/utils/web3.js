@@ -300,7 +300,7 @@ export const commit = async (dao, candidate) => {
 };
 
 /* UNI-V2 Incentivization Pool */
-export const depositPool = async (pool, amount) => {
+export const depositPool = async (pool, amount, callback) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -310,10 +310,11 @@ export const depositPool = async (pool, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      callback(hash);
     });
 };
 
-export const withdrawPool = async (pool, amount) => {
+export const withdrawPool = async (pool, amount, callback) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -323,10 +324,11 @@ export const withdrawPool = async (pool, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      callback(hash);
     });
 };
 
-export const bondPool = async (pool, amount) => {
+export const bondPool = async (pool, amount, callback) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -336,10 +338,11 @@ export const bondPool = async (pool, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      callback(hash);
     });
 };
 
-export const unbondPool = async (pool, amount) => {
+export const unbondPool = async (pool, amount, callback) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -349,10 +352,11 @@ export const unbondPool = async (pool, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      callback(hash);
     });
 };
 
-export const claimPool = async (pool, amount) => {
+export const claimPool = async (pool, amount, callback) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -362,10 +366,11 @@ export const claimPool = async (pool, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      callback(hash);
     });
 };
 
-export const providePool = async (pool, amount) => {
+export const providePool = async (pool, amount, callback) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -375,5 +380,6 @@ export const providePool = async (pool, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      callback(hash);
     });
 };

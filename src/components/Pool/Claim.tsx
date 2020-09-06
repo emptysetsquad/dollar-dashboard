@@ -20,7 +20,7 @@ type ClaimProps = {
 function Claim({
   claimable, status
 }: ClaimProps) {
-  const [claimableAmount, setClaimableAmount] = useState(new BigNumber(0));
+  const [claimAmount, setClaimAmount] = useState(new BigNumber(0));
 
   return (
     <Box heading="Claim">
@@ -37,13 +37,13 @@ function Claim({
               <>
                 <BigNumberInput
                   adornment="ESD"
-                  value={claimableAmount}
-                  setter={setClaimableAmount}
+                  value={claimAmount}
+                  setter={setClaimAmount}
                   disabled={status === 1}
                 />
                 <MaxButton
                   onClick={() => {
-                    setClaimableAmount(claimable);
+                    setClaimAmount(claimable);
                   }}
                 />
               </>
@@ -56,10 +56,11 @@ function Claim({
                 onClick={() => {
                   claimPool(
                     DollarPool,
-                    toBaseUnitBN(claimableAmount, ESD.decimals),
+                    toBaseUnitBN(claimAmount, ESD.decimals),
+                    (hash) => setClaimAmount(new BigNumber(0))
                   );
                 }}
-                disabled={status === 1 || !isPos(claimableAmount)}
+                disabled={status === 1 || !isPos(claimAmount)}
               />
             </div>
           </div>

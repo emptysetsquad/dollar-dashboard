@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import {
   BalanceBlock, MaxButton,
 } from '../common/index';
-import {bond, unbondPool} from '../../utils/web3';
+import {bondPool, unbondPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import {UNI} from "../../constants/tokens";
 import {DollarPool} from "../../constants/contracts";
@@ -53,9 +53,10 @@ function BondUnbond({
                 icon={<IconCirclePlus/>}
                 label="Bond"
                 onClick={() => {
-                  bond(
+                  bondPool(
                     DollarPool,
                     toBaseUnitBN(bondAmount, UNI.decimals),
+                    (hash) => setBondAmount(new BigNumber(0))
                   );
                 }}
                 disabled={!isPos(bondAmount)}
@@ -90,6 +91,7 @@ function BondUnbond({
                   unbondPool(
                     DollarPool,
                     toBaseUnitBN(unbondAmount, UNI.decimals),
+                    (hash) => setUnbondAmount(new BigNumber(0))
                   );
                 }}
                 disabled={!isPos(unbondAmount)}

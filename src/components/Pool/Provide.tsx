@@ -88,6 +88,7 @@ function Provide({
                     providePool(
                       DollarPool,
                       toBaseUnitBN(provideAmount, ESD.decimals),
+                      (hash) => setProvideAmount(new BigNumber(0))
                     );
                   }}
                   disabled={status === 1 || !isPos(provideAmount)}
