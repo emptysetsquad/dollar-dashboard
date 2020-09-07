@@ -11,7 +11,7 @@ function HomePage() {
     <>
       <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
         <div style={{ marginLeft: '2%'  }}>
-          <Header primary="yøu are here." />
+          <Header primary="døllar dashboard." />
         </div>
       </div>
       <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>

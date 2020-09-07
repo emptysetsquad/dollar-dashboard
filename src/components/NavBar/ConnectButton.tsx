@@ -7,11 +7,12 @@ import {
 import { connect } from '../../utils/web3';
 
 type connectButtonProps = {
+  hasWeb3: boolean,
   user: string,
   setUser: Function
 }
 
-function ConnectButton({ user, setUser }: connectButtonProps) {
+function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
   const [isConnected, setIsConnected] = useState(false);
 
   const connectWeb3 = async () => {
@@ -41,7 +42,7 @@ function ConnectButton({ user, setUser }: connectButtonProps) {
 
     </>
   ) : (
-    <Button icon={<IconConnect />} label="Connect" onClick={connectWeb3} />
+    <Button icon={<IconConnect />} label="Connect" onClick={connectWeb3} disabled={!hasWeb3}/>
   );
 }
 

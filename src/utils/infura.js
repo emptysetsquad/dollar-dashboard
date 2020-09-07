@@ -3,7 +3,7 @@ import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import { UniswapV2Router02 } from '../constants/contracts';
 import { ESD, UNI, USDC } from '../constants/tokens';
-import {checkConnectedAndGetAddress} from "./web3";
+import { checkConnectedAndGetAddress } from './web3';
 
 const dollarAbi = require('../constants/abi/Dollar.json');
 const daoAbi = require('../constants/abi/Implementation.json');
@@ -11,8 +11,12 @@ const poolAbi = require('../constants/abi/Pool.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 
+let web3;
 // eslint-disable-next-line no-undef
-const web3 = new Web3(ethereum);
+if (window.ethereum !== undefined) {
+  // eslint-disable-next-line no-undef
+  web3 = new Web3(ethereum);
+}
 
 /**
  *
@@ -344,9 +348,19 @@ export const getProceeds = async (amount) => {
   return outputAmount;
 };
 
-export const getInstantaneousPrice = async () => {
+export const getReserves = async () => {
   const exchange = new web3.eth.Contract(uniswapPairAbi, UNI.addr);
   return exchange.methods.getReserves().call();
+};
+
+export const getInstantaneousPrice = async () => {
+  const [reserve, token0] = await Promise.all([getReserves(), getToken0()]);
+  const token0Balance = new BigNumber(reserve.reserve0);
+  const token1Balance = new BigNumber(reserve.reserve1);
+  if (token0.toLowerCase() === USDC.addr.toLowerCase()) {
+    return token0Balance.multipliedBy(new BigNumber(10).pow(12)).dividedBy(token1Balance);
+  }
+  return token1Balance.multipliedBy(new BigNumber(10).pow(12)).dividedBy(token0Balance);
 };
 
 export const getToken0 = async () => {

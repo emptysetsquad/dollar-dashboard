@@ -8,12 +8,13 @@ import ChangeModeButton from './SwitchTheme';
 type NavbarProps = {
   theme:string,
   updateTheme: Function,
+  hasWeb3: boolean,
   user: string,
   setUser: Function
 }
 
 function NavBar({
-  theme, updateTheme, user, setUser,
+  theme, updateTheme, hasWeb3, user, setUser,
 }:NavbarProps) {
   const history = useHistory();
   const [isHome, updateIsHome] = useState(true);
@@ -27,12 +28,12 @@ function NavBar({
       const home = history.location.pathname === '/';
       updateIsHome(home);
     })
-  }, [user, history]);
+  }, [hasWeb3, user, history]);
 
   return (
     <Bar
       primary={
-        isHome ? (
+        isHome || !hasWeb3 ? (
           <></>
         ) : (
           <>
@@ -90,8 +91,8 @@ function NavBar({
       }
       secondary={(
         <>
-          <ConnectButton user={user} setUser={setUser} />
-          <ChangeModeButton theme={theme} updateTheme={updateTheme} />
+          <ConnectButton hasWeb3={hasWeb3} user={user} setUser={setUser} />
+          <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme} />
         </>
       )}
     />

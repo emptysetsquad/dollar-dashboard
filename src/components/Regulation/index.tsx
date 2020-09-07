@@ -2,28 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Header } from '@aragon/ui';
 
 import {
-  getEpoch,
-  getInstantaneousPrice, getPoolTotalBonded, getPoolTotalClaimable, getPoolTotalRewarded, getToken0, getTokenBalance,
+  getPoolTotalClaimable, getPoolTotalRewarded, getTokenBalance,
   getTokenTotalSupply, getTotalBonded, getTotalRedeemable, getTotalStaged,
 } from '../../utils/infura';
-import {ESD, ESDS, UNI, USDC} from "../../constants/tokens";
+import {ESD, ESDS, UNI} from "../../constants/tokens";
 import {toTokenUnitsBN} from "../../utils/number";
 import BigNumber from "bignumber.js";
 import RegulationHeader from "./Header";
 import RegulationHistory from "./RegulationHistory";
-import {BOOTSTRAPPING_EPOCHS, BOOTSTRAPPING_ORACLE_PRICE} from "../../constants/values";
 import IconHeader from "../common/IconHeader";
 import {DollarPool} from "../../constants/contracts";
 
-async function approximatePrice(): Promise<BigNumber> {
-  const [reserve, token0] = await Promise.all([getInstantaneousPrice(), getToken0()]);
-  const token0Balance = new BigNumber(reserve.reserve0);
-  const token1Balance = new BigNumber(reserve.reserve1);
-  if (token0.toLowerCase() === USDC.addr.toLowerCase()) {
-    return token0Balance.multipliedBy(new BigNumber(10).pow(12)).dividedBy(token1Balance);
-  }
-  return token1Balance.multipliedBy(new BigNumber(10).pow(12)).dividedBy(token0Balance);
-}
+
 
 function Regulation({ user }: {user: string}) {
 

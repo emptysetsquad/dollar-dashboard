@@ -2,11 +2,12 @@ import React from 'react';
 import { Button, IconStarFilled, IconStar } from '@aragon/ui';
 
 type switchThemeProps = {
+  hasWeb3: boolean,
   theme: string,
   updateTheme: Function
 }
 
-function SwitchMode({ theme, updateTheme }: switchThemeProps) {
+function SwitchMode({ hasWeb3, theme, updateTheme }: switchThemeProps) {
   const handleChangeTheme = () => {
     if (theme === 'light') updateTheme('dark');
     else updateTheme('light');
@@ -17,6 +18,7 @@ function SwitchMode({ theme, updateTheme }: switchThemeProps) {
       icon={theme === 'dark' ? <IconStar /> : <IconStarFilled />}
       onClick={handleChangeTheme}
       label="Theme"
+      disabled={!hasWeb3}
     />
   );
 }
