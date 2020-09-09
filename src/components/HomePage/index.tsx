@@ -37,40 +37,6 @@ function HomePage() {
           />
         </div>
 
-        <div style={{ width: '30%', marginLeft: '3%', marginRight: '2%'  }}>
-          <MainButton
-            title="Coupons"
-            description="Purchase and redeem coupons."
-            icon={<i className="fas fa-ticket-alt"/>}
-            onClick={() => {
-              history.push('/coupons/');
-            }}
-          />
-        </div>
-      </div>
-      <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '30%', marginRight: '3%', marginLeft: '2%'  }}>
-          <MainButton
-            title="Governance"
-            description="Vote on upgrades."
-            icon={<i className="fas fa-poll"/>}
-            onClick={() => {
-              history.push('/governance/');
-            }}
-          />
-        </div>
-
-        <div style={{ width: '30%' }}>
-          <MainButton
-            title="Trade"
-            description="Trade døllar tokens."
-            icon={<i className="fas fa-exchange-alt"/>}
-            onClick={() => {
-              history.push('/trade/');
-            }}
-          />
-        </div>
-
         <div style={{ width: '30%', marginLeft: '3%', marginRight: '2%' }}>
           <MainButton
             title="Regulation"
@@ -83,13 +49,47 @@ function HomePage() {
         </div>
       </div>
       <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '30%', marginLeft: '35%', marginRight: '35%' }}>
+        <div style={{ width: '30%', marginRight: '3%', marginLeft: '2%'  }}>
+          <MainButton
+            title="Trade"
+            description="Trade døllar tokens."
+            icon={<i className="fas fa-exchange-alt"/>}
+            onClick={() => {
+              history.push('/trade/');
+            }}
+          />
+        </div>
+
+        <div style={{ width: '30%' }}>
           <MainButton
             title="LP Rewards"
             description="Earn rewards for providing liquidity."
             icon={<i className="fas fa-parachute-box"/>}
             onClick={() => {
               history.push('/pool/');
+            }}
+          />
+        </div>
+
+        <div style={{ width: '30%', marginLeft: '3%', marginRight: '2%'  }}>
+          <MainButton
+            title="Coupons"
+            description="Purchase and redeem coupons."
+            icon={<i className="fas fa-ticket-alt"/>}
+            onClick={() => {
+              history.push('/coupons/');
+            }}
+          />
+        </div>
+      </div>
+      <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: '30%', marginLeft: '35%', marginRight: '35%' }}>
+          <MainButton
+            title="Governance"
+            description="Vote on upgrades."
+            icon={<i className="fas fa-poll"/>}
+            onClick={() => {
+              history.push('/governance/');
             }}
           />
         </div>

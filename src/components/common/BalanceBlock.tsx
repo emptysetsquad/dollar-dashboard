@@ -8,9 +8,13 @@ type BlanceBlockProps = {
   suffix?: string
 }
 
-function padZeros(nDecimalStr, len) {
+function padZeros(nDecimalStr, len, suffix=true) {
   while (nDecimalStr.length < len) {
-    nDecimalStr += '0'
+    if (suffix) {
+      nDecimalStr += '0'
+    } else {
+      nDecimalStr = '0' + nDecimalStr;
+    }
   }
   return nDecimalStr;
 }
@@ -20,7 +24,8 @@ function extractNum(nDecimalStr, start, len) {
 }
 
 function round(nDecimalStr, precision) {
-  return Math.round(parseInt(extractNum(nDecimalStr, 0, precision + 1)) / 10).toString();
+  const rounded = Math.round(parseInt(extractNum(nDecimalStr, 0, precision + 1)) / 10).toString();
+  return padZeros(rounded, precision, false);
 }
 
 function sigfigs(nDecimalStr, sigfigs) {
