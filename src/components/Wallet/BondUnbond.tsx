@@ -27,7 +27,7 @@ function BondUnbond({
       <div style={{display: 'flex'}}>
         {/* Total bonded */}
         <div style={{width: '30%'}}>
-          <BalanceBlock asset="Bonded Balance" balance={bonded}/>
+          <BalanceBlock asset="Bonded" balance={bonded} suffix={"ESD"}/>
         </div>
         {/* Bond Døllar within DAO */}
         <div style={{width: '32%', paddingTop: '2%'}}>
@@ -57,7 +57,7 @@ function BondUnbond({
                     toBaseUnitBN(bondAmount, ESD.decimals),
                   );
                 }}
-                disabled={!isPos(bondAmount)}
+                disabled={!isPos(bondAmount) || bondAmount.isGreaterThan(staged)}
               />
             </div>
           </div>
@@ -91,7 +91,7 @@ function BondUnbond({
                     toBaseUnitBN(unbondAmount, ESD.decimals),
                   );
                 }}
-                disabled={!isPos(unbondAmount)}
+                disabled={!isPos(unbondAmount) || unbondAmount.isGreaterThan(bonded)}
               />
             </div>
           </div>

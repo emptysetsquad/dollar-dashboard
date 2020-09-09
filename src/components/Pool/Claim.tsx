@@ -27,7 +27,7 @@ function Claim({
       <div style={{display: 'flex'}}>
         {/* total Issued */}
         <div style={{width: '30%'}}>
-          <BalanceBlock asset="Claimable Balance" balance={claimable}/>
+          <BalanceBlock asset="Claimable" balance={claimable} suffix={"ESD"} />
         </div>
         {/* Deposit UNI-V2 into Pool */}
         <div style={{width: '38%'}}/>

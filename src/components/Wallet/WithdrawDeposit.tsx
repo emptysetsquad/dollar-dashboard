@@ -32,7 +32,7 @@ function WithdrawDeposit({
         <div style={{display: 'flex'}}>
           {/* total Issued */}
           <div style={{width: '30%'}}>
-            <BalanceBlock asset="Staged Balance" balance={stagedBalance}/>
+            <BalanceBlock asset="Staged" balance={stagedBalance} suffix={"ESD"}/>
           </div>
           {/* Deposit Døllar into DAO */}
           <div style={{width: '32%', paddingTop: '2%'}}>
@@ -63,7 +63,7 @@ function WithdrawDeposit({
                       toBaseUnitBN(depositAmount, ESD.decimals),
                     );
                   }}
-                  disabled={status === 1 || !isPos(depositAmount)}
+                  disabled={status === 1 || !isPos(depositAmount) || depositAmount.isGreaterThan(balance)}
                 />
               </div>
             </div>
@@ -98,7 +98,7 @@ function WithdrawDeposit({
                       toBaseUnitBN(withdrawAmount, ESD.decimals),
                     );
                   }}
-                  disabled={status === 1 || !isPos(withdrawAmount)}
+                  disabled={status === 1 || !isPos(withdrawAmount) || withdrawAmount.isGreaterThan(stagedBalance)}
                 />
               </div>
             </div>
@@ -108,7 +108,7 @@ function WithdrawDeposit({
         <div style={{display: 'flex'}}>
           {/* total Issued */}
           <div style={{width: '30%'}}>
-            <BalanceBlock asset="ESD Balance" balance={stagedBalance}/>
+            <BalanceBlock asset="Staged" balance={stagedBalance} suffix={"ESD"}/>
           </div>
           <div style={{width: '40%'}}/>
           {/* Approve DAO to spend Døllar */}

@@ -28,7 +28,7 @@ function BondUnbond({
       <div style={{display: 'flex'}}>
         {/* Total bonded */}
         <div style={{width: '30%'}}>
-          <BalanceBlock asset="Bonded Balance" balance={bonded}/>
+          <BalanceBlock asset="Bonded" balance={bonded} suffix={"UNI-V2"} />
         </div>
         {/* Bond UNI-V2 within Pool */}
         <div style={{width: '32%', paddingTop: '2%'}}>

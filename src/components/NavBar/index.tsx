@@ -33,7 +33,7 @@ function NavBar({
   return (
     <Bar
       primary={
-        isHome || !hasWeb3 ? (
+        !hasWeb3 ? (
           <></>
         ) : (
           <>

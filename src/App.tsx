@@ -8,7 +8,7 @@ import NavBar from './components/NavBar';
 import HomePage from './components/HomePage';
 import Trade from './components/Trade/index';
 import Footer from './components/Footer';
-import AccountDetail from "./components/AccountDetail";
+import Wallet from "./components/Wallet";
 import EpochDetail from "./components/EpochDetail";
 import CouponMarket from "./components/CouponMarket";
 import CouponEpoch from "./components/CouponEpoch";
@@ -58,8 +58,8 @@ function App() {
         {
           hasWeb3 ?
             <Switch>
-              <Route path="/wallet/:override"><AccountDetail user={user}/></Route>
-              <Route path="/wallet/"><AccountDetail user={user}/></Route>
+              <Route path="/wallet/:override"><Wallet user={user}/></Route>
+              <Route path="/wallet/"><Wallet user={user}/></Route>
               <Route path="/epoch/"><EpochDetail user={user}/></Route>
               <Route path="/coupons/epoch/:epoch"><CouponEpoch user={user}/></Route>
               <Route path="/coupons/"><CouponMarket user={user}/></Route>

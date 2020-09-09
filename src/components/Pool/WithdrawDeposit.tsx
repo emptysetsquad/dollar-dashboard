@@ -33,7 +33,7 @@ function WithdrawDeposit({
         <div style={{display: 'flex'}}>
           {/* total Issued */}
           <div style={{width: '30%'}}>
-            <BalanceBlock asset="Staged Balance" balance={stagedBalance}/>
+            <BalanceBlock asset="Staged" balance={stagedBalance} suffix={"UNI-V2"}/>
           </div>
           {/* Deposit UNI-V2 into Pool */}
           <div style={{width: '32%', paddingTop: '2%'}}>
@@ -111,7 +111,7 @@ function WithdrawDeposit({
         <div style={{display: 'flex'}}>
           {/* total Issued */}
           <div style={{width: '30%'}}>
-            <BalanceBlock asset="UNI-V2 Balance" balance={stagedBalance}/>
+            <BalanceBlock asset="Staged" balance={stagedBalance} suffix={"UNI-V2"}/>
           </div>
           <div style={{width: '40%'}}/>
           {/* Approve Pool to spend UNI-V2 */}

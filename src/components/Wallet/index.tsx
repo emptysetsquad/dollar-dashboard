@@ -16,7 +16,7 @@ import WithdrawDeposit from "./WithdrawDeposit";
 import BondUnbond from "./BondUnbond";
 import IconHeader from "../common/IconHeader";
 
-function AccountDetail({ user }: {user: string}) {
+function Wallet({ user }: {user: string}) {
   const { override } = useParams();
   if (override) {
     user = override;
@@ -111,4 +111,4 @@ function AccountDetail({ user }: {user: string}) {
   );
 }
 
-export default AccountDetail;
+export default Wallet;

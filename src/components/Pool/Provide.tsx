@@ -54,10 +54,10 @@ function Provide({
         <div style={{display: 'flex'}}>
           {/* total rewarded */}
           <div style={{width: '30%'}}>
-            <BalanceBlock asset="Rewarded Balance" balance={rewarded}/>
+            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
           </div>
           <div style={{width: '30%'}}>
-            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance}/>
+            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
           </div>
           <div style={{width: '8%'}}/>
           {/* Provide liquidity using Pool rewards */}
@@ -101,10 +101,10 @@ function Provide({
         <div style={{display: 'flex'}}>
           {/* total rewarded */}
           <div style={{width: '30%'}}>
-            <BalanceBlock asset="Rewarded Balance" balance={rewarded}/>
+            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
           </div>
           <div style={{width: '30%'}}>
-            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance}/>
+            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
           </div>
           <div style={{width: '8%'}}/>
           {/* Approve Pool to spend USDC */}
