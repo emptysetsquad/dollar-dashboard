@@ -76,6 +76,7 @@ function App() {
               <Route path="/"><HomePageNoWeb3/></Route>
             </Switch>
         }
+        <div style={{height: '128px', width: '100%'}}/>
         <Footer theme={theme}/>
       </Main>
     </Router>
