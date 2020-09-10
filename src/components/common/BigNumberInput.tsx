@@ -20,7 +20,7 @@ function BigNumberInput({ value, setter, adornment, disabled=false }: BigNumberI
         adornmentPosition="end"
         adornment={adornment}
         wide
-        value={value.isNegative() ? '' : value}
+        value={value.isNegative() ? '' : value.toFixed()}
         onChange={(event) => {
           if (event.target.value) {
             setter(new BigNumber(event.target.value));

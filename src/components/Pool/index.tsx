@@ -114,6 +114,8 @@ function Pool({ user }: {user: string}) {
       clearInterval(id);
     };
   }, [user]);
+  // Check for error in .call()
+  const isRewardedNegative = userRewardedBalance.isGreaterThan(new BigNumber("1000000000000000000"));
 
   return (
     <>
@@ -122,7 +124,7 @@ function Pool({ user }: {user: string}) {
       <PoolPageHeader
         accountUNIBalance={userUNIBalance}
         accountBondedBalance={userBondedBalance}
-        accountRewardedESDBalance={userRewardedBalance}
+        accountRewardedESDBalance={isRewardedNegative ? new BigNumber(0) : userRewardedBalance}
         accountClaimableESDBalance={userClaimableBalance}
         poolTotalBonded={poolTotalBonded}
         accountPoolStatus={userStatus}
@@ -137,6 +139,7 @@ function Pool({ user }: {user: string}) {
       />
 
       <BondUnbond
+        isRewardNegative={isRewardedNegative}
         staged={userStagedBalance}
         bonded={userBondedBalance}
       />
@@ -148,7 +151,7 @@ function Pool({ user }: {user: string}) {
 
       <Provide
         user={user}
-        rewarded={userRewardedBalance}
+        rewarded={isRewardedNegative ? new BigNumber(0) : userRewardedBalance}
         status={userStatus}
         pairBalanceESD={pairBalanceESD}
         pairBalanceUSDC={pairBalanceUSDC}
