@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from '@aragon/ui';
+import { Header, LinkBase, Box } from '@aragon/ui';
+import { useHistory } from 'react-router-dom';
 
 import BigNumber from 'bignumber.js';
 import {
@@ -35,6 +36,8 @@ function unlockedPoolToken(userAllowanceUNI) {
 }
 
 function UniswapPool({ user }: {user: string}) {
+  const history = useHistory();
+
   const [pairBalanceESD, setPairBalanceESD] = useState(new BigNumber(0));
   const [userBalanceESD, setUserBalanceESD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
@@ -129,57 +132,118 @@ function UniswapPool({ user }: {user: string}) {
         uniswapPair={UNI.addr}
       />
 
-      {unlockedCollateral(userAllowanceESD, userAllowanceUSDC) ?
-        <>
-          <UniswapBuySell
-            userBalanceESD={userBalanceESD}
-            pairBalanceESD={pairBalanceESD}
+      <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: '30%', marginRight: '3%', marginLeft: '2%'  }}>
+          <MainButton
+            title="Info"
+            description="View ESD-USDC pool stats."
+            icon={<i className="fas fa-chart-area"/>}
+            onClick={() => window.location.href = "https://uniswap.info/pair/0x88ff79eb2bc5850f27315415da8685282c7610f9"}
           />
+        </div>
 
-          <Header primary="Provide Liquidity"/>
-
-          <AddLiquidity
-            userBalanceESD={userBalanceESD}
-            userBalanceUSDC={userBalanceUSDC}
-            pairBalanceESD={pairBalanceESD}
-            pairBalanceUSDC={pairBalanceUSDC}
-            pairTotalSupplyUNI={pairTotalSupplyUNI}
+        <div style={{ width: '30%' }}>
+          <MainButton
+            title="Trade"
+            description="Trade døllar tokens."
+            icon={<i className="fas fa-exchange-alt"/>}
+            onClick={() => window.location.href = "https://uniswap.exchange/swap?inputCurrency=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&outputCurrency=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723"}
           />
-        </>
-        :
-        <UniswapApproveCollateral
-          user={user}
-          userAllowanceESD={userAllowanceESD}
-          userAllowanceUSDC={userAllowanceUSDC}
-        />
-      }
-      {unlockedPoolToken(userAllowanceUNI) ?
-        <RemoveLiquidity
-          userBalanceUNI={userBalanceUNI}
-          pairBalanceESD={pairBalanceESD}
-          pairBalanceUSDC={pairBalanceUSDC}
-          pairTotalSupplyUNI={pairTotalSupplyUNI}
-        />
-        :
-        <UniswapApprovePoolToken
-          user={user}
-          userAllowanceUNI={userAllowanceUNI}
-        />
-      }
+        </div>
 
-
-      {isTestnet() ?
-        <>
-          <Header primary="Mint Testnet USDC" />
-
-          <MintUSDC
-            user={user}
-            userBalanceUSDC={userBalanceUSDC}
+        <div style={{ width: '30%', marginLeft: '3%', marginRight: '2%' }}>
+          <MainButton
+            title="Supply"
+            description="Supply and redeem liquidity."
+            icon={<i className="fas fa-water"/>}
+            onClick={() => window.location.href = "https://uniswap.exchange/add/0x36f3fd68e7325a35eb768f1aedaae9ea0689d723/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"}
           />
-        </>
-      : '' }
+        </div>
+      </div>
+
+      {/*{unlockedCollateral(userAllowanceESD, userAllowanceUSDC) ?*/}
+      {/*  <>*/}
+      {/*    <UniswapBuySell*/}
+      {/*      userBalanceESD={userBalanceESD}*/}
+      {/*      pairBalanceESD={pairBalanceESD}*/}
+      {/*    />*/}
+
+      {/*    <Header primary="Provide Liquidity"/>*/}
+
+      {/*    <AddLiquidity*/}
+      {/*      userBalanceESD={userBalanceESD}*/}
+      {/*      userBalanceUSDC={userBalanceUSDC}*/}
+      {/*      pairBalanceESD={pairBalanceESD}*/}
+      {/*      pairBalanceUSDC={pairBalanceUSDC}*/}
+      {/*      pairTotalSupplyUNI={pairTotalSupplyUNI}*/}
+      {/*    />*/}
+      {/*  </>*/}
+      {/*  :*/}
+      {/*  <UniswapApproveCollateral*/}
+      {/*    user={user}*/}
+      {/*    userAllowanceESD={userAllowanceESD}*/}
+      {/*    userAllowanceUSDC={userAllowanceUSDC}*/}
+      {/*  />*/}
+      {/*}*/}
+      {/*{unlockedPoolToken(userAllowanceUNI) ?*/}
+      {/*  <RemoveLiquidity*/}
+      {/*    userBalanceUNI={userBalanceUNI}*/}
+      {/*    pairBalanceESD={pairBalanceESD}*/}
+      {/*    pairBalanceUSDC={pairBalanceUSDC}*/}
+      {/*    pairTotalSupplyUNI={pairTotalSupplyUNI}*/}
+      {/*  />*/}
+      {/*  :*/}
+      {/*  <UniswapApprovePoolToken*/}
+      {/*    user={user}*/}
+      {/*    userAllowanceUNI={userAllowanceUNI}*/}
+      {/*  />*/}
+      {/*}*/}
+
+
+      {/*{isTestnet() ?*/}
+      {/*  <>*/}
+      {/*    <Header primary="Mint Testnet USDC" />*/}
+
+      {/*    <MintUSDC*/}
+      {/*      user={user}*/}
+      {/*      userBalanceUSDC={userBalanceUSDC}*/}
+      {/*    />*/}
+      {/*  </>*/}
+      {/*: '' }*/}
 
     </>
+  );
+}
+
+type MainButtonPropx = {
+  title: string,
+  description: string,
+  icon: any,
+  onClick: Function,
+  tag?:string
+}
+
+function MainButton({
+                      title, description, icon, onClick, tag,
+                    }:MainButtonPropx) {
+  return (
+    <LinkBase onClick={onClick} style={{ width: '100%' }}>
+      <Box>
+        <div style={{ padding: 10, fontSize: 18 }}>
+          {title}
+        </div>
+        <span style={{ fontSize: 48 }}>
+          {icon}
+        </span>
+        {/*<img alt="icon" style={{ padding: 10, height: 64 }} src={iconUrl} />*/}
+        <div style={{ paddingTop: 5, opacity: 0.5 }}>
+          {' '}
+          {description}
+          {' '}
+        </div>
+
+      </Box>
+    </LinkBase>
   );
 }
 
