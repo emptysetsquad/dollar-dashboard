@@ -8,6 +8,7 @@ function Footer({ theme } : { theme:string }) {
   return (
     <>
       <div style={{
+        borderTop: theme === 'light' ? '1px solid rgb(33, 43, 54, 0.1)' :'1px solid #405071',
         backgroundColor: theme === 'light' ? '#F8F8F8' : '#35425e',
         textAlign: 'center',
         position: 'fixed',
