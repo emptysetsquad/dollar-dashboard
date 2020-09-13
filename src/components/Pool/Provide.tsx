@@ -71,14 +71,14 @@ function Provide({
                     setter={onChangeAmountESD}
                     disabled={status === 1}
                   />
+                  <PriceSection label="Requires " amt={usdcAmount} symbol=" USDC"/>
                   <MaxButton
                     onClick={() => {
-                      setProvideAmount(rewarded);
+                      onChangeAmountESD(rewarded);
                     }}
                   />
                 </>
               </div>
-              <PriceSection label="Requires " amt={usdcAmount} symbol=" USDC"/>
               <div style={{width: '40%'}}>
                 <Button
                   wide
@@ -91,7 +91,7 @@ function Provide({
                       (hash) => setProvideAmount(new BigNumber(0))
                     );
                   }}
-                  disabled={status === 1 || !isPos(provideAmount)}
+                  disabled={status === 1 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
                 />
               </div>
             </div>
