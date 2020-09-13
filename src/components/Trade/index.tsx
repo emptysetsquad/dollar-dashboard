@@ -138,7 +138,7 @@ function UniswapPool({ user }: {user: string}) {
             title="Info"
             description="View ESD-USDC pool stats."
             icon={<i className="fas fa-chart-area"/>}
-            onClick={() => window.location.href = "https://uniswap.info/pair/0x88ff79eb2bc5850f27315415da8685282c7610f9"}
+            href={"https://uniswap.info/pair/0x88ff79eb2bc5850f27315415da8685282c7610f9"}
           />
         </div>
 
@@ -147,7 +147,7 @@ function UniswapPool({ user }: {user: string}) {
             title="Trade"
             description="Trade døllar tokens."
             icon={<i className="fas fa-exchange-alt"/>}
-            onClick={() => window.location.href = "https://uniswap.exchange/swap?inputCurrency=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&outputCurrency=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723"}
+            href={"https://uniswap.exchange/swap?inputCurrency=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&outputCurrency=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723"}
           />
         </div>
 
@@ -156,7 +156,7 @@ function UniswapPool({ user }: {user: string}) {
             title="Supply"
             description="Supply and redeem liquidity."
             icon={<i className="fas fa-water"/>}
-            onClick={() => window.location.href = "https://uniswap.exchange/add/0x36f3fd68e7325a35eb768f1aedaae9ea0689d723/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"}
+            href={"https://uniswap.exchange/add/0x36f3fd68e7325a35eb768f1aedaae9ea0689d723/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"}
           />
         </div>
       </div>
@@ -215,19 +215,18 @@ function UniswapPool({ user }: {user: string}) {
   );
 }
 
-type MainButtonPropx = {
+type MainButtonProps = {
   title: string,
   description: string,
   icon: any,
-  onClick: Function,
-  tag?:string
+  href:string
 }
 
 function MainButton({
-                      title, description, icon, onClick, tag,
-                    }:MainButtonPropx) {
+  title, description, icon, href,
+}:MainButtonProps) {
   return (
-    <LinkBase onClick={onClick} style={{ width: '100%' }}>
+    <LinkBase href={href} style={{ width: '100%' }}>
       <Box>
         <div style={{ padding: 10, fontSize: 18 }}>
           {title}
