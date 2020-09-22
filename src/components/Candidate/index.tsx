@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import {
   getApproveFor, getEpoch, getIsInitialized, getPeriodFor,
   getRecordedVote,
-  getRejectFor, getStartFor,
+  getRejectFor, getStartFor, getStatusOf,
   getTokenBalance,
   getTokenTotalSupply
 } from '../../utils/infura';
@@ -39,6 +39,7 @@ function Candidate({ user }: {user: string}) {
   const [rejectFor, setRejectFor] = useState(new BigNumber(0));
   const [totalStake, setTotalStake] = useState(new BigNumber(0));
   const [vote, setVote] = useState(0);
+  const [status, setStatus] = useState(0);
   const [userStake, setUserStake] = useState(new BigNumber(0));
   const [epoch, setEpoch] = useState(0);
   const [startEpoch, setStartEpoch] = useState(0);
@@ -48,6 +49,7 @@ function Candidate({ user }: {user: string}) {
   useEffect(() => {
     if (user === '') {
       setVote(0);
+      setStatus(0);
       setUserStake(new BigNumber(0));
       return;
     }
@@ -55,14 +57,16 @@ function Candidate({ user }: {user: string}) {
 
     async function updateUserInfo() {
       const [
-        voteStr, userStakeStr,
+        voteStr, statusStr, userStakeStr,
       ] = await Promise.all([
         getRecordedVote(ESDS.addr, user, candidate),
+        getStatusOf(ESDS.addr, user),
         getTokenBalance(ESDS.addr, user),
       ]);
 
       if (!isCancelled) {
         setVote(parseInt(voteStr, 10));
+        setStatus(parseInt(statusStr, 10));
         setUserStake(toTokenUnitsBN(userStakeStr, ESDS.decimals));
       }
     }
@@ -129,6 +133,7 @@ function Candidate({ user }: {user: string}) {
         candidate={candidate}
         stake={userStake}
         vote={vote}
+        status={status}
       />
 
       <Header primary="Commit" />

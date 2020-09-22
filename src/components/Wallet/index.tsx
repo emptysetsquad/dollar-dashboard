@@ -106,6 +106,7 @@ function Wallet({ user }: {user: string}) {
       <BondUnbond
         staged={userStagedBalance}
         bonded={userBondedBalance}
+        status={userStatus}
       />
     </>
   );

@@ -14,13 +14,14 @@ import TextBlock from "../common/TextBlock";
 type VoteProps = {
   candidate: string,
   stake: BigNumber,
-  vote: number
+  vote: number,
+  status: number
 };
 
 const VOTE_TYPE_MAP = ["Undecided", "Approve", "Reject"]
 
 function Vote({
-  candidate, stake, vote
+  candidate, stake, vote, status
 }: VoteProps) {
   return (
     <Box heading="Vote">
@@ -45,7 +46,7 @@ function Vote({
                 0 // UNDECIDED
               );
             }}
-            disabled={vote === 0 || stake.isZero()}
+            disabled={status === 1 || vote === 0 || stake.isZero()}
           />
         </div>
         {/* Vote to approve candidate */}
@@ -62,7 +63,7 @@ function Vote({
                 1 // APPROVE
               );
             }}
-            disabled={vote === 1 || stake.isZero()}
+            disabled={status === 1 || vote === 1 || stake.isZero()}
           />
         </div>
         {/* Vote to reject candidate */}
@@ -80,7 +81,7 @@ function Vote({
                     2 // REJECT
                   );
                 }}
-                disabled={vote === 2 || stake.isZero()}
+                disabled={status === 1 || vote === 2 || stake.isZero()}
               />
           </div>
         </div>

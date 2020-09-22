@@ -14,10 +14,11 @@ import BigNumberInput from "../common/BigNumberInput";
 type BondUnbondProps = {
   staged: BigNumber,
   bonded: BigNumber,
+  status: number,
 };
 
 function BondUnbond({
-  staged, bonded
+  staged, bonded, status
 }: BondUnbondProps) {
   const [bondAmount, setBondAmount] = useState(new BigNumber(0));
   const [unbondAmount, setUnbondAmount] = useState(new BigNumber(0));
@@ -38,6 +39,7 @@ function BondUnbond({
                   adornment="ESD"
                   value={bondAmount}
                   setter={setBondAmount}
+                  disabled={status === 2}
                 />
                 <MaxButton
                   onClick={() => {
@@ -57,7 +59,7 @@ function BondUnbond({
                     toBaseUnitBN(bondAmount, ESD.decimals),
                   );
                 }}
-                disabled={!isPos(bondAmount) || bondAmount.isGreaterThan(staged)}
+                disabled={status === 2 || !isPos(bondAmount) || bondAmount.isGreaterThan(staged)}
               />
             </div>
           </div>
@@ -72,6 +74,7 @@ function BondUnbond({
                   adornment="ESD"
                   value={unbondAmount}
                   setter={setUnbondAmount}
+                  disabled={status === 2}
                 />
                 <MaxButton
                   onClick={() => {
@@ -91,7 +94,7 @@ function BondUnbond({
                     toBaseUnitBN(unbondAmount, ESD.decimals),
                   );
                 }}
-                disabled={!isPos(unbondAmount) || unbondAmount.isGreaterThan(bonded)}
+                disabled={status === 2 || !isPos(unbondAmount) || unbondAmount.isGreaterThan(bonded)}
               />
             </div>
           </div>
