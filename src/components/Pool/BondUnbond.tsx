@@ -14,12 +14,11 @@ import BigNumberInput from "../common/BigNumberInput";
 
 type BondUnbondProps = {
   staged: BigNumber,
-  bonded: BigNumber,
-  isRewardNegative: boolean,
+  bonded: BigNumber
 };
 
 function BondUnbond({
-  staged, bonded, isRewardNegative
+  staged, bonded
 }: BondUnbondProps) {
   const [bondAmount, setBondAmount] = useState(new BigNumber(0));
   const [unbondAmount, setUnbondAmount] = useState(new BigNumber(0));
@@ -95,7 +94,7 @@ function BondUnbond({
                     (hash) => setUnbondAmount(new BigNumber(0))
                   );
                 }}
-                disabled={!isPos(unbondAmount) || isRewardNegative}
+                disabled={!isPos(unbondAmount)}
               />
             </div>
           </div>
