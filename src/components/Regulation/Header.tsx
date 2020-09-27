@@ -16,15 +16,26 @@ type RegulationHeaderProps = {
   poolLiquidity: BigNumber,
   poolRewarded: BigNumber,
   poolClaimable: BigNumber,
+
+  legacyPoolRewarded: BigNumber,
+  legacyPoolClaimable: BigNumber,
+
+  totalDebt: BigNumber,
+  totalCoupons: BigNumber,
+  couponPremium: BigNumber,
 };
 
 const RegulationHeader = ({
   totalSupply,
   totalBonded, totalStaged, totalRedeemable,
-  poolLiquidity, poolRewarded, poolClaimable
+  poolLiquidity, poolRewarded, poolClaimable,
+  legacyPoolRewarded, legacyPoolClaimable,
+  totalDebt, totalCoupons, couponPremium
 }: RegulationHeaderProps) => {
   const daoTotalSupply = totalBonded.plus(totalStaged).plus(totalRedeemable);
   const poolTotalSupply = poolLiquidity.plus(poolRewarded).plus(poolClaimable);
+  const legacyPoolTotalSupply = legacyPoolRewarded.plus(legacyPoolClaimable);
+  const circulatingSupply = totalSupply.minus(daoTotalSupply).minus(poolTotalSupply).minus(legacyPoolTotalSupply);
 
   return (
     <>
@@ -37,10 +48,10 @@ const RegulationHeader = ({
             <BalanceBlock asset="DAO" balance={ownership(daoTotalSupply, totalSupply)} suffix="%" />
           </div>
           <div style={{ width: '25%' }}>
-            <BalanceBlock asset="LP Pool" balance={ownership(poolTotalSupply, totalSupply)} suffix="%" />
+            <BalanceBlock asset="Oracle" balance={ownership(poolTotalSupply, totalSupply)} suffix="%" />
           </div>
           <div style={{ width: '25%' }}>
-            <BalanceBlock asset="Circulating" balance={ownership(totalSupply.minus(daoTotalSupply).minus(poolTotalSupply), totalSupply)} suffix="%" />
+            <BalanceBlock asset="Circulating" balance={ownership(circulatingSupply, totalSupply)} suffix="%" />
           </div>
         </div>
       </Box>
@@ -75,6 +86,23 @@ const RegulationHeader = ({
           </div>
           <div style={{ width: '25%' }}>
             <BalanceBlock asset="Claimable" balance={poolClaimable} suffix="" />
+          </div>
+        </div>
+      </Box>
+
+      <Box heading="Coupon Breakdown">
+        <div style={{display: 'flex'}}>
+          <div style={{ width: '25%' }}>
+            <BalanceBlock asset="Debt Ratio" balance={ownership(totalDebt, totalSupply)} suffix="%" />
+          </div>
+          <div style={{ width: '25%' }}>
+            <BalanceBlock asset="Debt" balance={totalDebt} suffix="" />
+          </div>
+          <div style={{ width: '25%' }}>
+            <BalanceBlock asset="Coupons" balance={totalCoupons} suffix="" />
+          </div>
+          <div style={{ width: '25%' }}>
+            <BalanceBlock asset="Premium" balance={couponPremium.multipliedBy(100)} suffix="%" />
           </div>
         </div>
       </Box>

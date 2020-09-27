@@ -148,6 +148,16 @@ export const getTotalRedeemable = async (dao) => {
  * @param {string} dao address
  * @return {Promise<string>}
  */
+export const getTotalCoupons = async (dao) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  return daoContract.methods.totalCoupons().call();
+};
+
+/**
+ *
+ * @param {string} dao address
+ * @return {Promise<string>}
+ */
 export const getTotalBonded = async (dao) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
   return daoContract.methods.totalBonded().call();

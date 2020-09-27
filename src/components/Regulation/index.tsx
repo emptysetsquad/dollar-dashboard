@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Header } from '@aragon/ui';
 
 import {
+  getCouponPremium,
   getPoolTotalClaimable, getPoolTotalRewarded, getTokenBalance,
-  getTokenTotalSupply, getTotalBonded, getTotalRedeemable, getTotalStaged,
+  getTokenTotalSupply, getTotalBonded, getTotalCoupons, getTotalDebt, getTotalRedeemable, getTotalStaged,
 } from '../../utils/infura';
 import {ESD, ESDS, UNI} from "../../constants/tokens";
 import {toTokenUnitsBN} from "../../utils/number";
@@ -11,9 +12,9 @@ import BigNumber from "bignumber.js";
 import RegulationHeader from "./Header";
 import RegulationHistory from "./RegulationHistory";
 import IconHeader from "../common/IconHeader";
-import {DollarPool} from "../../constants/contracts";
+import {DollarPool, LegacyDollarPool} from "../../constants/contracts";
 
-
+const ONE_COUPON = new BigNumber(10).pow(18);
 
 function Regulation({ user }: {user: string}) {
 
@@ -24,6 +25,11 @@ function Regulation({ user }: {user: string}) {
   const [poolLiquidity, setPoolLiquidity] = useState(new BigNumber(0));
   const [poolTotalRewarded, setPoolTotalRewarded] = useState(new BigNumber(0));
   const [poolTotalClaimable, setPoolTotalClaimable] = useState(new BigNumber(0));
+  const [legacyPoolTotalRewarded, setLegacyPoolTotalRewarded] = useState(new BigNumber(0));
+  const [legacyPoolTotalClaimable, setLegacyPoolTotalClaimable] = useState(new BigNumber(0));
+  const [totalDebt, setTotalDebt] = useState(new BigNumber(0));
+  const [totalCoupons, setTotalCoupons] = useState(new BigNumber(0));
+  const [couponPremium, setCouponPremium] = useState(new BigNumber(0));
 
   useEffect(() => {
     let isCancelled = false;
@@ -33,6 +39,8 @@ function Regulation({ user }: {user: string}) {
         totalSupplyStr,
         totalBondedStr, totalStagedStr, totalRedeemableStr,
         poolLiquidityStr, poolTotalRewardedStr, poolTotalClaimableStr,
+        legacyPoolTotalRewardedStr, legacyPoolTotalClaimableStr,
+        totalDebtStr, totalCouponsStr
       ] = await Promise.all([
         getTokenTotalSupply(ESD.addr),
 
@@ -43,6 +51,12 @@ function Regulation({ user }: {user: string}) {
         getTokenBalance(ESD.addr, UNI.addr),
         getPoolTotalRewarded(DollarPool),
         getPoolTotalClaimable(DollarPool),
+
+        getPoolTotalRewarded(LegacyDollarPool),
+        getPoolTotalClaimable(LegacyDollarPool),
+
+        getTotalDebt(ESDS.addr),
+        getTotalCoupons(ESDS.addr),
       ]);
 
       if (!isCancelled) {
@@ -55,6 +69,19 @@ function Regulation({ user }: {user: string}) {
         setPoolLiquidity(toTokenUnitsBN(poolLiquidityStr, ESD.decimals));
         setPoolTotalRewarded(toTokenUnitsBN(poolTotalRewardedStr, ESD.decimals));
         setPoolTotalClaimable(toTokenUnitsBN(poolTotalClaimableStr, ESD.decimals));
+
+        setLegacyPoolTotalRewarded(toTokenUnitsBN(legacyPoolTotalRewardedStr, ESD.decimals));
+        setLegacyPoolTotalClaimable(toTokenUnitsBN(legacyPoolTotalClaimableStr, ESD.decimals));
+
+        setTotalDebt(toTokenUnitsBN(totalDebtStr, ESD.decimals));
+        setTotalCoupons(toTokenUnitsBN(totalCouponsStr, ESD.decimals));
+
+        if (new BigNumber(totalDebtStr).isGreaterThan(ONE_COUPON)) {
+          const couponPremiumStr = await getCouponPremium(ESDS.addr, ONE_COUPON)
+          setCouponPremium(toTokenUnitsBN(couponPremiumStr, ESD.decimals));
+        } else {
+          setCouponPremium(new BigNumber(0));
+        }
       }
     }
     updateUserInfo();
@@ -81,6 +108,13 @@ function Regulation({ user }: {user: string}) {
         poolLiquidity={poolLiquidity}
         poolRewarded={poolTotalRewarded}
         poolClaimable={poolTotalClaimable}
+
+        legacyPoolRewarded={legacyPoolTotalRewarded}
+        legacyPoolClaimable={legacyPoolTotalClaimable}
+
+        totalDebt={totalDebt}
+        totalCoupons={totalCoupons}
+        couponPremium={couponPremium}
       />
 
       <Header primary="Regulation History" />
