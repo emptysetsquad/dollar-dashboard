@@ -32,59 +32,13 @@ export const ownership = (balance: BigNumber, totalSupply: BigNumber): BigNumber
  */
 
 export const formatBN = (amount: BigNumber, position: number): string => {
-  const str = new BigNumber(amount).toFixed();
-  const split = str.split('.');
-  let integer = delineate(split[0]);
-  let digits = split.length > 1 ? str.split('.')[1] : '0';
-  digits = integer === "0" ? sigfigs(digits, position) : round(digits, position)
-  while (digits.length < position) {
-    digits += '0';
+  if (amount.isLessThan(new BigNumber(1))) {
+    return amount.precision(position, BigNumber.ROUND_FLOOR).toFixed();
   }
-  return integer + '.' + digits;
+  return delineate(amount.toFixed(2, BigNumber.ROUND_FLOOR));
 }
 
-function padZeros(nDecimalStr, len, suffix=true) {
-  while (nDecimalStr.length < len) {
-    if (suffix) {
-      nDecimalStr += '0'
-    } else {
-      nDecimalStr = '0' + nDecimalStr;
-    }
-  }
-  return nDecimalStr;
-}
-
-function extractNum(nDecimalStr, start, len) {
-  return padZeros(nDecimalStr.substr(start, len), len);
-}
-
-function round(nDecimalStr, precision) {
-  const rounded = Math.round(parseInt(extractNum(nDecimalStr, 0, precision + 1)) / 10).toString();
-  return padZeros(rounded, precision, false);
-}
-
-function sigfigs(nDecimalStr, sigfigs) {
-  let position = 0;
-  for (let i = 0; i < nDecimalStr.length; i++) {
-    if (nDecimalStr[i] !== '0') {
-      position = i;
-      break;
-    }
-  }
-
-  return nDecimalStr.substr(0, position) + round(nDecimalStr.substr(position), sigfigs)
-}
-
-function delineate(nIntegerStr) {
-  let result = "";
-  let group = 0;
-  for (let i = nIntegerStr.length - 1; i >= 0; i--) {
-    if (group === 3) {
-      result = "," + result;
-      group = 0;
-    }
-    result = nIntegerStr[i] + result;
-    group++;
-  }
-  return result;
+function delineate(bnStr) {
+  const parts = bnStr.split('.');
+  return parts[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + parts[1];
 }

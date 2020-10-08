@@ -108,26 +108,6 @@ export const getEpochTime = async (dao) => {
  * @param {string} dao address
  * @return {Promise<string>}
  */
-export const getEpochStart = async (dao) => {
-  const daoContract = new web3.eth.Contract(daoAbi, dao);
-  return daoContract.methods.epochStart().call();
-};
-
-/**
- *
- * @param {string} dao address
- * @return {Promise<string>}
- */
-export const getEpochPeriod = async (dao) => {
-  const daoContract = new web3.eth.Contract(daoAbi, dao);
-  return daoContract.methods.epochPeriod().call();
-};
-
-/**
- *
- * @param {string} dao address
- * @return {Promise<string>}
- */
 export const getTotalDebt = async (dao) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
   return daoContract.methods.totalDebt().call();
