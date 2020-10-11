@@ -3,10 +3,11 @@ import { Header } from '@aragon/ui';
 import { useParams } from 'react-router-dom';
 
 import {
+  getCouponPremium,
   getTokenAllowance,
   getTokenBalance,
   getTokenTotalSupply,
-  getTotalDebt,
+  getTotalDebt, getTotalRedeemable,
 } from '../../utils/infura';
 import {ESD, ESDS} from "../../constants/tokens";
 import CouponMarketHeader from "./Header";
@@ -17,6 +18,8 @@ import PurchaseHistory from "./PurchaseHistory";
 import IconHeader from "../common/IconHeader";
 import {getPreference, storePreference} from "../../utils/storage";
 import {CheckBox} from "../common";
+
+const ONE_COUPON = new BigNumber(10).pow(18);
 
 function CouponMarket({ user }: {user: string}) {
   const { override } = useParams();
@@ -29,6 +32,8 @@ function CouponMarket({ user }: {user: string}) {
   const [balance, setBalance] = useState(new BigNumber(0));
   const [allowance, setAllowance] = useState(new BigNumber(0));
   const [supply, setSupply] = useState(new BigNumber(0));
+  const [redeemable, setRedeemable] = useState(new BigNumber(0));
+  const [couponPremium, setCouponPremium] = useState(new BigNumber(0));
   const [debt, setDebt] = useState(new BigNumber(0));
   const [hideRedeemed, setHideRedeemed] = useState(storedHideRedeemed === '1');
 
@@ -51,6 +56,7 @@ function CouponMarket({ user }: {user: string}) {
       if (!isCancelled) {
         setBalance(new BigNumber(userBalance));
         setAllowance(new BigNumber(allowanceStr));
+        (new BigNumber(allowanceStr));
       }
     }
     updateUserInfo();
@@ -67,17 +73,27 @@ function CouponMarket({ user }: {user: string}) {
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [supplyStr, debtStr] = await Promise.all([
+      const [supplyStr, debtStr, redeemableStr] = await Promise.all([
         getTokenTotalSupply(ESD.addr),
         getTotalDebt(ESDS.addr),
+        getTotalRedeemable(ESDS.addr),
       ]);
 
       const totalSupply = toTokenUnitsBN(supplyStr, ESD.decimals);
       const totalDebt = toTokenUnitsBN(debtStr, ESD.decimals);
+      const totalRedeemable = toTokenUnitsBN(redeemableStr, ESD.decimals);
 
       if (!isCancelled) {
         setSupply(new BigNumber(totalSupply));
         setDebt(new BigNumber(totalDebt));
+        setRedeemable(new BigNumber(totalRedeemable));
+
+        if (totalDebt.isGreaterThan(new BigNumber(1))) {
+          const couponPremiumStr = await getCouponPremium(ESDS.addr, ONE_COUPON)
+          setCouponPremium(toTokenUnitsBN(couponPremiumStr, ESD.decimals));
+        } else {
+          setCouponPremium(new BigNumber(0));
+        }
       }
     }
     updateUserInfo();
@@ -94,11 +110,10 @@ function CouponMarket({ user }: {user: string}) {
     <>
       <IconHeader icon={<i className="fas fa-ticket-alt"/>} text="Coupon Market"/>
 
-      <Header primary="Coupon Market" />
-
       <CouponMarketHeader
         debt={debt}
         supply={supply}
+        premium={couponPremium}
       />
 
       <Header primary="Purchase" />
@@ -110,10 +125,9 @@ function CouponMarket({ user }: {user: string}) {
         debt={debt}
       />
 
-      <Header primary="Coupons" />
-
       <div style={{ display: 'flex' }}>
-        <div style={{ marginLeft: 'auto' }}>
+        <Header primary="Coupons" />
+        <div style={{ marginLeft: 'auto', alignSelf: 'flex-end' }}>
           <CheckBox
             text="Hide Redeemed"
             onCheck={(checked) => {
@@ -128,6 +142,7 @@ function CouponMarket({ user }: {user: string}) {
       <PurchaseHistory
         user={user}
         hideRedeemed={hideRedeemed}
+        totalRedeemable={redeemable}
       />
     </>
   );

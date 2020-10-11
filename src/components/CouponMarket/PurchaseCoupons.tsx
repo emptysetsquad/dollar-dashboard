@@ -44,7 +44,7 @@ function PurchaseCoupons({
         <div style={{display: 'flex'}}>
           {/* User balance */}
           <div style={{width: '30%'}}>
-            <BalanceBlock asset={`Døllar Balance`} balance={balance} suffix={" ESD"}/>
+            <BalanceBlock asset={`Balance`} balance={balance} suffix={" ESD"}/>
           </div>
           <div style={{width: '38%'}}/>
           {/* Purchase coupons */}

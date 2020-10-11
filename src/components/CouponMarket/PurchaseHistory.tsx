@@ -1,22 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  DataView, Button, IconRight,
+  DataView, Button, IconRight, IconPlus
 } from '@aragon/ui';
 
 import {getBatchBalanceOfCoupons, getCouponEpochs} from '../../utils/infura';
 import {ESD, ESDS} from "../../constants/tokens";
-import {formatBN, toTokenUnitsBN} from "../../utils/number";
-import index from "web3";
+import {formatBN, toBaseUnitBN, toTokenUnitsBN} from "../../utils/number";
 import BigNumber from "bignumber.js";
+import {redeemCoupons} from "../../utils/web3";
 
 type PurchaseHistoryProps = {
   user: string,
-  hideRedeemed: boolean
+  hideRedeemed: boolean,
+  totalRedeemable: BigNumber
 };
 
 function PurchaseHistory({
-  user, hideRedeemed
+  user, hideRedeemed, totalRedeemable
 }: PurchaseHistoryProps) {
   const history = useHistory();
   const [epochs, setEpochs] = useState([]);
@@ -70,14 +71,25 @@ function PurchaseHistory({
         epoch.epoch.toString(),
         formatBN(toTokenUnitsBN(epoch.coupons, ESD.decimals), 2),
         formatBN(toTokenUnitsBN(epoch.balance, ESD.decimals), 2),
-        <Button
-          wide
-          icon={<IconRight />}
-          label="Manage"
-          onClick={() => {
-            history.push(`/coupons/epoch/${epoch}`);
-          }}
-        />
+        <>
+          <Button
+            icon={<IconPlus />}
+            label="Redeem All"
+            onClick={() => redeemCoupons(
+              ESDS.addr,
+              epoch.epoch,
+              toBaseUnitBN(epoch.balance, ESD.decimals),
+            )}
+            disabled={epoch.balance.isZero() || epoch.balance.isGreaterThan(totalRedeemable)}
+          />
+          <Button
+            icon={<IconRight />}
+            label="Manage"
+            onClick={() => {
+              history.push(`/coupons/epoch/${epoch.epoch}`);
+            }}
+          />
+        </>
       ]}
     />
   );
