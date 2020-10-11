@@ -25,7 +25,7 @@ function PurchaseHistory({
 
     async function updateUserInfo() {
       const [epochsFromEvents] = await Promise.all([
-        getCouponEpochs(ESDS.addr),
+        getCouponEpochs(ESDS.addr, user),
       ]);
 
       if (!isCancelled) {

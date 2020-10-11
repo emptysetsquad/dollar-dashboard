@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from '@aragon/ui';
+import { useParams } from 'react-router-dom';
 
 import {
   getTokenAllowance,
@@ -16,6 +17,10 @@ import PurchaseHistory from "./PurchaseHistory";
 import IconHeader from "../common/IconHeader";
 
 function CouponMarket({ user }: {user: string}) {
+  const { override } = useParams();
+  if (override) {
+    user = override;
+  }
 
   const [balance, setBalance] = useState(new BigNumber(0));
   const [allowance, setAllowance] = useState(new BigNumber(0));

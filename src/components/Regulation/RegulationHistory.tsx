@@ -24,6 +24,7 @@ type RegulationEntry = {
 }
 
 function formatPrice(type, data) {
+  console.log(toTokenUnitsBN(new BigNumber(data.price), ESD.decimals).toFixed());
   return type === 'NEUTRAL' ? '1.00' : formatBN(toTokenUnitsBN(new BigNumber(data.price), ESD.decimals), 3);
 }
 

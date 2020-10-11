@@ -33,9 +33,9 @@ export const ownership = (balance: BigNumber, totalSupply: BigNumber): BigNumber
 
 export const formatBN = (amount: BigNumber, position: number): string => {
   if (amount.isLessThan(new BigNumber(1))) {
-    return amount.precision(position, BigNumber.ROUND_FLOOR).toFixed();
+    return amount.precision(position, BigNumber.ROUND_FLOOR).toFixed(position);
   }
-  return delineate(amount.toFixed(2, BigNumber.ROUND_FLOOR));
+  return delineate(amount.toFixed(position, BigNumber.ROUND_FLOOR));
 }
 
 function delineate(bnStr) {

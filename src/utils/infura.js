@@ -3,7 +3,6 @@ import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import { UniswapV2Router02 } from '../constants/contracts';
 import { ESD, UNI, USDC } from '../constants/tokens';
-import { checkConnectedAndGetAddress } from './web3';
 
 const dollarAbi = require('../constants/abi/Dollar.json');
 const daoAbi = require('../constants/abi/Implementation.json');
@@ -269,8 +268,7 @@ export const getImplementation = async (dao) => {
  * @param {string} dao
  * @return {Promise<number[]>}
  */
-export const getCouponEpochs = async (dao) => {
-  const account = await checkConnectedAndGetAddress();
+export const getCouponEpochs = async (dao, account) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
   const events = await daoContract.getPastEvents('CouponPurchase', {
     filter: { account },
