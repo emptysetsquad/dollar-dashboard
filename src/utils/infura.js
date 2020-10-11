@@ -234,6 +234,18 @@ export const getBalanceOfCoupons = async (dao, account, epoch) => {
 /**
  *
  * @param {string} dao address
+ * @param {string} account address
+ * @param {number[]} epochs number[]
+ * @return {Promise<string[]>}
+ */
+export const getBatchBalanceOfCoupons = async (dao, account, epochs) => {
+  const calls = epochs.map((epoch) => getBalanceOfCoupons(dao, account, epoch));
+  return Promise.all(calls);
+};
+
+/**
+ *
+ * @param {string} dao address
  * @param {number} epoch address
  * @return {Promise<string>}
  */
@@ -266,7 +278,8 @@ export const getImplementation = async (dao) => {
 /**
  *
  * @param {string} dao
- * @return {Promise<number[]>}
+ * @param {string} account
+ * @return {Promise<any[]>}
  */
 export const getCouponEpochs = async (dao, account) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
@@ -274,11 +287,25 @@ export const getCouponEpochs = async (dao, account) => {
     filter: { account },
     fromBlock: 0,
   });
-  return Array.from(
-    new Set(
-      events.map((event) => parseInt(event.returnValues.epoch, 10)),
-    ),
-  ).sort();
+  const couponEpochs = [
+    ...events.reduce(
+      (map, event) => {
+        const { returnValues: { epoch, couponAmount } } = event;
+        const prev = map.get(epoch);
+
+        if (prev) {
+          map.set(epoch, { epoch, coupons: prev.coupons.plus(new BigNumber(couponAmount)) });
+        } else {
+          map.set(epoch, { epoch, coupons: new BigNumber(couponAmount) });
+        }
+
+        return map;
+      },
+      new Map(),
+    ).values(),
+  ];
+
+  return couponEpochs.sort((a, b) => a - b);
 };
 
 /**

@@ -15,6 +15,8 @@ import BigNumber from "bignumber.js";
 import PurchaseCoupons from "./PurchaseCoupons";
 import PurchaseHistory from "./PurchaseHistory";
 import IconHeader from "../common/IconHeader";
+import {getPreference, storePreference} from "../../utils/storage";
+import {CheckBox} from "../common";
 
 function CouponMarket({ user }: {user: string}) {
   const { override } = useParams();
@@ -22,10 +24,13 @@ function CouponMarket({ user }: {user: string}) {
     user = override;
   }
 
+  const storedHideRedeemed = getPreference('hideRedeemedCoupons', '0');
+
   const [balance, setBalance] = useState(new BigNumber(0));
   const [allowance, setAllowance] = useState(new BigNumber(0));
   const [supply, setSupply] = useState(new BigNumber(0));
   const [debt, setDebt] = useState(new BigNumber(0));
+  const [hideRedeemed, setHideRedeemed] = useState(storedHideRedeemed === '1');
 
   useEffect(() => {
     if (user === '') {
@@ -96,7 +101,7 @@ function CouponMarket({ user }: {user: string}) {
         supply={supply}
       />
 
-      <Header primary="Purchase Coupons" />
+      <Header primary="Purchase" />
 
       <PurchaseCoupons
         user={user}
@@ -105,10 +110,24 @@ function CouponMarket({ user }: {user: string}) {
         debt={debt}
       />
 
-      <Header primary="Purchase History" />
+      <Header primary="Coupons" />
+
+      <div style={{ display: 'flex' }}>
+        <div style={{ marginLeft: 'auto' }}>
+          <CheckBox
+            text="Hide Redeemed"
+            onCheck={(checked) => {
+              storePreference('hideRedeemedCoupons', checked ? '1' : '0');
+              setHideRedeemed(checked);
+            }}
+            checked={hideRedeemed}
+          />
+        </div>
+      </div>
 
       <PurchaseHistory
         user={user}
+        hideRedeemed={hideRedeemed}
       />
     </>
   );

@@ -1,22 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Box, Button, IconRight,
+  DataView, Button, IconRight,
 } from '@aragon/ui';
 
-import {getCouponEpochs} from '../../utils/infura';
-import {ESDS} from "../../constants/tokens";
-import TextBlock from "../common/TextBlock";
+import {getBatchBalanceOfCoupons, getCouponEpochs} from '../../utils/infura';
+import {ESD, ESDS} from "../../constants/tokens";
+import {formatBN, toTokenUnitsBN} from "../../utils/number";
+import index from "web3";
+import BigNumber from "bignumber.js";
 
 type PurchaseHistoryProps = {
   user: string,
+  hideRedeemed: boolean
 };
 
 function PurchaseHistory({
-  user,
+  user, hideRedeemed
 }: PurchaseHistoryProps) {
   const history = useHistory();
   const [epochs, setEpochs] = useState([]);
+  const [page, setPage] = useState(0)
+  const [initialized, setInitialized] = useState(false)
 
   //Update User balances
   useEffect(() => {
@@ -24,13 +29,22 @@ function PurchaseHistory({
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [epochsFromEvents] = await Promise.all([
-        getCouponEpochs(ESDS.addr, user),
-      ]);
+      const epochsFromEvents = await getCouponEpochs(ESDS.addr, user);
+      const balanceOfCoupons = await getBatchBalanceOfCoupons(
+        ESDS.addr,
+        user,
+        epochsFromEvents.map(e => parseInt(e.epoch)));
+
+      const couponEpochs = epochsFromEvents.map((epoch, i) => {
+        epoch.balance = new BigNumber(balanceOfCoupons[i]);
+        return epoch;
+      });
+
 
       if (!isCancelled) {
         // @ts-ignore
-        setEpochs(epochsFromEvents);
+        setEpochs(couponEpochs);
+        setInitialized(true);
       }
     }
     updateUserInfo();
@@ -44,28 +58,28 @@ function PurchaseHistory({
   }, [user]);
 
   return (
-    <Box heading="History">
-      {epochs.map((epoch) => {
-        return <div style={{display: 'flex'}} key={epoch}>
-          {/* Epoch */}
-          <div style={{width: '30%'}}>
-            <TextBlock label="Epoch" text={epoch}/>
-          </div>
-          <div style={{width: '38%'}}/>
-          {/* Go To */}
-          <div style={{ width: '30%', paddingTop: '2%' }}>
-            <Button
-              wide
-              icon={<IconRight />}
-              label="Go To"
-              onClick={() => {
-                history.push(`/coupons/epoch/${epoch}`);
-              }}
-            />
-          </div>
-        </div>
-      })}
-    </Box>
+    <DataView
+      fields={['Epoch', 'Purchased', 'Balance', '']}
+      status={ initialized ? 'default' : 'loading' }
+      // @ts-ignore
+      entries={hideRedeemed ? epochs.filter((epoch) => !epoch.balance.isZero()) : epochs}
+      entriesPerPage={10}
+      page={page}
+      onPageChange={setPage}
+      renderEntry={(epoch) => [
+        epoch.epoch.toString(),
+        formatBN(toTokenUnitsBN(epoch.coupons, ESD.decimals), 2),
+        formatBN(toTokenUnitsBN(epoch.balance, ESD.decimals), 2),
+        <Button
+          wide
+          icon={<IconRight />}
+          label="Manage"
+          onClick={() => {
+            history.push(`/coupons/epoch/${epoch}`);
+          }}
+        />
+      ]}
+    />
   );
 }
 
