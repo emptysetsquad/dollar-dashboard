@@ -277,6 +277,16 @@ export const getImplementation = async (dao) => {
 
 /**
  *
+ * @param {string} dao address
+ * @return {Promise<string>}
+ */
+export const getPool = async (dao) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  return daoContract.methods.pool().call();
+};
+
+/**
+ *
  * @param {string} dao
  * @param {string} account
  * @return {Promise<any[]>}

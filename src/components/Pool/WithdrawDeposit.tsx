@@ -10,10 +10,10 @@ import {approve, depositPool, withdrawPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import {UNI} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
-import {DollarPool} from "../../constants/contracts";
 import BigNumberInput from "../common/BigNumberInput";
 
 type WithdrawDepositProps = {
+  poolAddress: string
   user: string
   balance: BigNumber,
   allowance: BigNumber,
@@ -22,7 +22,7 @@ type WithdrawDepositProps = {
 };
 
 function WithdrawDeposit({
-  user, balance, allowance, stagedBalance, status
+  poolAddress, user, balance, allowance, stagedBalance, status
 }: WithdrawDepositProps) {
   const [depositAmount, setDepositAmount] = useState(new BigNumber(0));
   const [withdrawAmount, setWithdrawAmount] = useState(new BigNumber(0));
@@ -60,12 +60,12 @@ function WithdrawDeposit({
                   label="Deposit"
                   onClick={() => {
                     depositPool(
-                      DollarPool,
+                      poolAddress,
                       toBaseUnitBN(depositAmount, UNI.decimals),
                       (hash) => setDepositAmount(new BigNumber(0))
                     );
                   }}
-                  disabled={status === 1 || !isPos(depositAmount)}
+                  disabled={poolAddress === '' || status === 1 || !isPos(depositAmount)}
                 />
               </div>
             </div>
@@ -96,12 +96,12 @@ function WithdrawDeposit({
                   label="Withdraw"
                   onClick={() => {
                     withdrawPool(
-                      DollarPool,
+                      poolAddress,
                       toBaseUnitBN(withdrawAmount, UNI.decimals),
                       (hash) => setWithdrawAmount(new BigNumber(0))
                     );
                   }}
-                  disabled={status === 1 || !isPos(withdrawAmount)}
+                  disabled={poolAddress === '' || status === 1 || !isPos(withdrawAmount)}
                 />
               </div>
             </div>
@@ -121,9 +121,9 @@ function WithdrawDeposit({
               icon={<IconCirclePlus />}
               label="Unlock"
               onClick={() => {
-                approve(UNI.addr, DollarPool);
+                approve(UNI.addr, poolAddress);
               }}
-              disabled={user === ''}
+              disabled={poolAddress === '' || user === ''}
             />
           </div>
         </div>

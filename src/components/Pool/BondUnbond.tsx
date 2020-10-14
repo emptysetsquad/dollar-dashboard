@@ -8,17 +8,17 @@ import {
 } from '../common/index';
 import {bondPool, unbondPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
-import {UNI} from "../../constants/tokens";
-import {DollarPool} from "../../constants/contracts";
+import {ESDS, UNI} from "../../constants/tokens";
 import BigNumberInput from "../common/BigNumberInput";
 
 type BondUnbondProps = {
+  poolAddress: string,
   staged: BigNumber,
   bonded: BigNumber
 };
 
 function BondUnbond({
-  staged, bonded
+  poolAddress, staged, bonded
 }: BondUnbondProps) {
   const [bondAmount, setBondAmount] = useState(new BigNumber(0));
   const [unbondAmount, setUnbondAmount] = useState(new BigNumber(0));
@@ -54,12 +54,12 @@ function BondUnbond({
                 label="Bond"
                 onClick={() => {
                   bondPool(
-                    DollarPool,
+                    poolAddress,
                     toBaseUnitBN(bondAmount, UNI.decimals),
                     (hash) => setBondAmount(new BigNumber(0))
                   );
                 }}
-                disabled={!isPos(bondAmount)}
+                disabled={poolAddress === '' || !isPos(bondAmount)}
               />
             </div>
           </div>
@@ -89,12 +89,12 @@ function BondUnbond({
                 label="Unbond"
                 onClick={() => {
                   unbondPool(
-                    DollarPool,
+                    poolAddress,
                     toBaseUnitBN(unbondAmount, UNI.decimals),
                     (hash) => setUnbondAmount(new BigNumber(0))
                   );
                 }}
-                disabled={!isPos(unbondAmount)}
+                disabled={poolAddress === '' || !isPos(unbondAmount)}
               />
             </div>
           </div>

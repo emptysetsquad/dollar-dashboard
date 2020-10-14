@@ -9,9 +9,9 @@ import {
 import {claimPool, unbondPool, withdrawPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import {ESD, UNI} from "../../constants/tokens";
-import {LegacyDollarPool} from "../../constants/contracts";
 
 type MigrateProps = {
+  legacyPoolAddress: string,
   staged: BigNumber,
   claimable: BigNumber,
   bonded: BigNumber,
@@ -20,7 +20,7 @@ type MigrateProps = {
 };
 
 function Migrate({
-  staged, claimable, bonded, status, isRewardNegative
+  legacyPoolAddress, staged, claimable, bonded, status, isRewardNegative
 }: MigrateProps) {
   const [unbonded, setUnbonded] = useState(false);
   const [withdrawn, setWithdrawn] = useState(false);
@@ -40,12 +40,12 @@ function Migrate({
                 label="Unbond"
                 onClick={() => {
                   unbondPool(
-                    LegacyDollarPool,
+                    legacyPoolAddress,
                     toBaseUnitBN(bonded, UNI.decimals),
                     (hash) => setUnbonded(hash.length > 0)
                   );
                 }}
-                disabled={!isPos(bonded) || unbonded || isRewardNegative}
+                disabled={legacyPoolAddress === '' || !isPos(bonded) || unbonded || isRewardNegative}
               />
             </div>
           </div>
@@ -61,12 +61,12 @@ function Migrate({
                 label="Withdraw"
                 onClick={() => {
                   withdrawPool(
-                    LegacyDollarPool,
+                    legacyPoolAddress,
                     toBaseUnitBN(staged, UNI.decimals),
                     (hash) => setWithdrawn(hash.length > 0)
                   );
                 }}
-                disabled={!isPos(staged) || withdrawn || status == 1}
+                disabled={legacyPoolAddress === '' || !isPos(staged) || withdrawn || status == 1}
               />
             </div>
           </div>
@@ -82,12 +82,12 @@ function Migrate({
                 label="Claim"
                 onClick={() => {
                   claimPool(
-                    LegacyDollarPool,
+                    legacyPoolAddress,
                     toBaseUnitBN(claimable, ESD.decimals),
                     (hash) => setClaimed(hash.length > 0)
                   );
                 }}
-                disabled={!isPos(claimable) || claimed || status == 1}
+                disabled={legacyPoolAddress === '' || !isPos(claimable) || claimed || status == 1}
               />
             </div>
           </div>

@@ -12,7 +12,7 @@ import BigNumber from "bignumber.js";
 import RegulationHeader from "./Header";
 import RegulationHistory from "./RegulationHistory";
 import IconHeader from "../common/IconHeader";
-import {DollarPool, LegacyDollarPool} from "../../constants/contracts";
+import {getLegacyPoolAddress, getPoolAddress} from "../../utils/pool";
 
 const ONE_COUPON = new BigNumber(10).pow(18);
 
@@ -35,6 +35,9 @@ function Regulation({ user }: {user: string}) {
     let isCancelled = false;
 
     async function updateUserInfo() {
+      const poolAddress = await getPoolAddress();
+      const legacyPoolAddress = getLegacyPoolAddress(poolAddress);
+
       const [
         totalSupplyStr,
         totalBondedStr, totalStagedStr, totalRedeemableStr,
@@ -49,11 +52,11 @@ function Regulation({ user }: {user: string}) {
         getTotalRedeemable(ESDS.addr),
 
         getTokenBalance(ESD.addr, UNI.addr),
-        getPoolTotalRewarded(DollarPool),
-        getPoolTotalClaimable(DollarPool),
+        getPoolTotalRewarded(poolAddress),
+        getPoolTotalClaimable(poolAddress),
 
-        getPoolTotalRewarded(LegacyDollarPool),
-        getPoolTotalClaimable(LegacyDollarPool),
+        getPoolTotalRewarded(legacyPoolAddress),
+        getPoolTotalClaimable(legacyPoolAddress),
 
         getTotalDebt(ESDS.addr),
         getTotalCoupons(ESDS.addr),

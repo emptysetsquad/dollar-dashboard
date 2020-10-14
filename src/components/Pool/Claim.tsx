@@ -9,16 +9,16 @@ import {
 import {claimPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import {ESD} from "../../constants/tokens";
-import {DollarPool} from "../../constants/contracts";
 import BigNumberInput from "../common/BigNumberInput";
 
 type ClaimProps = {
+  poolAddress: string
   claimable: BigNumber,
   status: number
 };
 
 function Claim({
-  claimable, status
+  poolAddress, claimable, status
 }: ClaimProps) {
   const [claimAmount, setClaimAmount] = useState(new BigNumber(0));
 
@@ -55,12 +55,12 @@ function Claim({
                 label="Claim"
                 onClick={() => {
                   claimPool(
-                    DollarPool,
+                    poolAddress,
                     toBaseUnitBN(claimAmount, ESD.decimals),
                     (hash) => setClaimAmount(new BigNumber(0))
                   );
                 }}
-                disabled={status === 1 || !isPos(claimAmount)}
+                disabled={poolAddress === '' || status === 1 || !isPos(claimAmount)}
               />
             </div>
           </div>

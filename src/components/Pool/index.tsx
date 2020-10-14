@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import BigNumber from 'bignumber.js';
 import {
+  getPool,
   getPoolBalanceOfBonded, getPoolBalanceOfClaimable,
   getPoolBalanceOfRewarded,
   getPoolBalanceOfStaged,
@@ -10,7 +11,7 @@ import {
   getTokenAllowance,
   getTokenBalance,
 } from '../../utils/infura';
-import {ESD, UNI, USDC} from "../../constants/tokens";
+import {ESD, ESDS, UNI, USDC} from "../../constants/tokens";
 import { toTokenUnitsBN } from '../../utils/number';
 import { Header } from '@aragon/ui';
 
@@ -19,9 +20,11 @@ import BondUnbond from "./BondUnbond";
 import PoolPageHeader from "./Header";
 import Claim from "./Claim";
 import Provide from "./Provide";
-import {DollarPool, LegacyDollarPool} from "../../constants/contracts";
 import IconHeader from "../common/IconHeader";
 import Migrate from "./Migrate";
+import {getLegacyPoolAddress, getPoolAddress} from "../../utils/pool";
+
+
 
 function Pool({ user }: {user: string}) {
   const { override } = useParams();
@@ -29,6 +32,7 @@ function Pool({ user }: {user: string}) {
     user = override;
   }
 
+  const [poolAddress, setPoolAddress] = useState("");
   const [poolTotalBonded, setPoolTotalBonded] = useState(new BigNumber(0));
   const [pairBalanceESD, setPairBalanceESD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
@@ -50,6 +54,7 @@ function Pool({ user }: {user: string}) {
   //Update User balances
   useEffect(() => {
     if (user === '') {
+      setPoolAddress("");
       setPoolTotalBonded(new BigNumber(0));
       setPairBalanceESD(new BigNumber(0));
       setPairBalanceUSDC(new BigNumber(0));
@@ -72,32 +77,38 @@ function Pool({ user }: {user: string}) {
     let isCancelled = false;
 
     async function updateUserInfo() {
+      const poolAddressStr = await getPoolAddress();
+      const legacyPoolAddress = getLegacyPoolAddress(poolAddressStr);
+
+      console.log(poolAddressStr)
+      console.log(legacyPoolAddress)
+
       const [
         poolTotalBondedStr, pairBalanceESDStr, pairBalanceUSDCStr, balance, usdcBalance,
         allowance, usdcAllowance, stagedBalance, bondedBalance,
         rewardedBalance, claimableBalance, status,
         legacyStagedBalance, legacyBondedBalance, legacyRewardedBalance, legacyClaimableBalance, legacyStatus
       ] = await Promise.all([
-        getPoolTotalBonded(DollarPool),
+        getPoolTotalBonded(poolAddressStr),
         getTokenBalance(ESD.addr, UNI.addr),
         getTokenBalance(USDC.addr, UNI.addr),
         getTokenBalance(UNI.addr, user),
         getTokenBalance(USDC.addr, user),
 
-        getTokenAllowance(UNI.addr, user, DollarPool),
-        getTokenAllowance(USDC.addr, user, DollarPool),
-        getPoolBalanceOfStaged(DollarPool, user),
-        getPoolBalanceOfBonded(DollarPool, user),
+        getTokenAllowance(UNI.addr, user, poolAddressStr),
+        getTokenAllowance(USDC.addr, user, poolAddressStr),
+        getPoolBalanceOfStaged(poolAddressStr, user),
+        getPoolBalanceOfBonded(poolAddressStr, user),
 
-        getPoolBalanceOfRewarded(DollarPool, user),
-        getPoolBalanceOfClaimable(DollarPool, user),
-        getPoolStatusOf(DollarPool, user),
+        getPoolBalanceOfRewarded(poolAddressStr, user),
+        getPoolBalanceOfClaimable(poolAddressStr, user),
+        getPoolStatusOf(poolAddressStr, user),
 
-        getPoolBalanceOfStaged(LegacyDollarPool, user),
-        getPoolBalanceOfBonded(LegacyDollarPool, user),
-        getPoolBalanceOfRewarded(LegacyDollarPool, user),
-        getPoolBalanceOfClaimable(LegacyDollarPool, user),
-        getPoolStatusOf(LegacyDollarPool, user)
+        getPoolBalanceOfStaged(legacyPoolAddress, user),
+        getPoolBalanceOfBonded(legacyPoolAddress, user),
+        getPoolBalanceOfRewarded(legacyPoolAddress, user),
+        getPoolBalanceOfClaimable(legacyPoolAddress, user),
+        getPoolStatusOf(legacyPoolAddress, user)
       ]);
 
       const poolTotalBonded = toTokenUnitsBN(poolTotalBondedStr, ESD.decimals);
@@ -117,6 +128,7 @@ function Pool({ user }: {user: string}) {
       const legacyUserStatus = parseInt(legacyStatus, 10);
 
       if (!isCancelled) {
+        setPoolAddress(poolAddressStr);
         setPoolTotalBonded(new BigNumber(poolTotalBonded));
         setPairBalanceESD(new BigNumber(pairESDBalance));
         setPairBalanceUSDC(new BigNumber(pairUSDCBalance));
@@ -157,6 +169,7 @@ function Pool({ user }: {user: string}) {
           <Header primary={"Legacy Pool Migration"}/>
 
           <Migrate
+            legacyPoolAddress={getLegacyPoolAddress(poolAddress)}
             isRewardNegative={isRewardedNegative}
             staged={legacyUserStagedBalance}
             claimable={legacyUserClaimableBalance}
@@ -176,6 +189,7 @@ function Pool({ user }: {user: string}) {
       />
 
       <WithdrawDeposit
+        poolAddress={poolAddress}
         user={user}
         balance={userUNIBalance}
         allowance={userUNIAllowance}
@@ -184,16 +198,19 @@ function Pool({ user }: {user: string}) {
       />
 
       <BondUnbond
+        poolAddress={poolAddress}
         staged={userStagedBalance}
         bonded={userBondedBalance}
       />
 
       <Claim
+        poolAddress={poolAddress}
         claimable={userClaimableBalance}
         status={userStatus}
       />
 
       <Provide
+        poolAddress={poolAddress}
         user={user}
         rewarded={isRewardedNegative ? new BigNumber(0) : userRewardedBalance}
         status={userStatus}

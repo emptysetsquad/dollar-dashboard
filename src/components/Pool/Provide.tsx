@@ -9,11 +9,11 @@ import {
 import {approve, providePool} from '../../utils/web3';
 import {isPos, toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
 import {ESD, USDC} from "../../constants/tokens";
-import {DollarPool} from "../../constants/contracts";
 import {MAX_UINT256} from "../../constants/values";
 import BigNumberInput from "../common/BigNumberInput";
 
 type ProvideProps = {
+  poolAddress: string,
   user: string,
   rewarded: BigNumber,
   pairBalanceESD: BigNumber,
@@ -24,7 +24,7 @@ type ProvideProps = {
 };
 
 function Provide({
-  user, rewarded, pairBalanceESD, pairBalanceUSDC, userUSDCBalance, userUSDCAllowance, status
+  poolAddress, user, rewarded, pairBalanceESD, pairBalanceUSDC, userUSDCBalance, userUSDCAllowance, status
 }: ProvideProps) {
   const [provideAmount, setProvideAmount] = useState(new BigNumber(0));
   const [usdcAmount, setUsdcAmount] = useState(new BigNumber(0));
@@ -86,12 +86,12 @@ function Provide({
                   label="Provide"
                   onClick={() => {
                     providePool(
-                      DollarPool,
+                      poolAddress,
                       toBaseUnitBN(provideAmount, ESD.decimals),
                       (hash) => setProvideAmount(new BigNumber(0))
                     );
                   }}
-                  disabled={status === 1 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
+                  disabled={poolAddress === '' || status === 1 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
                 />
               </div>
             </div>
@@ -114,9 +114,9 @@ function Provide({
               icon={<IconCirclePlus/>}
               label="Unlock"
               onClick={() => {
-                approve(USDC.addr, DollarPool);
+                approve(USDC.addr, poolAddress);
               }}
-              disabled={user === ''}
+              disabled={poolAddress === '' || user === ''}
             />
           </div>
         </div>
