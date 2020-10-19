@@ -327,8 +327,12 @@ export const getAllProposals = async (dao) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
   const payload = (await daoContract.getPastEvents('Proposal', {
     fromBlock: 0,
-  })).map((event) => event.returnValues);
-  return payload.sort((a, b) => b.start - a.start);
+  })).map((event) => {
+    const prop = event.returnValues;
+    prop.blockNumber = event.blockNumber;
+    return prop;
+  });
+  return payload.sort((a, b) => b.blockNumber - a.blockNumber);
 };
 
 /**

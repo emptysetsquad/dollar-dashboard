@@ -1,40 +1,77 @@
 import React, {useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Box, Button, IconRight
+  Button, IconRight, DataView
 } from '@aragon/ui';
 
-import { getAllProposals } from '../../utils/infura';
-import { ESDS } from "../../constants/tokens";
-import BigNumber from "bignumber.js";
-import NumberBlock from "../common/NumberBlock";
+import {
+  getAllProposals,
+  getApproveFor,
+  getEpoch,
+  getIsInitialized,
+  getRejectFor,
+  getTokenTotalSupply
+} from '../../utils/infura';
+import {ESDS} from "../../constants/tokens";
 import {AddressBlock} from "../common";
+import {proposalStatus} from "../../utils/gov";
+import BigNumber from "bignumber.js";
 
 type CandidateHistoryProps = {
   user: string;
 };
 
 type Proposal = {
+  index: number
   candidate: string,
   account: string,
-  start: BigNumber,
-  period: BigNumber
+  start: number,
+  period: number,
+  status: string
+}
+
+async function formatProposals(epoch: number, proposals: any[]): Promise<Proposal[]> {
+  const currentTotalStake = await getTokenTotalSupply(ESDS.addr);
+  const initializeds = await Promise.all(proposals.map((p) => getIsInitialized(ESDS.addr, p.candidate)));
+  const approves = await Promise.all(proposals.map((p) => getApproveFor(ESDS.addr, p.candidate)));
+  const rejecteds = await Promise.all(proposals.map((p) => getRejectFor(ESDS.addr, p.candidate)));
+
+  for (let i = 0; i < proposals.length; i++) {
+    proposals[i].index = (proposals.length - i);
+    proposals[i].start = parseInt(proposals[i].start);
+    proposals[i].period = parseInt(proposals[i].period);
+    proposals[i].status = proposalStatus(
+      epoch,
+      proposals[i].start,
+      proposals[i].period,
+      initializeds[i],
+      new BigNumber(approves[i]),
+      new BigNumber(rejecteds[i]),
+      currentTotalStake
+    );
+  }
+  return proposals
 }
 
 function CandidateHistory({user}: CandidateHistoryProps) {
   const history = useHistory();
   const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [page, setPage] = useState(0)
+  const [initialized, setInitialized] = useState(false)
 
   useEffect(() => {
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [allProposals] = await Promise.all([
+      const [epochStr, allProposals] = await Promise.all([
+        getEpoch(ESDS.addr),
         getAllProposals(ESDS.addr),
       ]);
 
       if (!isCancelled) {
-        setProposals(allProposals);
+        const formattedProposals = await formatProposals(parseInt(epochStr), allProposals);
+        setProposals(formattedProposals);
+        setInitialized(true);
       }
     }
     updateUserInfo();
@@ -48,37 +85,31 @@ function CandidateHistory({user}: CandidateHistoryProps) {
   }, [user]);
 
   return (
-    <Box heading="Candidates">
-      {proposals.map((proposal) => {
-        return <div style={{display: 'flex'}} key={proposal.candidate}>
-          {/* Epoch */}
-          <div style={{width: '20%' }}>
-            <AddressBlock label="Candidate" address={proposal.candidate} />
-          </div>
-          <div style={{width: '15%' }}>
-            <NumberBlock title="Start" num={proposal.start} />
-          </div>
-          <div style={{width: '15%' }}>
-            <NumberBlock title="Period" num={proposal.period} />
-          </div>
-          <div style={{width: '20%' }}>
-            <AddressBlock label="Proposer" address={proposal.account} />
-          </div>
-          {/* Go To */}
-          <div style={{width: '10%' }} />
-          <div style={{ width: '20%', paddingTop: '2%' }}>
-            <Button
-              wide
-              icon={<IconRight />}
-              label="Go To"
-              onClick={() => {
-                history.push(`/governance/candidate/${proposal.candidate}`);
-              }}
-            />
-          </div>
-        </div>
-      })}
-    </Box>
+    <DataView
+      fields={['Proposal', 'Candidate', 'Proposed', 'Complete', 'Proposer', 'Status', '']}
+      status={ initialized ? 'default' : 'loading' }
+      // @ts-ignore
+      entries={proposals}
+      entriesPerPage={10}
+      page={page}
+      onPageChange={setPage}
+      renderEntry={(proposal) => [
+        "#" + proposal.index,
+        <AddressBlock label="" address={proposal.candidate} />,
+        proposal.start.toString(),
+        (proposal.start + proposal.period).toString(),
+        <AddressBlock label="" address={proposal.account} />,
+        proposal.status,
+        <Button
+          wide
+          icon={<IconRight />}
+          label="Go To"
+          onClick={() => {
+            history.push(`/governance/candidate/${proposal.candidate}`);
+          }}
+        />
+      ]}
+    />
   );
 }
 
