@@ -10,7 +10,7 @@ import {
   getEpoch,
   getIsInitialized,
   getRejectFor,
-  getTokenTotalSupply
+  getTokenTotalSupply, getTotalBonded, getTotalBondedAt
 } from '../../utils/infura';
 import {ESDS} from "../../constants/tokens";
 import {AddressBlock} from "../common";
@@ -35,6 +35,13 @@ async function formatProposals(epoch: number, proposals: any[]): Promise<Proposa
   const initializeds = await Promise.all(proposals.map((p) => getIsInitialized(ESDS.addr, p.candidate)));
   const approves = await Promise.all(proposals.map((p) => getApproveFor(ESDS.addr, p.candidate)));
   const rejecteds = await Promise.all(proposals.map((p) => getRejectFor(ESDS.addr, p.candidate)));
+  const supplyAts = await Promise.all(proposals.map(async (p) => {
+    const at = (p.start + p.period - 1);
+    if (epoch > at) {
+      return await getTotalBondedAt(ESDS.addr, at);
+    }
+    return currentTotalStake;
+  }));
 
   for (let i = 0; i < proposals.length; i++) {
     proposals[i].index = (proposals.length - i);
@@ -47,7 +54,7 @@ async function formatProposals(epoch: number, proposals: any[]): Promise<Proposa
       initializeds[i],
       new BigNumber(approves[i]),
       new BigNumber(rejecteds[i]),
-      currentTotalStake
+      new BigNumber(supplyAts[i])
     );
   }
   return proposals

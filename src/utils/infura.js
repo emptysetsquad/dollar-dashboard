@@ -155,6 +155,17 @@ export const getTotalStaged = async (dao) => {
 /**
  *
  * @param {string} dao address
+ * @param {number} epoch number
+ * @return {Promise<string>}
+ */
+export const getTotalBondedAt = async (dao, epoch) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  return daoContract.methods.totalBondedAt(epoch).call();
+};
+
+/**
+ *
+ * @param {string} dao address
  * @param {string} candidate address
  * @return {Promise<string>}
  */

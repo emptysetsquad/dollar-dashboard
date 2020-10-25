@@ -7,7 +7,7 @@ import {
   getRecordedVote,
   getRejectFor, getStartFor, getStatusOf,
   getTokenBalance,
-  getTokenTotalSupply
+  getTokenTotalSupply, getTotalBondedAt
 } from '../../utils/infura';
 import {ESDS} from "../../constants/tokens";
 import {toTokenUnitsBN} from "../../utils/number";
@@ -17,20 +17,7 @@ import VoteHeader from "./VoteHeader";
 import CommitHeader from "./CommitHeader";
 import Commit from "./Commit";
 import IconHeader from "../common/IconHeader";
-import {GOVERNANCE_QUORUM} from "../../constants/values";
-
-function approved(
-  epoch: number, start: number, period: number,
-  approve: BigNumber, reject: BigNumber, totalStake: BigNumber
-): boolean {
-  if (epoch < (start + period)) {
-    return false; // Not ended
-  }
-  if (approve.plus(reject).dividedBy(totalStake).comparedTo(GOVERNANCE_QUORUM) < 0) {
-    return false; // Didn't meet quorum
-  }
-  return approve.comparedTo(reject) > 0;
-}
+import {proposalStatus} from "../../utils/gov";
 
 function Candidate({ user }: {user: string}) {
   const { candidate } = useParams();
@@ -84,7 +71,7 @@ function Candidate({ user }: {user: string}) {
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [
+      let [
         approveForStr, rejectForStr, totalStakeStr,
         epochStr, startForStr, periodForStr, isInitialized
       ] = await Promise.all([
@@ -97,13 +84,22 @@ function Candidate({ user }: {user: string}) {
         getIsInitialized(ESDS.addr, candidate),
       ]);
 
+      const epochN = parseInt(epochStr, 10);
+      const startN = parseInt(startForStr, 10);
+      const periodN = parseInt(periodForStr, 10);
+
+      const endsAfter = (startN + periodN - 1);
+      if (epochN > endsAfter) {
+        totalStakeStr = await getTotalBondedAt(ESDS.addr, endsAfter);
+      }
+
       if (!isCancelled) {
         setApproveFor(toTokenUnitsBN(approveForStr, ESDS.decimals));
         setRejectFor(toTokenUnitsBN(rejectForStr, ESDS.decimals));
         setTotalStake(toTokenUnitsBN(totalStakeStr, ESDS.decimals));
-        setEpoch(parseInt(epochStr, 10));
-        setStartEpoch(parseInt(startForStr, 10));
-        setPeriodEpoch(parseInt(periodForStr, 10));
+        setEpoch(epochN);
+        setStartEpoch(startN);
+        setPeriodEpoch(periodN);
         setInitialized(isInitialized);
       }
     }
@@ -126,6 +122,7 @@ function Candidate({ user }: {user: string}) {
         approveFor={approveFor}
         rejectFor={rejectFor}
         totalStake={totalStake}
+        showParticipation={startEpoch > 106}
       />
 
       <Header primary="Vote" />
@@ -150,7 +147,7 @@ function Candidate({ user }: {user: string}) {
         startEpoch={startEpoch}
         periodEpoch={periodEpoch}
         initialized={initialized}
-        approved={approved(epoch, startEpoch, periodEpoch, approveFor, rejectFor, totalStake)}
+        approved={proposalStatus(epoch, startEpoch, periodEpoch, false, approveFor, rejectFor, totalStake) === "Approved"}
       />
     </>
   );

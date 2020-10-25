@@ -7,6 +7,7 @@ type VoteHeaderProps = {
   approveFor: BigNumber,
   rejectFor: BigNumber,
   totalStake: BigNumber,
+  showParticipation: boolean,
 };
 
 function approval(approve: BigNumber, reject: BigNumber): BigNumber {
@@ -18,7 +19,7 @@ function participation(approve: BigNumber, reject: BigNumber, totalStake: BigNum
 }
 
 const VoteHeader = ({
-   approveFor, rejectFor, totalStake,
+  approveFor, rejectFor, totalStake, showParticipation
 }: VoteHeaderProps) => (
   <div style={{ padding: '2%', display: 'flex', alignItems: 'center' }}>
     <div style={{ width: '25%' }}>
@@ -30,9 +31,11 @@ const VoteHeader = ({
     <div style={{ width: '25%' }}>
       <BalanceBlock asset="Approval" balance={approval(approveFor, rejectFor)} suffix="%" />
     </div>
-    <div style={{ width: '25%' }}>
-      <BalanceBlock asset="Participation" balance={participation(approveFor, rejectFor, totalStake)} suffix="%" />
-    </div>
+    {showParticipation ?
+      <div style={{width: '25%'}}>
+        <BalanceBlock asset="Participation" balance={participation(approveFor, rejectFor, totalStake)} suffix="%"/>
+      </div> : ''
+    }
   </div>
 );
 
