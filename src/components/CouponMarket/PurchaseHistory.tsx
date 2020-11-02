@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  DataView, Button, IconRight, IconPlus
+  DataView, Button, IconCirclePlus
 } from '@aragon/ui';
 
-import {getBatchBalanceOfCoupons, getCouponEpochs} from '../../utils/infura';
+import {getBatchBalanceOfCoupons, getBatchCouponsExpiration, getCouponEpochs} from '../../utils/infura';
 import {ESD, ESDS} from "../../constants/tokens";
 import {formatBN, toBaseUnitBN, toTokenUnitsBN} from "../../utils/number";
 import BigNumber from "bignumber.js";
@@ -31,13 +31,13 @@ function PurchaseHistory({
 
     async function updateUserInfo() {
       const epochsFromEvents = await getCouponEpochs(ESDS.addr, user);
-      const balanceOfCoupons = await getBatchBalanceOfCoupons(
-        ESDS.addr,
-        user,
-        epochsFromEvents.map(e => parseInt(e.epoch)));
+      const epochNumbers = epochsFromEvents.map(e => parseInt(e.epoch));
+      const balanceOfCoupons = await getBatchBalanceOfCoupons(ESDS.addr, user, epochNumbers);
+      const couponsExpirations = await getBatchCouponsExpiration(ESDS.addr, epochNumbers);
 
       const couponEpochs = epochsFromEvents.map((epoch, i) => {
         epoch.balance = new BigNumber(balanceOfCoupons[i]);
+        epoch.expiration = couponsExpirations[i];
         return epoch;
       });
 
@@ -60,7 +60,7 @@ function PurchaseHistory({
 
   return (
     <DataView
-      fields={['Epoch', 'Purchased', 'Balance', '']}
+      fields={['Epoch', 'Purchased', 'Balance', 'Expires', '']}
       status={ initialized ? 'default' : 'loading' }
       // @ts-ignore
       entries={hideRedeemed ? epochs.filter((epoch) => !epoch.balance.isZero()) : epochs}
@@ -71,25 +71,20 @@ function PurchaseHistory({
         epoch.epoch.toString(),
         formatBN(toTokenUnitsBN(epoch.coupons, ESD.decimals), 2),
         formatBN(toTokenUnitsBN(epoch.balance, ESD.decimals), 2),
-        <>
-          <Button
-            icon={<IconPlus />}
-            label="Redeem All"
-            onClick={() => redeemCoupons(
-              ESDS.addr,
-              epoch.epoch,
-              toBaseUnitBN(epoch.balance, ESD.decimals),
-            )}
-            disabled={epoch.balance.isZero() || epoch.balance.isGreaterThan(totalRedeemable)}
-          />
-          <Button
-            icon={<IconRight />}
-            label="Manage"
-            onClick={() => {
-              history.push(`/coupons/epoch/${epoch.epoch}`);
-            }}
-          />
-        </>
+        epoch.expiration.toString(),
+        <Button
+          icon={<IconCirclePlus />}
+          label="Redeem"
+          onClick={() => redeemCoupons(
+            ESDS.addr,
+            epoch.epoch,
+            toBaseUnitBN(
+              epoch.balance.isGreaterThan(totalRedeemable) ? totalRedeemable : epoch.balance,
+              ESD.decimals
+            ),
+          )}
+          disabled={epoch.balance.isZero() || epoch.balance.isGreaterThan(totalRedeemable)}
+        />
       ]}
     />
   );

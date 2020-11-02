@@ -268,6 +268,28 @@ export const getOutstandingCoupons = async (dao, epoch) => {
 /**
  *
  * @param {string} dao address
+ * @param {number} epoch number
+ * @return {Promise<string>}
+ */
+export const getCouponsExpiration = async (dao, epoch) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  return daoContract.methods.couponsExpiration(epoch).call();
+};
+
+/**
+ *
+ * @param {string} dao address
+ * @param {number[]} epochs number[]
+ * @return {Promise<string[]>}
+ */
+export const getBatchCouponsExpiration = async (dao, epochs) => {
+  const calls = epochs.map((epoch) => getCouponsExpiration(dao, epoch));
+  return Promise.all(calls);
+};
+
+/**
+ *
+ * @param {string} dao address
  * @param {string|BigNumber} amount uint256
  * @return {Promise<string>}
  */

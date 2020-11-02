@@ -11,7 +11,6 @@ import Footer from './components/Footer';
 import Wallet from "./components/Wallet";
 import EpochDetail from "./components/EpochDetail";
 import CouponMarket from "./components/CouponMarket";
-import CouponEpoch from "./components/CouponEpoch";
 import Governance from "./components/Governance";
 import Candidate from "./components/Candidate";
 import Regulation from "./components/Regulation";
@@ -61,7 +60,6 @@ function App() {
               <Route path="/wallet/:override"><Wallet user={user}/></Route>
               <Route path="/wallet/"><Wallet user={user}/></Route>
               <Route path="/epoch/"><EpochDetail user={user}/></Route>
-              <Route path="/coupons/epoch/:epoch"><CouponEpoch user={user}/></Route>
               <Route path="/coupons/:override"><CouponMarket user={user}/></Route>
               <Route path="/coupons/"><CouponMarket user={user}/></Route>
               <Route path="/governance/candidate/:candidate"><Candidate user={user}/></Route>
