@@ -59,11 +59,18 @@ function NavBar({
               isSelected={page.includes('/wallet')}
             />
             <LinkButton
-              title="Epoch"
+              title="Rewards"
               onClick={() => {
-                history.push('/epoch/');
+                history.push('/pool/');
               }}
-              isSelected={page.includes('/epoch')}
+              isSelected={page.includes('/pool')}
+            />
+            <LinkButton
+              title="Coupons"
+              onClick={() => {
+                history.push('/coupons/');
+              }}
+              isSelected={page.includes('/coupons')}
             />
             <LinkButton
               title="Trade"
@@ -71,13 +78,6 @@ function NavBar({
                 history.push('/trade/');
               }}
               isSelected={page.includes('/trade')}
-            />
-            <LinkButton
-              title="Rewards"
-              onClick={() => {
-                history.push('/pool/');
-              }}
-              isSelected={page.includes('/pool')}
             />
             <LinkButton
               title="Governance"

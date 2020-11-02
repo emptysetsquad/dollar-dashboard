@@ -1,17 +1,70 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   Header, Box, LinkBase, Tag,
 } from '@aragon/ui';
+import TextBlock from "../common/TextBlock";
+import BigNumber from "bignumber.js";
+import EpochBlock from "../common/EpochBlock";
 
-function HomePage() {
+function epochformatted() {
+  const epochStart = 1599148800;
+  const epochPeriod = 8 * 60 * 60;
+  const hour = 60 * 60;
+  const minute = 60;
+  const unixTimeSec = Math.floor(Date.now() / 1000);
+
+  let epochRemainder = unixTimeSec - epochStart
+  const epoch = Math.floor(epochRemainder / epochPeriod);
+  epochRemainder -= epoch * epochPeriod;
+  console.log(epochRemainder)
+  const epochHour = Math.floor(epochRemainder / hour);
+  epochRemainder -= epochHour * hour;
+  console.log(epochRemainder)
+  const epochMinute = Math.floor(epochRemainder / minute);
+  epochRemainder -= epochMinute * minute;
+  console.log(epochRemainder)
+  return `${epoch}-0${epochHour}:${epochMinute > 9 ? epochMinute : "0" + epochMinute.toString()}:${epochRemainder > 9 ? epochRemainder : "0" + epochRemainder.toString()}`;
+}
+
+type HomePageProps = {
+  user: string
+};
+
+function HomePage({user}: HomePageProps) {
   const history = useHistory();
+
+  const [epochTime, setEpochTime] = useState("0-00:00:00");
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function updateUserInfo() {
+      if (!isCancelled) {
+        setEpochTime(epochformatted())
+      }
+    }
+    updateUserInfo();
+    const id = setInterval(updateUserInfo, 1000);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      isCancelled = true;
+      clearInterval(id);
+    };
+  }, [user]);
 
   return (
     <>
       <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ marginLeft: '2%'  }}>
-          <Header primary="døllar dashboard." />
+        <div style={{ width: '30%', marginLeft: '3%'  }}>
+          <Header primary="døllar." />
+        </div>
+        <div style={{ width: '35%' }} />
+        <div style={{ width: '30%', marginRight: '2%', textAlign: 'right'}}>
+          <Box>
+            <EpochBlock epoch={epochTime}/>
+          </Box>
         </div>
       </div>
       <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
@@ -28,11 +81,11 @@ function HomePage() {
 
         <div style={{ width: '30%' }}>
           <MainButton
-            title="Epoch"
-            description="View and advance the current epoch."
-            icon={<i className="fas fa-stream"/>}
+            title="Governance"
+            description="Vote on upgrades."
+            icon={<i className="fas fa-poll"/>}
             onClick={() => {
-              history.push('/epoch/');
+              history.push('/governance/');
             }}
           />
         </div>
@@ -78,18 +131,6 @@ function HomePage() {
             icon={<i className="fas fa-ticket-alt"/>}
             onClick={() => {
               history.push('/coupons/');
-            }}
-          />
-        </div>
-      </div>
-      <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '30%', marginLeft: '35%', marginRight: '35%' }}>
-          <MainButton
-            title="Governance"
-            description="Vote on upgrades."
-            icon={<i className="fas fa-poll"/>}
-            onClick={() => {
-              history.push('/governance/');
             }}
           />
         </div>
