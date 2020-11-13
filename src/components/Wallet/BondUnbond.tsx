@@ -10,15 +10,17 @@ import { bond, unbondUnderlying } from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import { ESD, ESDS } from "../../constants/tokens";
 import BigNumberInput from "../common/BigNumberInput";
+import TextBlock from "../common/TextBlock";
 
 type BondUnbondProps = {
   staged: BigNumber,
   bonded: BigNumber,
   status: number,
+  lockup: number,
 };
 
 function BondUnbond({
-  staged, bonded, status
+  staged, bonded, status, lockup
 }: BondUnbondProps) {
   const [bondAmount, setBondAmount] = useState(new BigNumber(0));
   const [unbondAmount, setUnbondAmount] = useState(new BigNumber(0));
@@ -27,11 +29,15 @@ function BondUnbond({
     <Box heading="Bond">
       <div style={{display: 'flex'}}>
         {/* Total bonded */}
-        <div style={{width: '30%'}}>
+        <div style={{width: '16%'}}>
           <BalanceBlock asset="Bonded" balance={bonded} suffix={"ESD"}/>
         </div>
+        {/* Total bonded */}
+        <div style={{width: '16%'}}>
+          <TextBlock label="Exit Lockup" text={lockup == 0 ? "" : lockup == 1 ? "1 epoch" : `${lockup} epochs`}/>
+        </div>
         {/* Bond Døllar within DAO */}
-        <div style={{width: '32%', paddingTop: '2%'}}>
+        <div style={{width: '33%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
               <>
@@ -64,9 +70,9 @@ function BondUnbond({
             </div>
           </div>
         </div>
-        <div style={{width: '6%'}}/>
+        <div style={{width: '2%'}}/>
         {/* Unbond Døllar within DAO */}
-        <div style={{width: '32%', paddingTop: '2%'}}>
+        <div style={{width: '33%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
               <>

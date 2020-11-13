@@ -15,6 +15,8 @@ import AccountPageHeader from "./Header";
 import WithdrawDeposit from "./WithdrawDeposit";
 import BondUnbond from "./BondUnbond";
 import IconHeader from "../common/IconHeader";
+import {getPoolAddress} from "../../utils/pool";
+import {DollarPool4} from "../../constants/contracts";
 
 function Wallet({ user }: {user: string}) {
   const { override } = useParams();
@@ -29,6 +31,7 @@ function Wallet({ user }: {user: string}) {
   const [userStagedBalance, setUserStagedBalance] = useState(new BigNumber(0));
   const [userBondedBalance, setUserBondedBalance] = useState(new BigNumber(0));
   const [userStatus, setUserStatus] = useState(0);
+  const [lockup, setLockup] = useState(0);
 
   //Update User balances
   useEffect(() => {
@@ -45,7 +48,7 @@ function Wallet({ user }: {user: string}) {
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [esdBalance, esdAllowance, esdsBalance, esdsSupply, stagedBalance, bondedBalance, status] = await Promise.all([
+      const [esdBalance, esdAllowance, esdsBalance, esdsSupply, stagedBalance, bondedBalance, status, poolAddress] = await Promise.all([
         getTokenBalance(ESD.addr, user),
         getTokenAllowance(ESD.addr, user, ESDS.addr),
         getTokenBalance(ESDS.addr, user),
@@ -53,6 +56,7 @@ function Wallet({ user }: {user: string}) {
         getBalanceOfStaged(ESDS.addr, user),
         getBalanceBonded(ESDS.addr, user),
         getStatusOf(ESDS.addr, user),
+        getPoolAddress(),
       ]);
 
       const userESDBalance = toTokenUnitsBN(esdBalance, ESD.decimals);
@@ -70,6 +74,7 @@ function Wallet({ user }: {user: string}) {
         setUserStagedBalance(new BigNumber(userStagedBalance));
         setUserBondedBalance(new BigNumber(userBondedBalance));
         setUserStatus(userStatus);
+        setLockup(poolAddress == DollarPool4 ? 15 : 1);
       }
     }
     updateUserInfo();
@@ -107,6 +112,7 @@ function Wallet({ user }: {user: string}) {
         staged={userStagedBalance}
         bonded={userBondedBalance}
         status={userStatus}
+        lockup={lockup}
       />
     </>
   );

@@ -23,6 +23,7 @@ import Provide from "./Provide";
 import IconHeader from "../common/IconHeader";
 import Migrate from "./Migrate";
 import {getLegacyPoolAddress, getPoolAddress} from "../../utils/pool";
+import {DollarPool4} from "../../constants/contracts";
 
 
 
@@ -50,6 +51,7 @@ function Pool({ user }: {user: string}) {
   const [legacyUserRewardedBalance, setLegacyUserRewardedBalance] = useState(new BigNumber(0));
   const [legacyUserClaimableBalance, setLegacyUserClaimableBalance] = useState(new BigNumber(0));
   const [legacyUserStatus, setLegacyUserStatus] = useState(0);
+  const [lockup, setLockup] = useState(0);
 
   //Update User balances
   useEffect(() => {
@@ -79,9 +81,6 @@ function Pool({ user }: {user: string}) {
     async function updateUserInfo() {
       const poolAddressStr = await getPoolAddress();
       const legacyPoolAddress = getLegacyPoolAddress(poolAddressStr);
-
-      console.log(poolAddressStr)
-      console.log(legacyPoolAddress)
 
       const [
         poolTotalBondedStr, pairBalanceESDStr, pairBalanceUSDCStr, balance, usdcBalance,
@@ -146,6 +145,7 @@ function Pool({ user }: {user: string}) {
         setLegacyUserRewardedBalance(new BigNumber(legacyUserRewardedBalance));
         setLegacyUserClaimableBalance(new BigNumber(legacyUserClaimableBalance));
         setLegacyUserStatus(legacyUserStatus);
+        setLockup(poolAddressStr == DollarPool4 ? 5 : 1);
       }
     }
     updateUserInfo();
@@ -201,6 +201,7 @@ function Pool({ user }: {user: string}) {
         poolAddress={poolAddress}
         staged={userStagedBalance}
         bonded={userBondedBalance}
+        lockup={lockup}
       />
 
       <Claim

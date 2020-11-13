@@ -10,15 +10,17 @@ import {bondPool, unbondPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import {ESDS, UNI} from "../../constants/tokens";
 import BigNumberInput from "../common/BigNumberInput";
+import TextBlock from "../common/TextBlock";
 
 type BondUnbondProps = {
   poolAddress: string,
   staged: BigNumber,
-  bonded: BigNumber
+  bonded: BigNumber,
+  lockup: number,
 };
 
 function BondUnbond({
-  poolAddress, staged, bonded
+  poolAddress, staged, bonded, lockup
 }: BondUnbondProps) {
   const [bondAmount, setBondAmount] = useState(new BigNumber(0));
   const [unbondAmount, setUnbondAmount] = useState(new BigNumber(0));
@@ -27,11 +29,15 @@ function BondUnbond({
     <Box heading="Bond">
       <div style={{display: 'flex'}}>
         {/* Total bonded */}
-        <div style={{width: '30%'}}>
+        <div style={{width: '16%'}}>
           <BalanceBlock asset="Bonded" balance={bonded} suffix={"UNI-V2"} />
         </div>
+        {/* Exit lockup */}
+        <div style={{width: '16%'}}>
+          <TextBlock label="Exit Lockup" text={lockup == 0 ? "" : lockup == 1 ? "1 epoch" : `${lockup} epochs`}/>
+        </div>
         {/* Bond UNI-V2 within Pool */}
-        <div style={{width: '32%', paddingTop: '2%'}}>
+        <div style={{width: '33%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
               <>
@@ -64,9 +70,9 @@ function BondUnbond({
             </div>
           </div>
         </div>
-        <div style={{width: '6%'}}/>
+        <div style={{width: '2%'}}/>
         {/* Unbond UNI-V2 within Pool */}
-        <div style={{width: '32%', paddingTop: '2%'}}>
+        <div style={{width: '33%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
               <>
