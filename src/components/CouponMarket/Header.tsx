@@ -13,14 +13,14 @@ type CouponMarketHeaderProps = {
 const CouponMarketHeader = ({
   debt, supply, premium
 }: CouponMarketHeaderProps) => (
-  <div style={{ padding: '2%', display: 'flex', alignItems: 'center' }}>
-    <div style={{ width: '25%' }}>
+  <div style={{ padding: '2%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+    <div style={{ flexBasis: '25%' }}>
       <BalanceBlock asset="Total Debt" balance={debt} suffix={"ESD"}/>
     </div>
-    <div style={{ width: '25%' }}>
+    <div style={{ flexBasis: '25%' }}>
       <BalanceBlock asset="Debt Ratio" balance={ownership(debt, supply)} suffix={"%"}/>
     </div>
-    <div style={{ width: '25%' }}>
+    <div style={{ flexBasis: '25%' }}>
       <BalanceBlock asset="Premium" balance={premium.multipliedBy(100)} suffix={"%"}/>
     </div>
   </div>

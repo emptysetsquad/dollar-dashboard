@@ -28,9 +28,9 @@ function Migrate({
 
   return (
     <Box heading="Migrate">
-      <div style={{display: 'flex'}}>
+      <div style={{display: 'flex', flexWrap: 'wrap'}}>
         {/* Unbond UNI-V2 within Pool */}
-        <div style={{width: '32%', paddingTop: '2%'}}>
+        <div style={{flexBasis: '32%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
               <BalanceBlock asset="Bonded" balance={bonded} suffix={"UNI-V2"} />
@@ -51,7 +51,7 @@ function Migrate({
           </div>
         </div>
         {/* Withdraw UNI-V2 within Pool */}
-        <div style={{width: '32%', paddingTop: '2%'}}>
+        <div style={{flexBasis: '32%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
               <BalanceBlock asset="Staged" balance={staged} suffix={"UNI-V2"} />
@@ -72,7 +72,7 @@ function Migrate({
           </div>
         </div>
         {/* Claim ESD within Pool */}
-        <div style={{width: '32%', paddingTop: '2%'}}>
+        <div style={{flexBasis: '32%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
               <BalanceBlock asset="Claimable" balance={claimable} suffix={"ESD"} />

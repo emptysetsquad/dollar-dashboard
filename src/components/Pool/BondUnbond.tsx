@@ -27,19 +27,19 @@ function BondUnbond({
 
   return (
     <Box heading="Bond">
-      <div style={{display: 'flex'}}>
+      <div style={{display: 'flex', flexWrap: 'wrap'}}>
         {/* Total bonded */}
-        <div style={{width: '16%'}}>
+        <div style={{flexBasis: '16%'}}>
           <BalanceBlock asset="Bonded" balance={bonded} suffix={"UNI-V2"} />
         </div>
         {/* Exit lockup */}
-        <div style={{width: '16%'}}>
+        <div style={{flexBasis: '16%'}}>
           <TextBlock label="Exit Lockup" text={lockup == 0 ? "" : lockup == 1 ? "1 epoch" : `${lockup} epochs`}/>
         </div>
         {/* Bond UNI-V2 within Pool */}
-        <div style={{width: '33%', paddingTop: '2%'}}>
+        <div style={{flexBasis: '33%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
-            <div style={{width: '60%'}}>
+            <div style={{width: '60%', minWidth: '6em'}}>
               <>
                 <BigNumberInput
                   adornment="UNI-V2"
@@ -53,7 +53,7 @@ function BondUnbond({
                 />
               </>
             </div>
-            <div style={{width: '40%'}}>
+            <div style={{width: '40%', minWidth: '7em'}}>
               <Button
                 wide
                 icon={<IconCirclePlus/>}
@@ -70,11 +70,11 @@ function BondUnbond({
             </div>
           </div>
         </div>
-        <div style={{width: '2%'}}/>
+        <div style={{flexBasis: '2%'}}/>
         {/* Unbond UNI-V2 within Pool */}
-        <div style={{width: '33%', paddingTop: '2%'}}>
+        <div style={{flexBasis: '33%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
-            <div style={{width: '60%'}}>
+            <div style={{width: '60%', minWidth: '6em'}}>
               <>
                 <BigNumberInput
                   adornment="UNI-V2"
@@ -88,7 +88,7 @@ function BondUnbond({
                 />
               </>
             </div>
-            <div style={{width: '40%'}}>
+            <div style={{width: '40%', minWidth: '7em'}}>
               <Button
                 wide
                 icon={<IconCircleMinus/>}

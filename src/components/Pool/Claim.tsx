@@ -24,16 +24,16 @@ function Claim({
 
   return (
     <Box heading="Claim">
-      <div style={{display: 'flex'}}>
+      <div style={{display: 'flex', flexWrap: 'wrap'}}>
         {/* total Issued */}
-        <div style={{width: '30%'}}>
+        <div style={{flexBasis: '30%'}}>
           <BalanceBlock asset="Claimable" balance={claimable} suffix={"ESD"} />
         </div>
         {/* Deposit UNI-V2 into Pool */}
         <div style={{width: '38%'}}/>
-        <div style={{width: '32%', paddingTop: '2%'}}>
+        <div style={{flexBasis: '32%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
-            <div style={{width: '60%'}}>
+            <div style={{width: '60%', minWidth: '6em'}}>
               <>
                 <BigNumberInput
                   adornment="ESD"
@@ -48,7 +48,7 @@ function Claim({
                 />
               </>
             </div>
-            <div style={{width: '40%'}}>
+            <div style={{width: '40%', minWidth: '6em'}}>
               <Button
                 wide
                 icon={<IconArrowDown/>}

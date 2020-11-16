@@ -29,9 +29,9 @@ function ProposeCandidate({
 
   return (
     <Box heading="Propose">
-      <div style={{display: 'flex'}}>
+      <div style={{display: 'flex', flexWrap: 'wrap'}}>
         {/* User balance */}
-        <div style={{width: '62%', paddingTop: '2%'}}>
+        <div style={{flexBasis: '62%', paddingTop: '2%'}}>
           <>
             <TextInput
               wide
@@ -46,9 +46,9 @@ function ProposeCandidate({
             />
           </>
         </div>
-        <div style={{width: '6%'}}/>
+        <div style={{flexBasis: '6%'}}/>
         {/* Purchase coupons */}
-        <div style={{width: '32%', paddingTop: '2%'}}>
+        <div style={{flexBasis: '32%', paddingTop: '2%'}}>
           <Button
             wide
             icon={<IconToken/>}

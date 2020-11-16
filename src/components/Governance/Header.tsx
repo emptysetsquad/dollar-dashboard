@@ -17,17 +17,17 @@ const STATUS_MAP = ["Frozen", "Fluid", "Locked"];
 const GovernanceHeader = ({
   stake, totalStake, accountStatus, implementation
 }: GovernanceHeaderProps) => (
-  <div style={{ padding: '2%', display: 'flex', alignItems: 'center' }}>
-    <div style={{ width: '25%' }}>
+  <div style={{ padding: '2%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+    <div style={{ flexBasis: '25%' }}>
       <BalanceBlock asset="DAO Ownership" balance={ownership(stake, totalStake)} suffix="%" />
     </div>
-    <div style={{ width: '25%' }}>
+    <div style={{ flexBasis: '25%' }}>
       <BalanceBlock asset="Proposal Threshold" balance={new BigNumber("1.00")} suffix="%" />
     </div>
-    <div style={{ width: '25%' }}>
+    <div style={{ flexBasis: '25%' }}>
       <TextBlock label="Status" text={STATUS_MAP[accountStatus]}/>
     </div>
-    <div style={{ width: '25%' }}>
+    <div style={{ flexBasis: '25%' }}>
       <AddressBlock label="Implementation" address={implementation} />
     </div>
   </div>
