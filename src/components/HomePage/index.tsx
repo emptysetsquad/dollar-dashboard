@@ -3,8 +3,6 @@ import { useHistory } from 'react-router-dom';
 import {
   Header, Box, LinkBase, Tag,
 } from '@aragon/ui';
-import TextBlock from "../common/TextBlock";
-import BigNumber from "bignumber.js";
 import EpochBlock from "../common/EpochBlock";
 
 function epochformatted() {
@@ -17,13 +15,10 @@ function epochformatted() {
   let epochRemainder = unixTimeSec - epochStart
   const epoch = Math.floor(epochRemainder / epochPeriod);
   epochRemainder -= epoch * epochPeriod;
-  console.log(epochRemainder)
   const epochHour = Math.floor(epochRemainder / hour);
   epochRemainder -= epochHour * hour;
-  console.log(epochRemainder)
   const epochMinute = Math.floor(epochRemainder / minute);
   epochRemainder -= epochMinute * minute;
-  console.log(epochRemainder)
   return `${epoch}-0${epochHour}:${epochMinute > 9 ? epochMinute : "0" + epochMinute.toString()}:${epochRemainder > 9 ? epochRemainder : "0" + epochRemainder.toString()}`;
 }
 

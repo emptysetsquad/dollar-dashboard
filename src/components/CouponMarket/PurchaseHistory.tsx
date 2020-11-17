@@ -41,7 +41,6 @@ function PurchaseHistory({
         return epoch;
       });
 
-
       if (!isCancelled) {
         // @ts-ignore
         setEpochs(couponEpochs);
@@ -56,7 +55,7 @@ function PurchaseHistory({
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  }, [user, totalRedeemable]);
 
   return (
     <DataView
@@ -83,7 +82,7 @@ function PurchaseHistory({
               ESD.decimals
             ),
           )}
-          disabled={epoch.balance.isZero() || epoch.balance.isGreaterThan(totalRedeemable)}
+          disabled={epoch.balance.isZero()}
         />
       ]}
     />
