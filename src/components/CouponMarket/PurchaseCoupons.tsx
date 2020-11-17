@@ -41,16 +41,16 @@ function PurchaseCoupons({
   return (
     <Box heading="Purchase">
       {allowance.comparedTo(MAX_UINT256) === 0 ?
-        <div style={{display: 'flex'}}>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* User balance */}
-          <div style={{width: '30%'}}>
+          <div style={{flexBasis: '30%'}}>
             <BalanceBlock asset={`Balance`} balance={balance} suffix={" ESD"}/>
           </div>
-          <div style={{width: '38%'}}/>
+          <div style={{flexBasis: '38%'}}/>
           {/* Purchase coupons */}
-          <div style={{width: '32%', paddingTop: '2%'}}>
+          <div style={{flexBasis: '32%', paddingTop: '2%'}}>
             <div style={{display: 'flex'}}>
-              <div style={{width: '60%'}}>
+              <div style={{width: '60%', minWidth: '6em'}}>
                 <>
                   <BigNumberInput
                     adornment="ESD"
@@ -69,7 +69,7 @@ function PurchaseCoupons({
                   />
                 </>
               </div>
-              <div style={{width: '40%'}}>
+              <div style={{width: '40%', minWidth: '6em'}}>
                 <Button
                   wide
                   icon={<IconCircleMinus/>}
@@ -88,14 +88,14 @@ function PurchaseCoupons({
           </div>
         </div>
         :
-        <div style={{display: 'flex'}}>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* User balance */}
-          <div style={{width: '30%'}}>
+          <div style={{flexBasis: '30%'}}>
             <BalanceBlock asset={`Døllar Balance`} balance={balance}/>
           </div>
-          <div style={{width: '40%'}}/>
+          <div style={{flexBasis: '40%'}}/>
           {/* Approve DAO to spend Døllar */}
-          <div style={{width: '30%', paddingTop: '2%'}}>
+          <div style={{flexBasis: '30%', paddingTop: '2%'}}>
             <Button
               wide
               icon={<IconCirclePlus/>}

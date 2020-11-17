@@ -56,19 +56,19 @@ function HomePage({user}: HomePageProps) {
 
   return (
     <>
-      <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '30%', marginLeft: '3%'  }}>
+      <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ flexBasis: '30%', marginLeft: '3%' }}>
           <Header primary="døllar." />
         </div>
-        <div style={{ width: '35%' }} />
-        <div style={{ width: '30%', marginRight: '2%', textAlign: 'right'}}>
+        <div style={{ flexBasis: '35%' }} />
+        <div style={{ flexBasis: '30%', flexGrow: 1, marginRight: '2%', textAlign: 'right'}}>
           <Box>
             <EpochBlock epoch={epochTime}/>
           </Box>
         </div>
       </div>
-      <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '30%', marginRight: '3%', marginLeft: '2%'  }}>
+      <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ flexBasis: '30%', marginRight: '3%', marginLeft: '2%'  }}>
           <MainButton
             title="Wallet"
             description="Manage døllar balance and bonding."
@@ -79,7 +79,7 @@ function HomePage({user}: HomePageProps) {
           />
         </div>
 
-        <div style={{ width: '30%' }}>
+        <div style={{ flexBasis: '30%' }}>
           <MainButton
             title="Governance"
             description="Vote on upgrades."
@@ -90,7 +90,7 @@ function HomePage({user}: HomePageProps) {
           />
         </div>
 
-        <div style={{ width: '30%', marginLeft: '3%', marginRight: '2%' }}>
+        <div style={{ flexBasis: '30%', marginLeft: '3%', marginRight: '2%' }}>
           <MainButton
             title="Regulation"
             description="Network supply regulation statistics."
@@ -101,8 +101,8 @@ function HomePage({user}: HomePageProps) {
           />
         </div>
       </div>
-      <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '30%', marginRight: '3%', marginLeft: '2%'  }}>
+      <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ flexBasis: '30%', marginRight: '3%', marginLeft: '2%'  }}>
           <MainButton
             title="Trade"
             description="Trade døllar tokens."
@@ -113,7 +113,7 @@ function HomePage({user}: HomePageProps) {
           />
         </div>
 
-        <div style={{ width: '30%' }}>
+        <div style={{ flexBasis: '30%' }}>
           <MainButton
             title="LP Rewards"
             description="Earn rewards for providing liquidity."
@@ -124,7 +124,7 @@ function HomePage({user}: HomePageProps) {
           />
         </div>
 
-        <div style={{ width: '30%', marginLeft: '3%', marginRight: '2%'  }}>
+        <div style={{ flexBasis: '30%', marginLeft: '3%', marginRight: '2%'  }}>
           <MainButton
             title="Coupons"
             description="Purchase and redeem coupons."

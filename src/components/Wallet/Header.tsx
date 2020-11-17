@@ -19,20 +19,20 @@ const STATUS_MAP = ["Frozen", "Fluid", "Locked"];
 const AccountPageHeader = ({
   accountESDBalance, accountESDSBalance, totalESDSSupply, accountStagedBalance, accountBondedBalance, accountStatus,
 }: AccountPageHeaderProps) => (
-  <div style={{ padding: '2%', display: 'flex', alignItems: 'center' }}>
-    <div style={{ width: '20%' }}>
+  <div style={{ padding: '2%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+    <div style={{ flexBasis: '20%' }}>
       <BalanceBlock asset="Balance" balance={accountESDBalance} suffix={" ESD"}/>
     </div>
-    <div style={{ width: '20%' }}>
+    <div style={{ flexBasis: '20%' }}>
       <BalanceBlock asset="Staged" balance={accountStagedBalance}  suffix={" ESD"}/>
     </div>
-    <div style={{ width: '20%' }}>
+    <div style={{ flexBasis: '20%' }}>
       <BalanceBlock asset="Bonded" balance={accountBondedBalance} suffix={" ESD"} />
     </div>
-    <div style={{ width: '20%' }}>
+    <div style={{ flexBasis: '20%' }}>
       <BalanceBlock asset="DAO Ownership" balance={ownership(accountESDSBalance, totalESDSSupply)}  suffix={"%"}/>
     </div>
-    <div style={{ width: '20%' }}>
+    <div style={{ flexBasis: '20%' }}>
       <TextBlock label="Status" text={STATUS_MAP[accountStatus]}/>
     </div>
   </div>

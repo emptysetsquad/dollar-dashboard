@@ -132,8 +132,8 @@ function UniswapPool({ user }: {user: string}) {
         uniswapPair={UNI.addr}
       />
 
-      <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '30%', marginRight: '3%', marginLeft: '2%'  }}>
+      <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ flexBasis: '30%', marginRight: '3%', marginLeft: '2%'  }}>
           <MainButton
             title="Info"
             description="View ESD-USDC pool stats."
@@ -142,7 +142,7 @@ function UniswapPool({ user }: {user: string}) {
           />
         </div>
 
-        <div style={{ width: '30%' }}>
+        <div style={{ flexBasis: '30%' }}>
           <MainButton
             title="Trade"
             description="Trade døllar tokens."
@@ -151,7 +151,7 @@ function UniswapPool({ user }: {user: string}) {
           />
         </div>
 
-        <div style={{ width: '30%', marginLeft: '3%', marginRight: '2%' }}>
+        <div style={{ flexBasis: '30%', marginLeft: '3%', marginRight: '2%' }}>
           <MainButton
             title="Supply"
             description="Supply and redeem liquidity."

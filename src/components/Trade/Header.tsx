@@ -15,17 +15,17 @@ const TradePageHeader = ({
   const price = pairBalanceUSDC.dividedBy(pairBalanceESD);
 
   return (
-    <div style={{ padding: '2%', display: 'flex', alignItems: 'center' }}>
-      <div style={{ width: '25%' }}>
+    <div style={{ padding: '2%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+      <div style={{ flexBasis: '25%' }}>
         <BalanceBlock asset="ESD Price" balance={price} suffix={"USDC"}/>
       </div>
-      <div style={{ width: '25%' }}>
+      <div style={{ flexBasis: '25%' }}>
         <BalanceBlock asset="ESD Liquidity" balance={pairBalanceESD} suffix={"ESD"}/>
       </div>
-      <div style={{ width: '25%' }}>
+      <div style={{ flexBasis: '25%' }}>
         <BalanceBlock asset="USDC Liquidity" balance={pairBalanceUSDC} suffix={"USDC"}/>
       </div>
-      <div style={{ width: '25%' }}>
+      <div style={{ flexBasis: '25%' }}>
         <>
           <AddressBlock label="Uniswap Contract" address={uniswapPair} />
         </>

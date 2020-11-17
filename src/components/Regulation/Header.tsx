@@ -40,68 +40,68 @@ const RegulationHeader = ({
   return (
     <>
       <Box heading="Supply Allocation">
-        <div style={{display: 'flex'}}>
-          <div style={{ width: '25%' }}>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Total" balance={totalSupply} suffix="" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="DAO" balance={ownership(daoTotalSupply, totalSupply)} suffix="%" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Oracle" balance={ownership(poolTotalSupply, totalSupply)} suffix="%" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Circulating" balance={ownership(circulatingSupply, totalSupply)} suffix="%" />
           </div>
         </div>
       </Box>
 
       <Box heading="DAO Breakdown">
-        <div style={{display: 'flex'}}>
-          <div style={{ width: '25%' }}>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Total" balance={daoTotalSupply} suffix="" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Staged" balance={totalStaged} suffix="" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Bonded" balance={totalBonded} suffix="" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Redeemable" balance={totalRedeemable} suffix="" />
           </div>
         </div>
       </Box>
 
       <Box heading="Oracle Breakdown">
-        <div style={{display: 'flex'}}>
-          <div style={{ width: '25%' }}>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Total" balance={poolTotalSupply} suffix="" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Liquidity" balance={poolLiquidity} suffix="" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Rewarded" balance={poolRewarded} suffix="" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Claimable" balance={poolClaimable} suffix="" />
           </div>
         </div>
       </Box>
 
       <Box heading="Coupon Breakdown">
-        <div style={{display: 'flex'}}>
-          <div style={{ width: '25%' }}>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Debt Ratio" balance={ownership(totalDebt, totalSupply)} suffix="%" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Debt" balance={totalDebt} suffix="" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Coupons" balance={totalCoupons} suffix="" />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Premium" balance={couponPremium.multipliedBy(100)} suffix="%" />
           </div>
         </div>

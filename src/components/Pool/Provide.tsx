@@ -51,19 +51,19 @@ function Provide({
   return (
     <Box heading="Provide">
       {userUSDCAllowance.comparedTo(MAX_UINT256.dividedBy(2)) > 0 ?
-        <div style={{display: 'flex'}}>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total rewarded */}
-          <div style={{width: '30%'}}>
+          <div style={{flexBasis: '30%'}}>
             <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
           </div>
-          <div style={{width: '30%'}}>
+          <div style={{flexBasis: '30%'}}>
             <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
           </div>
           <div style={{width: '8%'}}/>
           {/* Provide liquidity using Pool rewards */}
-          <div style={{width: '32%', paddingTop: '2%'}}>
+          <div style={{flexBasis: '32%', paddingTop: '2%'}}>
             <div style={{display: 'flex'}}>
-              <div style={{width: '60%'}}>
+              <div style={{width: '60%', minWidth: '6em'}}>
                 <>
                   <BigNumberInput
                     adornment="ESD"
@@ -79,7 +79,7 @@ function Provide({
                   />
                 </>
               </div>
-              <div style={{width: '40%'}}>
+              <div style={{width: '40%', minWidth: '6em'}}>
                 <Button
                   wide
                   icon={<IconArrowUp/>}
@@ -98,17 +98,17 @@ function Provide({
           </div>
         </div>
         :
-        <div style={{display: 'flex'}}>
+        <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total rewarded */}
-          <div style={{width: '30%'}}>
+          <div style={{flexBasis: '30%'}}>
             <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
           </div>
-          <div style={{width: '30%'}}>
+          <div style={{flexBasis: '30%'}}>
             <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
           </div>
           <div style={{width: '8%'}}/>
           {/* Approve Pool to spend USDC */}
-          <div style={{width: '30%', paddingTop: '2%'}}>
+          <div style={{flexBasis: '30%', paddingTop: '2%'}}>
             <Button
               wide
               icon={<IconCirclePlus/>}
