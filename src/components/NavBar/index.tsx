@@ -37,13 +37,19 @@ function NavBar({
           <></>
         ) : (
           <>
-            <div style={{ height: '100%' }}>
-              <BackButton
-                onClick={() => {
-                  history.goBack();
-                }}
-              />
-            </div>
+            {
+              isHome ? (
+                <></>
+              ) : (
+                <div style={{ height: '100%' }}>
+                  <BackButton
+                    onClick={() => {
+                      history.goBack();
+                    }}
+                  />
+                </div>                
+              )
+            }
             <LinkButton
               title="Home"
               onClick={() => {
