@@ -76,7 +76,7 @@ function App() {
             </Switch>
         }
         <div style={{height: '128px', width: '100%'}}/>
-        <Footer theme={theme}/>
+        <Footer/>
       </Main>
     </Router>
   );
