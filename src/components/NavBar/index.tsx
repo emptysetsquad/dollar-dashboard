@@ -37,13 +37,19 @@ function NavBar({
           <></>
         ) : (
           <>
-            <div style={{ height: '100%' }}>
-              <BackButton
-                onClick={() => {
-                  history.goBack();
-                }}
-              />
-            </div>
+            {
+              isHome ? (
+                <></>
+              ) : (
+                <div style={{ height: '100%' }}>
+                  <BackButton
+                    onClick={() => {
+                      history.goBack();
+                    }}
+                  />
+                </div>                
+              )
+            }
             <LinkButton
               title="Home"
               onClick={() => {
@@ -59,18 +65,25 @@ function NavBar({
               isSelected={page.includes('/wallet')}
             />
             <LinkButton
-              title="Rewards"
+              title="Liquidity"
               onClick={() => {
                 history.push('/pool/');
               }}
               isSelected={page.includes('/pool')}
             />
             <LinkButton
-              title="Coupons"
+              title="Regulation"
               onClick={() => {
-                history.push('/coupons/');
+                history.push('/regulation/');
               }}
-              isSelected={page.includes('/coupons')}
+              isSelected={page.includes('/regulation')}
+            />
+            <LinkButton
+              title="Governance"
+              onClick={() => {
+                history.push('/governance/');
+              }}
+              isSelected={page.includes('/governance')}
             />
             <LinkButton
               title="Trade"
@@ -80,11 +93,11 @@ function NavBar({
               isSelected={page.includes('/trade')}
             />
             <LinkButton
-              title="Governance"
+              title="Coupons"
               onClick={() => {
-                history.push('/governance/');
+                history.push('/coupons/');
               }}
-              isSelected={page.includes('/governance')}
+              isSelected={page.includes('/coupons')}
             />
           </>
         )
@@ -108,7 +121,7 @@ type linkButtonProps = {
 
 function LinkButton({ title, onClick, isSelected = false }:linkButtonProps) {
   return (
-    <div style={{ paddingLeft: 40 }}>
+    <div style={{ paddingLeft: 30 }}>
       <LinkBase onClick={onClick}>
         <div style={{ padding: '1%', opacity: isSelected ? 1 : 0.5, fontSize: 17 }}>{title}</div>
       </LinkBase>

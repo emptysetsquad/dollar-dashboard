@@ -76,11 +76,11 @@ function HomePage({user}: HomePageProps) {
 
         <div style={{ flexBasis: '30%' }}>
           <MainButton
-            title="Governance"
-            description="Vote on upgrades."
-            icon={<i className="fas fa-poll"/>}
+            title="LP Rewards"
+            description="Earn rewards for providing liquidity."
+            icon={<i className="fas fa-parachute-box"/>}
             onClick={() => {
-              history.push('/governance/');
+              history.push('/pool/');
             }}
           />
         </div>
@@ -97,24 +97,24 @@ function HomePage({user}: HomePageProps) {
         </div>
       </div>
       <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <div style={{ flexBasis: '30%', marginRight: '3%', marginLeft: '2%'  }}>
+        <div style={{ flexBasis: '30%', marginRight: '3%', marginLeft: '2%' }}>
           <MainButton
-            title="Trade"
-            description="Trade døllar tokens."
-            icon={<i className="fas fa-exchange-alt"/>}
+            title="Governance"
+            description="Vote on upgrades."
+            icon={<i className="fas fa-poll"/>}
             onClick={() => {
-              history.push('/trade/');
+              history.push('/governance/');
             }}
           />
         </div>
 
         <div style={{ flexBasis: '30%' }}>
           <MainButton
-            title="LP Rewards"
-            description="Earn rewards for providing liquidity."
-            icon={<i className="fas fa-parachute-box"/>}
+            title="Trade"
+            description="Trade døllar tokens."
+            icon={<i className="fas fa-exchange-alt"/>}
             onClick={() => {
-              history.push('/pool/');
+              history.push('/trade/');
             }}
           />
         </div>

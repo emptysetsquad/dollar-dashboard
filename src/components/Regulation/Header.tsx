@@ -48,7 +48,7 @@ const RegulationHeader = ({
             <BalanceBlock asset="DAO" balance={ownership(daoTotalSupply, totalSupply)} suffix="%" />
           </div>
           <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Oracle" balance={ownership(poolTotalSupply, totalSupply)} suffix="%" />
+            <BalanceBlock asset="Uniswap" balance={ownership(poolTotalSupply, totalSupply)} suffix="%" />
           </div>
           <div style={{ flexBasis: '25%' }}>
             <BalanceBlock asset="Circulating" balance={ownership(circulatingSupply, totalSupply)} suffix="%" />

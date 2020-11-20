@@ -1,15 +1,17 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { LinkBase } from '@aragon/ui';
+import { useTheme } from '@aragon/ui';
 
-function Footer({ theme } : { theme:string }) {
+function Footer() {
   const history = useHistory();
+  const theme = useTheme();
 
   return (
     <>
       <div style={{
-        borderTop: theme === 'light' ? '1px solid rgb(33, 43, 54, 0.1)' :'1px solid #405071',
-        backgroundColor: theme === 'light' ? '#F8F8F8' : '#35425e',
+        borderTop: '1px solid ' + theme.border,
+        backgroundColor: theme.surface,
         textAlign: 'center',
         position: 'fixed',
         left: '0',
