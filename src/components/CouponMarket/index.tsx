@@ -15,6 +15,7 @@ import {toTokenUnitsBN} from "../../utils/number";
 import BigNumber from "bignumber.js";
 import PurchaseCoupons from "./PurchaseCoupons";
 import PurchaseHistory from "./PurchaseHistory";
+import ModalWarning from "./ModalWarning";
 import IconHeader from "../common/IconHeader";
 import {getPreference, storePreference} from "../../utils/storage";
 import {CheckBox} from "../common";
@@ -108,6 +109,8 @@ function CouponMarket({ user }: {user: string}) {
 
   return (
     <>
+      <ModalWarning/>
+
       <IconHeader icon={<i className="fas fa-ticket-alt"/>} text="Coupon Market"/>
 
       <CouponMarketHeader
