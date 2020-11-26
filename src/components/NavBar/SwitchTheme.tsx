@@ -17,7 +17,7 @@ function SwitchMode({ hasWeb3, theme, updateTheme }: switchThemeProps) {
     <Button
       icon={theme === 'dark' ? <IconStar /> : <IconStarFilled />}
       onClick={handleChangeTheme}
-      label="Theme"
+      label=""
       disabled={!hasWeb3}
     />
   );

@@ -36,9 +36,7 @@ function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
           {' '}
         </LinkBase>
       </div>
-      <Box padding={6}>
-        <IdentityBadge entity={user} />
-      </Box>
+      <IdentityBadge entity={user} />
 
     </>
   ) : (
