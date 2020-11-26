@@ -1,4 +1,5 @@
-import { GOVERNANCE_QUORUM } from "../constants/values";
+import {GOVERNANCE_PROPOSAL_THRESHOLD, GOVERNANCE_QUORUM} from "../constants/values";
+import BigNumber from "bignumber.js";
 
 export function proposalStatus(epoch, start, period, initialized, approve, reject, total): string {
   if (start === 0) {
@@ -21,4 +22,8 @@ export function proposalStatus(epoch, start, period, initialized, approve, rejec
     return "Rejected"; // Didn't meet quorum
   }
   return approve.comparedTo(reject) > 0 ? "Approved" : "Rejected";
+}
+
+export function canPropose(stake: BigNumber, totalStake: BigNumber): boolean {
+  return stake.div(totalStake).comparedTo(GOVERNANCE_PROPOSAL_THRESHOLD) >= 0;
 }

@@ -14,6 +14,7 @@ import GovernanceHeader from "./Header";
 import ProposeCandidate from "./ProposeCandidate";
 import CandidateHistory from "./CandidateHistory";
 import IconHeader from "../common/IconHeader";
+import {canPropose} from "../../utils/gov";
 
 function Governance({ user }: {user: string}) {
 
@@ -86,14 +87,20 @@ function Governance({ user }: {user: string}) {
         implementation={implementation}
       />
 
-      <Header primary="Propose Candidate" />
-
-      <ProposeCandidate
-        user={user}
-        stake={stake}
-        totalStake={totalStake}
-        accountStatus={userStatus}
-      />
+      {
+        canPropose(stake, totalStake) ?
+          <>
+            <Header primary="Propose Candidate"/>
+            <ProposeCandidate
+              user={user}
+              stake={stake}
+              totalStake={totalStake}
+              accountStatus={userStatus}
+            />
+          </>
+          :
+          ''
+      }
 
       <Header primary="Candidate History" />
 

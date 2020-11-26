@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js';
 import {recordVote} from '../../utils/web3';
 
 import {ESDS} from "../../constants/tokens";
+import {canPropose} from "../../utils/gov";
 
 type ProposeCandidateProps = {
   user: string,
@@ -13,10 +14,6 @@ type ProposeCandidateProps = {
   totalStake: BigNumber,
   accountStatus: number
 };
-
-function canPropose(stake: BigNumber, totalStake: BigNumber): boolean {
-  return stake.div(totalStake).comparedTo(new BigNumber("0.01")) >= 0;
-}
 
 function plausibleCandidate(candidate: string): boolean {
   return (/^(0x)[0-9a-fA-F]{40}$/i.test(candidate));

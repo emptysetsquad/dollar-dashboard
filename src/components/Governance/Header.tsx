@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 import {AddressBlock, BalanceBlock} from "../common";
 import TextBlock from "../common/TextBlock";
 import {ownership} from "../../utils/number";
+import {GOVERNANCE_PROPOSAL_THRESHOLD} from "../../constants/values";
 
 type GovernanceHeaderProps = {
   stake: BigNumber,
@@ -22,7 +23,7 @@ const GovernanceHeader = ({
       <BalanceBlock asset="DAO Ownership" balance={ownership(stake, totalStake)} suffix="%" />
     </div>
     <div style={{ flexBasis: '25%' }}>
-      <BalanceBlock asset="Proposal Threshold" balance={new BigNumber("1.00")} suffix="%" />
+      <BalanceBlock asset="Proposal Threshold" balance={GOVERNANCE_PROPOSAL_THRESHOLD.multipliedBy(100)} suffix="%" />
     </div>
     <div style={{ flexBasis: '25%' }}>
       <TextBlock label="Status" text={STATUS_MAP[accountStatus]}/>
