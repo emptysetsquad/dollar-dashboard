@@ -6,7 +6,7 @@ import {
   getCouponPremium,
   getTokenAllowance,
   getTokenBalance,
-  getTokenTotalSupply,
+  getTokenTotalSupply, getTotalCoupons,
   getTotalDebt, getTotalRedeemable,
 } from '../../utils/infura';
 import {ESD, ESDS} from "../../constants/tokens";
@@ -33,6 +33,7 @@ function CouponMarket({ user }: {user: string}) {
   const [balance, setBalance] = useState(new BigNumber(0));
   const [allowance, setAllowance] = useState(new BigNumber(0));
   const [supply, setSupply] = useState(new BigNumber(0));
+  const [coupons, setCoupons] = useState(new BigNumber(0));
   const [redeemable, setRedeemable] = useState(new BigNumber(0));
   const [couponPremium, setCouponPremium] = useState(new BigNumber(0));
   const [debt, setDebt] = useState(new BigNumber(0));
@@ -74,19 +75,22 @@ function CouponMarket({ user }: {user: string}) {
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [supplyStr, debtStr, redeemableStr] = await Promise.all([
+      const [supplyStr, debtStr, couponsStr, redeemableStr] = await Promise.all([
         getTokenTotalSupply(ESD.addr),
         getTotalDebt(ESDS.addr),
+        getTotalCoupons(ESDS.addr),
         getTotalRedeemable(ESDS.addr),
       ]);
 
       const totalSupply = toTokenUnitsBN(supplyStr, ESD.decimals);
       const totalDebt = toTokenUnitsBN(debtStr, ESD.decimals);
+      const totalCoupons = toTokenUnitsBN(couponsStr, ESD.decimals);
       const totalRedeemable = toTokenUnitsBN(redeemableStr, ESD.decimals);
 
       if (!isCancelled) {
         setSupply(new BigNumber(totalSupply));
         setDebt(new BigNumber(totalDebt));
+        setCoupons(new BigNumber(totalCoupons));
         setRedeemable(new BigNumber(totalRedeemable));
 
         if (totalDebt.isGreaterThan(new BigNumber(1))) {
@@ -116,6 +120,7 @@ function CouponMarket({ user }: {user: string}) {
       <CouponMarketHeader
         debt={debt}
         supply={supply}
+        coupons={coupons}
         premium={couponPremium}
       />
 

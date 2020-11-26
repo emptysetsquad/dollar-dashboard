@@ -56,3 +56,14 @@ function pad(bnStr, position) {
 
   return bnStr
 }
+
+export function formatMoney(n) {
+  n = n.toPrecision(3)
+  return Math.abs(Number(n)) >= 1.0e+9
+    ? Math.abs(Number(n)) / 1.0e+9 + "B"
+    : Math.abs(Number(n)) >= 1.0e+6
+      ? Math.abs(Number(n)) / 1.0e+6 + "MM"
+      : Math.abs(Number(n)) >= 1.0e+3
+        ? Math.abs(Number(n)) / 1.0e+3 + "K"
+        : Math.abs(Number(n));
+}

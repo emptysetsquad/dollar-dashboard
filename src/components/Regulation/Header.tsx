@@ -3,8 +3,8 @@ import React from 'react';
 import BigNumber from "bignumber.js";
 import {BalanceBlock} from "../common";
 
-import {Box} from '@aragon/ui';
-import {ownership} from "../../utils/number";
+import {Box, Distribution} from '@aragon/ui';
+import {formatMoney, ownership} from "../../utils/number";
 
 type RegulationHeaderProps = {
   totalSupply: BigNumber,
@@ -39,73 +39,44 @@ const RegulationHeader = ({
 
   return (
     <>
-      <Box heading="Supply Allocation">
-        <div style={{display: 'flex', flexWrap: 'wrap'}}>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Total" balance={totalSupply} suffix="" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="DAO" balance={ownership(daoTotalSupply, totalSupply)} suffix="%" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Uniswap" balance={ownership(poolTotalSupply, totalSupply)} suffix="%" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Circulating" balance={ownership(circulatingSupply, totalSupply)} suffix="%" />
-          </div>
+      <div style={{display: 'flex', flexWrap: 'wrap'}}>
+        <div style={{ flexBasis: '25%', marginRight: '2%' }}>
+          <Box heading="Supply Allocation">
+            <Distribution
+              heading={`∅${formatMoney(totalSupply.toNumber())}`}
+              items={[
+                { item: 'DAO', percentage: +(ownership(daoTotalSupply, totalSupply).toNumber().toFixed(2)) },
+                { item: 'Uniswap', percentage: +(ownership(poolTotalSupply, totalSupply).toNumber().toFixed(2)) },
+                { item: 'Circulating', percentage: +(ownership(circulatingSupply, totalSupply).toNumber().toFixed(2)) },
+              ]}
+            />
+          </Box>
         </div>
-      </Box>
-
-      <Box heading="DAO Breakdown">
-        <div style={{display: 'flex', flexWrap: 'wrap'}}>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Total" balance={daoTotalSupply} suffix="" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Staged" balance={totalStaged} suffix="" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Bonded" balance={totalBonded} suffix="" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Redeemable" balance={totalRedeemable} suffix="" />
-          </div>
+        <div style={{ flexBasis: '25%', marginRight: '2%' }}>
+          <Box heading="DAO Breakdown">
+            <Distribution
+              heading={`∅${formatMoney(daoTotalSupply.toNumber())}`}
+              items={[
+                { item: 'Bonded', percentage: +(ownership(totalBonded, daoTotalSupply).toNumber().toFixed(2)) },
+                { item: 'Staged', percentage: +(ownership(totalStaged, daoTotalSupply).toNumber().toFixed(2)) },
+                { item: 'Redeemable', percentage: +(ownership(totalRedeemable, daoTotalSupply).toNumber().toFixed(2)) },
+              ]}
+            />
+          </Box>
         </div>
-      </Box>
-
-      <Box heading="Oracle Breakdown">
-        <div style={{display: 'flex', flexWrap: 'wrap'}}>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Total" balance={poolTotalSupply} suffix="" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Liquidity" balance={poolLiquidity} suffix="" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Rewarded" balance={poolRewarded} suffix="" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Claimable" balance={poolClaimable} suffix="" />
-          </div>
+        <div style={{ flexBasis: '25%' }}>
+          <Box heading="Uniswap Breakdown">
+            <Distribution
+              heading={`∅${formatMoney(poolTotalSupply.toNumber())}`}
+              items={[
+                { item: 'Liquidity', percentage: +(ownership(poolLiquidity, poolTotalSupply).toNumber().toFixed(2)) },
+                { item: 'Rewarded', percentage: +(ownership(poolRewarded, poolTotalSupply).toNumber().toFixed(2)) },
+                { item: 'Claimable', percentage: +(ownership(poolClaimable, poolTotalSupply).toNumber().toFixed(2)) },
+              ]}
+            />
+          </Box>
         </div>
-      </Box>
-
-      <Box heading="Coupon Breakdown">
-        <div style={{display: 'flex', flexWrap: 'wrap'}}>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Debt Ratio" balance={ownership(totalDebt, totalSupply)} suffix="%" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Debt" balance={totalDebt} suffix="" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Coupons" balance={totalCoupons} suffix="" />
-          </div>
-          <div style={{ flexBasis: '25%' }}>
-            <BalanceBlock asset="Premium" balance={couponPremium.multipliedBy(100)} suffix="%" />
-          </div>
-        </div>
-      </Box>
+      </div>
     </>
   );
 }
