@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Bar, BackButton, LinkBase, useTheme } from '@aragon/ui';
+import { LinkBase, useTheme } from '@aragon/ui';
 import ConnectButton from './ConnectButton';
-import ChangeModeButton from './SwitchTheme';
+import TotalBalance from "./TotalBalance";
 
 type NavbarProps = {
-  theme:string,
-  updateTheme: Function,
   hasWeb3: boolean,
   user: string,
   setUser: Function
 }
 
 function NavBar({
-  theme, updateTheme, hasWeb3, user, setUser,
+  hasWeb3, user, setUser,
 }:NavbarProps) {
   const history = useHistory();
   const currentTheme = useTheme();
@@ -56,7 +54,6 @@ function NavBar({
             </div>
             <div style={{ width: '20%', textAlign: 'right'}}>
               <ConnectButton hasWeb3={hasWeb3} user={user} setUser={setUser} />
-              <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme} />
             </div>
           </div>
         </div>

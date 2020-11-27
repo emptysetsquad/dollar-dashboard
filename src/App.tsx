@@ -53,7 +53,7 @@ function App() {
   return (
     <Router>
       <Main assetsUrl={`${process.env.PUBLIC_URL}/aragon-ui/`} theme={theme} layout={false}>
-        <NavBar hasWeb3={hasWeb3} user={user} setUser={setUser} theme={theme} updateTheme={updateTheme}/>
+        <NavBar hasWeb3={hasWeb3} user={user} setUser={setUser} />
         <Layout>
         {
           hasWeb3 ?
@@ -78,7 +78,7 @@ function App() {
         }
         </Layout>
         <div style={{height: '128px', width: '100%'}}/>
-        <Footer/>
+        <Footer hasWeb3={hasWeb3} updateTheme={updateTheme}/>
       </Main>
     </Router>
   );

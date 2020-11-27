@@ -1,10 +1,13 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { LinkBase } from '@aragon/ui';
-import { useTheme } from '@aragon/ui';
+import { LinkBase, useTheme } from '@aragon/ui';
+import ChangeModeButton from "./SwitchTheme";
 
-function Footer() {
-  const history = useHistory();
+type FooterProps = {
+  updateTheme: Function,
+  hasWeb3: boolean,
+}
+
+function Footer({updateTheme, hasWeb3}: FooterProps) {
   const theme = useTheme();
 
   return (
@@ -29,8 +32,11 @@ function Footer() {
               <FooterLink icon={<i className="fab fa-telegram"/>} href={"https://www.t.me/emptysetdollar"}/>
               <FooterLink icon={<i className="fab fa-discord"/>} href={"https://discord.gg/vPws9Vp"}/>
             </div>
-            <div style={{ width: '50%', textAlign: 'right', height: '18px', marginTop: '15px', marginBottom: '15px'}}>
+            <div style={{ width: '45%', textAlign: 'right', height: '18px', marginTop: '15px', marginBottom: '15px'}}>
               made with <span role="img" aria-labelledby="heartbreak">💔️</span> by the &#123;ess&#125;.
+            </div>
+            <div style={{ width: '5%', textAlign: 'right', marginTop: '4px' }}>
+              <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme} />
             </div>
           </div>
         </div>
