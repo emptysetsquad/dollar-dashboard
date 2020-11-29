@@ -29,16 +29,22 @@ function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
   };
 
   return isConnected ? (
-    <Box padding={4}>
-      <div>
-        <LinkBase onClick={disconnectWeb3} size="small">
-          {' '}
-          <IconPower />
-          {' '}
-        </LinkBase>
-        <IdentityBadge entity={user} />
+    <Box padding={4} style={{width: '192px'}}>
+      <div style={{display: 'flex'}}>
+        <div>
+          <LinkBase onClick={disconnectWeb3} style={{marginRight: '8px', height: '24px'}}>
+            <IconPower />
+          </LinkBase>
+        </div>
+        <div style={{flex: '1', textAlign: 'right'}}>
+          <IdentityBadge entity={user} />
+        </div>
       </div>
-      <TotalBalance user={user} />
+      <div style={{display: 'flex'}}>
+        <div style={{flex: '1', textAlign: 'right'}}>
+          <TotalBalance user={user} />
+        </div>
+      </div>
     </Box>
   ) : (
     <Button icon={<IconConnect />} label="Connect" onClick={connectWeb3} disabled={!hasWeb3}/>
