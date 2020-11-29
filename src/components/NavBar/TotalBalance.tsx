@@ -54,17 +54,6 @@ function TotalBalance({ user }: TotalBalanceProps) {
         getPoolBalanceOfClaimable(poolAddress, user),
       ]);
 
-      console.log(esdBalance)
-      console.log(stagedBalance)
-      console.log(bondedBalance)
-      console.log(pairBalanceESDStr)
-      console.log(pairTotalSupplyUNIStr)
-      console.log(userUNIBalanceStr)
-      console.log(userPoolBondedBalanceStr)
-      console.log(userPoolStagedBalanceStr)
-      console.log(userPoolRewardedBalanceStr)
-      console.log(userPoolClaimableBalanceStr)
-
       const userBalance = toTokenUnitsBN(new BigNumber(esdBalance), ESD.decimals);
       const userStagedBalance = toTokenUnitsBN(new BigNumber(stagedBalance), ESDS.decimals);
       const userBondedBalance = toTokenUnitsBN(new BigNumber(bondedBalance), ESDS.decimals);

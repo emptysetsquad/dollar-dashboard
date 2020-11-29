@@ -17,7 +17,6 @@ function NavBar({
   const history = useHistory();
   const currentTheme = useTheme();
 
-  console.log(currentTheme._name)
   const [isHome, updateIsHome] = useState(true);
   const [page, setPage] = useState("");
 
