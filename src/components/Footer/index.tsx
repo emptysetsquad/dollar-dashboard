@@ -4,17 +4,18 @@ import ChangeModeButton from "./SwitchTheme";
 
 type FooterProps = {
   updateTheme: Function,
+  theme: string,
   hasWeb3: boolean,
 }
 
-function Footer({updateTheme, hasWeb3}: FooterProps) {
-  const theme = useTheme();
+function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
+  const currentTheme = useTheme();
 
   return (
     <>
       <div style={{
-        borderTop: '1px solid ' + theme.border,
-        backgroundColor: theme.surface,
+        borderTop: '1px solid ' + currentTheme.border,
+        backgroundColor: currentTheme.surface,
         textAlign: 'center',
         position: 'fixed',
         left: '0',
@@ -44,7 +45,6 @@ function Footer({updateTheme, hasWeb3}: FooterProps) {
     </>
   );
 }
-
 
 type FooterLinkProp = {
   icon: any,

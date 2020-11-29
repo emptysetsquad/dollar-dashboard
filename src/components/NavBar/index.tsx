@@ -16,6 +16,8 @@ function NavBar({
 }:NavbarProps) {
   const history = useHistory();
   const currentTheme = useTheme();
+
+  console.log(currentTheme._name)
   const [isHome, updateIsHome] = useState(true);
   const [page, setPage] = useState("");
 
@@ -28,6 +30,8 @@ function NavBar({
       updateIsHome(home);
     })
   }, [hasWeb3, user, history]);
+
+  const logoUrl = `./logo/logo_${currentTheme._name === 'light' ? 'black' : 'white'}.svg`
 
   return (
     <>
@@ -42,13 +46,15 @@ function NavBar({
         <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
           <div style={{ display: 'flex', paddingTop: '24px'}}>
             <div style={{ width: '20%', textAlign: 'left'}}>
-              <img src='./logo/logo_black.svg' height="256"/>
+              <LinkBase onClick={() => history.push('/')} style={{marginRight: '16px', height: '40px'}}>
+                <img src={logoUrl} height="40px"/>
+              </LinkBase>
             </div>
             <div style={{ width: '60%', textAlign: 'center' }}>
               <LinkButton title="Wallet" onClick={() => history.push('/wallet/')} isSelected={page.includes('/wallet')}/>
               <LinkButton title="Liquidity" onClick={() => history.push('/pool/')} isSelected={page.includes('/pool')}/>
               <LinkButton title="Regulation" onClick={() => history.push('/regulation/')} isSelected={page.includes('/regulation')}/>
-              <LinkButton title="Governance" onClick={() => history.push('/governance/')}isSelected={page.includes('/governance')}/>
+              <LinkButton title="Governance" onClick={() => history.push('/governance/')} isSelected={page.includes('/governance')}/>
               <LinkButton title="Trade" onClick={() => history.push('/trade/')} isSelected={page.includes('/trade')}/>
               <LinkButton title="Coupons" onClick={() => history.push('/coupons/')} isSelected={page.includes('/coupons')}/>
             </div>

@@ -52,10 +52,7 @@ function HomePage({user}: HomePageProps) {
   return (
     <>
       <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <div style={{ flexBasis: '30%', marginLeft: '3%' }}>
-          <Header primary="døllar." />
-        </div>
-        <div style={{ flexBasis: '35%' }} />
+        <div style={{ flexBasis: '68%' }} />
         <div style={{ flexBasis: '30%', flexGrow: 1, marginRight: '2%', textAlign: 'right'}}>
           <Box>
             <EpochBlock epoch={epochTime}/>
