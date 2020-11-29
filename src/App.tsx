@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
-import { Main } from '@aragon/ui';
+import { Main, Layout } from '@aragon/ui';
 import { updateModalMode } from './utils/web3';
 import { storePreference, getPreference } from './utils/storage';
 import NavBar from './components/NavBar';
@@ -52,8 +52,9 @@ function App() {
 
   return (
     <Router>
-      <Main assetsUrl={`${process.env.PUBLIC_URL}/aragon-ui/`} theme={theme}>
-        <NavBar hasWeb3={hasWeb3} user={user} setUser={setUser} theme={theme} updateTheme={updateTheme}/>
+      <Main assetsUrl={`${process.env.PUBLIC_URL}/aragon-ui/`} theme={theme} layout={false}>
+        <NavBar hasWeb3={hasWeb3} user={user} setUser={setUser} />
+        <Layout>
         {
           hasWeb3 ?
             <Switch>
@@ -75,8 +76,9 @@ function App() {
               <Route path="/"><HomePageNoWeb3/></Route>
             </Switch>
         }
+        </Layout>
         <div style={{height: '128px', width: '100%'}}/>
-        <Footer/>
+        <Footer hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
       </Main>
     </Router>
   );

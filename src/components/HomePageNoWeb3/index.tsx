@@ -10,11 +10,6 @@ function HomePageNoWeb3() {
   return (
     <>
       <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
-        <div style={{ marginLeft: '2%'  }}>
-          <Header primary="døllar dashboard." />
-        </div>
-      </div>
-      <div style={{ padding: '1%', display: 'flex', alignItems: 'center' }}>
         <MainButton
           title="No web3 wallet detected"
           description="Click to get Metamask."

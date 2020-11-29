@@ -5,6 +5,7 @@ import {
 } from '@aragon/ui';
 
 import { connect } from '../../utils/web3';
+import TotalBalance from "./TotalBalance";
 
 type connectButtonProps = {
   hasWeb3: boolean,
@@ -28,19 +29,23 @@ function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
   };
 
   return isConnected ? (
-    <>
-      <div style={{ paddingTop: 5, paddingRight: 5 }}>
-        <LinkBase onClick={disconnectWeb3} size="small">
-          {' '}
-          <IconPower />
-          {' '}
-        </LinkBase>
+    <Box padding={4} style={{width: '192px'}}>
+      <div style={{display: 'flex'}}>
+        <div>
+          <LinkBase onClick={disconnectWeb3} style={{marginRight: '8px', height: '24px'}}>
+            <IconPower />
+          </LinkBase>
+        </div>
+        <div style={{flex: '1', textAlign: 'right'}}>
+          <IdentityBadge entity={user} />
+        </div>
       </div>
-      <Box padding={6}>
-        <IdentityBadge entity={user} />
-      </Box>
-
-    </>
+      <div style={{display: 'flex'}}>
+        <div style={{flex: '1', textAlign: 'right'}}>
+          <TotalBalance user={user} />
+        </div>
+      </div>
+    </Box>
   ) : (
     <Button icon={<IconConnect />} label="Connect" onClick={connectWeb3} disabled={!hasWeb3}/>
   );
