@@ -50,7 +50,7 @@ function NavBar({
               </LinkBase>
             </div>
             <div style={{ width: '60%', textAlign: 'center' }}>
-              <LinkButton title="Wallet" onClick={() => history.push('/wallet/')} isSelected={page.includes('/wallet')}/>
+              <LinkButton title="DAO" onClick={() => history.push('/dao/')} isSelected={page.includes('/wallet')}/>
               <LinkButton title="Liquidity" onClick={() => history.push('/pool/')} isSelected={page.includes('/pool')}/>
               <LinkButton title="Regulation" onClick={() => history.push('/regulation/')} isSelected={page.includes('/regulation')}/>
               <LinkButton title="Governance" onClick={() => history.push('/governance/')} isSelected={page.includes('/governance')}/>

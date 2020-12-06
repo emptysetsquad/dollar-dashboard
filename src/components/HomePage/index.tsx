@@ -62,11 +62,11 @@ function HomePage({user}: HomePageProps) {
       <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ flexBasis: '30%', marginRight: '3%', marginLeft: '2%'  }}>
           <MainButton
-            title="Wallet"
-            description="Manage døllar balance and bonding."
-            icon={<i className="fas fa-wallet"/>}
+            title="DAO"
+            description="Earn rewards for governing"
+            icon={<i className="fas fa-dot-circle"/>}
             onClick={() => {
-              history.push('/wallet/');
+              history.push('/dao/');
             }}
           />
         </div>

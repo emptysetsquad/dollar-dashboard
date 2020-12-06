@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, IconCirclePlus, IconCircleMinus,
+  Box, Button, IconCirclePlus, IconCircleMinus, IconLock
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {
@@ -45,7 +45,7 @@ function BondUnbond({
                   adornment="ESD"
                   value={bondAmount}
                   setter={setBondAmount}
-                  disabled={status === 2}
+                  disabled={status != 0}
                 />
                 <MaxButton
                   onClick={() => {
@@ -57,7 +57,7 @@ function BondUnbond({
             <div style={{width: '40%', minWidth: '7em'}}>
               <Button
                 wide
-                icon={<IconCirclePlus/>}
+                icon={status === 0 ? <IconCirclePlus/> : <IconLock/>}
                 label="Bond"
                 onClick={() => {
                   bond(
@@ -80,7 +80,7 @@ function BondUnbond({
                   adornment="ESD"
                   value={unbondAmount}
                   setter={setUnbondAmount}
-                  disabled={status === 2}
+                  disabled={status != 0}
                 />
                 <MaxButton
                   onClick={() => {
@@ -92,7 +92,7 @@ function BondUnbond({
             <div style={{width: '40%', minWidth: '7em'}}>
               <Button
                 wide
-                icon={<IconCircleMinus/>}
+                icon={status === 0 ? <IconCircleMinus/> : <IconLock/>}
                 label="Unbond"
                 onClick={() => {
                   unbondUnderlying(

@@ -85,6 +85,28 @@ export const getStatusOf = async (dao, account) => {
 /**
  *
  * @param {string} dao address
+ * @param {string} account address
+ * @return {Promise<string>}
+ */
+export const getFluidUntil = async (dao, account) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  return daoContract.methods.fluidUntil(account).call();
+};
+
+/**
+ *
+ * @param {string} dao address
+ * @param {string} account address
+ * @return {Promise<string>}
+ */
+export const getLockedUntil = async (dao, account) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  return daoContract.methods.lockedUntil(account).call();
+};
+
+/**
+ *
+ * @param {string} dao address
  * @return {Promise<string>}
  */
 export const getEpoch = async (dao) => {

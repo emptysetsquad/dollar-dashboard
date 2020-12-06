@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, IconCirclePlus, IconCircleMinus,
+  Box, Button, IconCirclePlus, IconCircleMinus, IconLock
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {
@@ -43,7 +43,7 @@ function WithdrawDeposit({
                     adornment="ESD"
                     value={depositAmount}
                     setter={setDepositAmount}
-                    disabled={status === 1}
+                    disabled={status !== 0}
                   />
                   <MaxButton
                     onClick={() => {
@@ -55,7 +55,7 @@ function WithdrawDeposit({
               <div style={{width: '40%', minWidth: '6em'}}>
                 <Button
                   wide
-                  icon={<IconCirclePlus/>}
+                  icon={status == 0 ? <IconCirclePlus/> : <IconLock/>}
                   label="Deposit"
                   onClick={() => {
                     deposit(
@@ -78,7 +78,7 @@ function WithdrawDeposit({
                     adornment="ESD"
                     value={withdrawAmount}
                     setter={setWithdrawAmount}
-                    disabled={status === 1}
+                    disabled={status !== 0}
                   />
                   <MaxButton
                     onClick={() => {
@@ -90,7 +90,7 @@ function WithdrawDeposit({
               <div style={{width: '40%', minWidth: '7em'}}>
                 <Button
                   wide
-                  icon={<IconCircleMinus/>}
+                  icon={status === 0 ? <IconCircleMinus/> : <IconLock/>}
                   label="Withdraw"
                   onClick={() => {
                     withdraw(
@@ -116,7 +116,7 @@ function WithdrawDeposit({
             <Button
               wide
               icon={<IconCirclePlus />}
-              label="Unlock"
+              label="Approve"
               onClick={() => {
                 approve(ESD.addr, ESDS.addr);
               }}

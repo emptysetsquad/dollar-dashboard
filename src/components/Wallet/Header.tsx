@@ -12,12 +12,17 @@ type AccountPageHeaderProps = {
   accountStagedBalance: BigNumber,
   accountBondedBalance: BigNumber,
   accountStatus: number,
+  unlocked: number,
 };
 
-const STATUS_MAP = ["Frozen", "Fluid", "Locked"];
+const STATUS_MAP = ["Unlocked", "Locked", "Locked"];
+
+function status(accountStatus, unlocked) {
+  return STATUS_MAP[accountStatus] + (accountStatus == 0 ? "" : " until " + unlocked)
+}
 
 const AccountPageHeader = ({
-  accountESDBalance, accountESDSBalance, totalESDSSupply, accountStagedBalance, accountBondedBalance, accountStatus,
+  accountESDBalance, accountESDSBalance, totalESDSSupply, accountStagedBalance, accountBondedBalance, accountStatus, unlocked
 }: AccountPageHeaderProps) => (
   <div style={{ padding: '2%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
     <div style={{ flexBasis: '20%' }}>
@@ -33,7 +38,7 @@ const AccountPageHeader = ({
       <BalanceBlock asset="DAO Ownership" balance={ownership(accountESDSBalance, totalESDSSupply)}  suffix={"%"}/>
     </div>
     <div style={{ flexBasis: '20%' }}>
-      <TextBlock label="Status" text={STATUS_MAP[accountStatus]}/>
+      <TextBlock label="Status" text={status(accountStatus, unlocked)}/>
     </div>
   </div>
 );

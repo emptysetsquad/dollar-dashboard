@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
 import {
   getBalanceBonded,
-  getBalanceOfStaged,
+  getBalanceOfStaged, getFluidUntil, getLockedUntil,
   getStatusOf, getTokenAllowance,
   getTokenBalance, getTokenTotalSupply,
 } from '../../utils/infura';
@@ -31,6 +31,7 @@ function Wallet({ user }: {user: string}) {
   const [userStagedBalance, setUserStagedBalance] = useState(new BigNumber(0));
   const [userBondedBalance, setUserBondedBalance] = useState(new BigNumber(0));
   const [userStatus, setUserStatus] = useState(0);
+  const [userStatusUnlocked, setUserStatusUnlocked] = useState(0);
   const [lockup, setLockup] = useState(0);
 
   //Update User balances
@@ -48,7 +49,10 @@ function Wallet({ user }: {user: string}) {
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [esdBalance, esdAllowance, esdsBalance, esdsSupply, stagedBalance, bondedBalance, status, poolAddress] = await Promise.all([
+      const [
+        esdBalance, esdAllowance, esdsBalance, esdsSupply, stagedBalance, bondedBalance, status, poolAddress,
+        fluidUntilStr, lockedUntilStr
+      ] = await Promise.all([
         getTokenBalance(ESD.addr, user),
         getTokenAllowance(ESD.addr, user, ESDS.addr),
         getTokenBalance(ESDS.addr, user),
@@ -57,6 +61,9 @@ function Wallet({ user }: {user: string}) {
         getBalanceBonded(ESDS.addr, user),
         getStatusOf(ESDS.addr, user),
         getPoolAddress(),
+
+        getFluidUntil(ESDS.addr, user),
+        getLockedUntil(ESDS.addr, user),
       ]);
 
       const userESDBalance = toTokenUnitsBN(esdBalance, ESD.decimals);
@@ -65,6 +72,8 @@ function Wallet({ user }: {user: string}) {
       const userStagedBalance = toTokenUnitsBN(stagedBalance, ESDS.decimals);
       const userBondedBalance = toTokenUnitsBN(bondedBalance, ESDS.decimals);
       const userStatus = parseInt(status, 10);
+      const fluidUntil = parseInt(fluidUntilStr, 10);
+      const lockedUntil = parseInt(lockedUntilStr, 10);
 
       if (!isCancelled) {
         setUserESDBalance(new BigNumber(userESDBalance));
@@ -74,6 +83,7 @@ function Wallet({ user }: {user: string}) {
         setUserStagedBalance(new BigNumber(userStagedBalance));
         setUserBondedBalance(new BigNumber(userBondedBalance));
         setUserStatus(userStatus);
+        setUserStatusUnlocked(Math.max(fluidUntil, lockedUntil))
         setLockup(poolAddress == DollarPool4 ? 15 : 1);
       }
     }
@@ -89,7 +99,7 @@ function Wallet({ user }: {user: string}) {
 
   return (
     <>
-      <IconHeader icon={<i className="fas fa-wallet"/>} text="Wallet"/>
+      <IconHeader icon={<i className="fas fa-dot-circle"/>} text="DAO"/>
 
       <AccountPageHeader
         accountESDBalance={userESDBalance}
@@ -98,6 +108,7 @@ function Wallet({ user }: {user: string}) {
         accountStagedBalance={userStagedBalance}
         accountBondedBalance={userBondedBalance}
         accountStatus={userStatus}
+        unlocked={userStatusUnlocked}
       />
 
       <WithdrawDeposit
