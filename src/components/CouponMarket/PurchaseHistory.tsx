@@ -77,10 +77,9 @@ function PurchaseHistory({
           onClick={() => redeemCoupons(
             ESDS.addr,
             epoch.epoch,
-            toBaseUnitBN(
-              epoch.balance.isGreaterThan(totalRedeemable) ? totalRedeemable : epoch.balance,
-              ESD.decimals
-            ),
+            epoch.balance.isGreaterThan(toBaseUnitBN(totalRedeemable, ESD.decimals))
+              ? toBaseUnitBN(totalRedeemable, ESD.decimals)
+              : epoch.balance
           )}
           disabled={epoch.balance.isZero()}
         />
