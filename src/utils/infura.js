@@ -349,20 +349,28 @@ export const getPool = async (dao) => {
  */
 export const getCouponEpochs = async (dao, account) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
-  const events = await daoContract.getPastEvents('CouponPurchase', {
+  const purchaseP = daoContract.getPastEvents('CouponPurchase', {
     filter: { account },
     fromBlock: 0,
   });
+  const transferP = daoContract.getPastEvents('CouponTransfer', {
+    filter: { to: account },
+    fromBlock: 0,
+  });
+  const [bought, given] = await Promise.all([purchaseP, transferP]);
+  const events = bought.map((e) => ({epoch: e.returnValues.epoch, amount: e.returnValues.couponAmount}))
+    .concat(given.map((e) => ({epoch: e.returnValues.epoch, amount: 0})));
+
   const couponEpochs = [
     ...events.reduce(
       (map, event) => {
-        const { returnValues: { epoch, couponAmount } } = event;
+        const { epoch, amount } = event;
         const prev = map.get(epoch);
 
         if (prev) {
-          map.set(epoch, { epoch, coupons: prev.coupons.plus(new BigNumber(couponAmount)) });
+          map.set(epoch, { epoch, coupons: prev.coupons.plus(new BigNumber(amount)) });
         } else {
-          map.set(epoch, { epoch, coupons: new BigNumber(couponAmount) });
+          map.set(epoch, { epoch, coupons: new BigNumber(amount) });
         }
 
         return map;
