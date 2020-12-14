@@ -122,6 +122,7 @@ function CouponMarket({ user }: {user: string}) {
         supply={supply}
         coupons={coupons}
         premium={couponPremium}
+        redeemable={redeemable}
       />
 
       <Header primary="Purchase" />

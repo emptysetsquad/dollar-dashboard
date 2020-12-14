@@ -32,11 +32,11 @@ function WithdrawDeposit({
       {allowance.comparedTo(MAX_UINT256) === 0 ?
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total Issued */}
-          <div style={{flexBasis: '30%'}}>
+          <div style={{flexBasis: '32%'}}>
             <BalanceBlock asset="Staged" balance={stagedBalance} suffix={"UNI-V2"}/>
           </div>
           {/* Deposit UNI-V2 into Pool */}
-          <div style={{flexBasis: '32%', paddingTop: '2%'}}>
+          <div style={{flexBasis: '33%', paddingTop: '2%'}}>
             <div style={{display: 'flex'}}>
               <div style={{width: '60%', minWidth: '6em'}}>
                 <>
@@ -70,9 +70,9 @@ function WithdrawDeposit({
               </div>
             </div>
           </div>
-          <div style={{width: '6%'}}/>
+          <div style={{flexBasis: '2%'}}/>
           {/* Withdraw Døllar from DAO */}
-          <div style={{flexBasis: '32%', paddingTop: '2%'}}>
+          <div style={{flexBasis: '33%', paddingTop: '2%'}}>
             <div style={{display: 'flex'}}>
               <div style={{width: '60%', minWidth: '6em'}}>
                 <>
@@ -110,12 +110,12 @@ function WithdrawDeposit({
         :
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total Issued */}
-          <div style={{flexBasis: '30%'}}>
+          <div style={{flexBasis: '32%'}}>
             <BalanceBlock asset="Staged" balance={stagedBalance} suffix={"UNI-V2"}/>
           </div>
-          <div style={{flexBasis: '40%'}}/>
+          <div style={{flexBasis: '35%'}}/>
           {/* Approve Pool to spend UNI-V2 */}
-          <div style={{flexBasis: '30%', paddingTop: '2%'}}>
+          <div style={{flexBasis: '33%', paddingTop: '2%'}}>
             <Button
               wide
               icon={<IconCirclePlus />}
