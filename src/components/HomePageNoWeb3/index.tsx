@@ -1,11 +1,9 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
-  Header, Box, LinkBase, Tag,
+  Box, LinkBase, Tag,
 } from '@aragon/ui';
 
 function HomePageNoWeb3() {
-  const history = useHistory();
 
   return (
     <>

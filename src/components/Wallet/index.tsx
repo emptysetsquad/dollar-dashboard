@@ -9,6 +9,7 @@ import {
   getTokenBalance, getTokenTotalSupply,
 } from '../../utils/infura';
 import {ESD, ESDS} from "../../constants/tokens";
+import {DAO_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
 
 import AccountPageHeader from "./Header";
@@ -84,7 +85,7 @@ function Wallet({ user }: {user: string}) {
         setUserBondedBalance(new BigNumber(userBondedBalance));
         setUserStatus(userStatus);
         setUserStatusUnlocked(Math.max(fluidUntil, lockedUntil))
-        setLockup(poolAddress == DollarPool4 ? 15 : 1);
+        setLockup(poolAddress === DollarPool4 ? DAO_EXIT_LOCKUP_EPOCHS : 1);
       }
     }
     updateUserInfo();

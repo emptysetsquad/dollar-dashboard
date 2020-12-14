@@ -14,7 +14,7 @@ export async function getPoolAddress(): Promise<string> {
     return DollarPool4;
   }
 
-  throw "Unrecognized Pool Address";
+  throw new Error("Unrecognized Pool Address");
 }
 
 export function getLegacyPoolAddress(poolAddress): string {
@@ -28,5 +28,5 @@ export function getLegacyPoolAddress(poolAddress): string {
     return DollarPool3;
   }
 
-  throw "Unrecognized Pool Address";
+  throw new Error("Unrecognized Pool Address");
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Header, Modal, Button, useTheme } from '@aragon/ui';
+import { Modal, Button, useTheme } from '@aragon/ui';
 import { getPreference, storePreference } from "../../utils/storage";
 import { COUPON_EXPIRATION } from "../../constants/values";
 

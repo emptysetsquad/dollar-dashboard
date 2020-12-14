@@ -55,7 +55,7 @@ function WithdrawDeposit({
               <div style={{width: '40%', minWidth: '6em'}}>
                 <Button
                   wide
-                  icon={status == 0 ? <IconCirclePlus/> : <IconLock/>}
+                  icon={status === 0 ? <IconCirclePlus/> : <IconLock/>}
                   label="Deposit"
                   onClick={() => {
                     deposit(

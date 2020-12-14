@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, IconArrowDown, IconLock
+  Box, Button, IconArrowDown
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {

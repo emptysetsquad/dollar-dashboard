@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 
 import BigNumber from 'bignumber.js';
 import {
-  getPool,
   getPoolBalanceOfBonded, getPoolBalanceOfClaimable,
   getPoolBalanceOfRewarded,
   getPoolBalanceOfStaged,
@@ -12,7 +11,8 @@ import {
   getTokenBalance,
   getPoolFluidUntil
 } from '../../utils/infura';
-import {ESD, ESDS, UNI, USDC} from "../../constants/tokens";
+import {ESD, UNI, USDC} from "../../constants/tokens";
+import {POOL_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
 import { Header } from '@aragon/ui';
 
@@ -151,7 +151,7 @@ function Pool({ user }: {user: string}) {
         setLegacyUserRewardedBalance(new BigNumber(legacyUserRewardedBalance));
         setLegacyUserClaimableBalance(new BigNumber(legacyUserClaimableBalance));
         setLegacyUserStatus(legacyUserStatus);
-        setLockup(poolAddressStr == DollarPool4 ? 5 : 1);
+        setLockup(poolAddressStr === DollarPool4 ? POOL_EXIT_LOCKUP_EPOCHS : 1);
       }
     }
     updateUserInfo();
