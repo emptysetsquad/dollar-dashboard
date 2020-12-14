@@ -91,7 +91,7 @@ function Provide({
                       (hash) => setProvideAmount(new BigNumber(0))
                     );
                   }}
-                  disabled={poolAddress === '' || status === 1 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
+                  disabled={poolAddress === '' || status !== 0 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
                 />
               </div>
             </div>
@@ -112,7 +112,7 @@ function Provide({
             <Button
               wide
               icon={<IconCirclePlus/>}
-              label="Unlock"
+              label="Approve"
               onClick={() => {
                 approve(USDC.addr, poolAddress);
               }}

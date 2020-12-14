@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import { UniswapV2Router02 } from '../constants/contracts';
 import { ESD, UNI, USDC } from '../constants/tokens';
+import { POOL_EXIT_LOCKUP_EPOCHS } from '../constants/values';
 
 const dollarAbi = require('../constants/abi/Dollar.json');
 const daoAbi = require('../constants/abi/Implementation.json');
@@ -536,4 +537,36 @@ export const getPoolTotalRewarded = async (pool) => {
 export const getPoolTotalClaimable = async (pool) => {
   const poolContract = new web3.eth.Contract(poolAbi, pool);
   return poolContract.methods.totalClaimable().call();
+};
+
+/**
+ *
+ * @param {string} pool address
+ * @param {string} account address
+ * @return {Promise<string>}
+ */
+export const getPoolFluidUntil = async (pool, account) => {
+  const poolContract = new web3.eth.Contract(poolAbi, pool);
+
+  // no need to look back further than the pool lockup period
+  const blockNumber = await web3.eth.getBlockNumber();
+  const fromBlock = blockNumber - (POOL_EXIT_LOCKUP_EPOCHS + 1) * 8640;
+  const bondP = poolContract.getPastEvents('Bond', {
+    filter: {account: account}, fromBlock: fromBlock });
+  const unbondP = poolContract.getPastEvents('Unbond', {
+    filter: {account: account}, fromBlock: fromBlock });
+
+  const [bond, unbond] = await Promise.all([bondP, unbondP]);
+  const events = bond.map((e) => e.returnValues)
+    .concat(unbond.map((e) => e.returnValues));
+
+  const endEpoch = events.reduce(
+    (epoch, event) => {
+      if (epoch > event.start)
+        return epoch
+      else
+        return event.start
+    }, 0);
+
+  return (parseInt(endEpoch, 10) + POOL_EXIT_LOCKUP_EPOCHS).toString();
 };

@@ -12,12 +12,17 @@ type PoolPageHeaderProps = {
   accountClaimableESDBalance: BigNumber,
   poolTotalBonded: BigNumber,
   accountPoolStatus: number,
+  unlocked: number,
 };
 
-const STATUS_MAP = ["Frozen", "Fluid"];
+const STATUS_MAP = ["Unlocked", "Locked"];
+
+function status(accountStatus, unlocked) {
+  return STATUS_MAP[accountStatus] + (accountStatus === 0 ? "" : " until " + unlocked)
+}
 
 const PoolPageHeader = ({
-  accountUNIBalance, accountBondedBalance, accountRewardedESDBalance, accountClaimableESDBalance, poolTotalBonded, accountPoolStatus
+  accountUNIBalance, accountBondedBalance, accountRewardedESDBalance, accountClaimableESDBalance, poolTotalBonded, accountPoolStatus, unlocked
 }: PoolPageHeaderProps) => (
   <div style={{ padding: '2%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
     <div style={{ flexBasis: '20%' }}>
@@ -33,7 +38,7 @@ const PoolPageHeader = ({
       <BalanceBlock asset="Pool Ownership" balance={ownership(accountBondedBalance, poolTotalBonded)}  suffix={"%"}/>
     </div>
     <div style={{ flexBasis: '20%' }}>
-      <TextBlock label="Pool Status" text={STATUS_MAP[accountPoolStatus]}/>
+      <TextBlock label="Pool Status" text={status(accountPoolStatus, unlocked)}/>
     </div>
   </div>
 );

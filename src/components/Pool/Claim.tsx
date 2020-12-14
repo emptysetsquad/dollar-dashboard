@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, IconArrowDown,
+  Box, Button, IconArrowDown, IconLock
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {
@@ -39,7 +39,7 @@ function Claim({
                   adornment="ESD"
                   value={claimAmount}
                   setter={setClaimAmount}
-                  disabled={status === 1}
+                  disabled={status !== 0}
                 />
                 <MaxButton
                   onClick={() => {
@@ -60,7 +60,7 @@ function Claim({
                     (hash) => setClaimAmount(new BigNumber(0))
                   );
                 }}
-                disabled={poolAddress === '' || status === 1 || !isPos(claimAmount)}
+                disabled={poolAddress === '' || status !== 0 || !isPos(claimAmount)}
               />
             </div>
           </div>
