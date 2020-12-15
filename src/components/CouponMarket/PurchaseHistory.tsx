@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   DataView, Button, IconCirclePlus
 } from '@aragon/ui';
@@ -19,7 +18,6 @@ type PurchaseHistoryProps = {
 function PurchaseHistory({
   user, hideRedeemed, totalRedeemable
 }: PurchaseHistoryProps) {
-  const history = useHistory();
   const [epochs, setEpochs] = useState([]);
   const [page, setPage] = useState(0)
   const [initialized, setInitialized] = useState(false)

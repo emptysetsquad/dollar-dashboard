@@ -1,7 +1,6 @@
 import React from 'react';
 
 import BigNumber from "bignumber.js";
-import {BalanceBlock} from "../common";
 
 import {Box, Distribution} from '@aragon/ui';
 import {formatMoney, ownership} from "../../utils/number";

@@ -1,10 +1,4 @@
 import React, {useEffect, useState} from 'react';
-
-import {
-  Button, IdentityBadge, IconConnect, Box, IconPower, LinkBase,
-} from '@aragon/ui';
-
-import { connect } from '../../utils/web3';
 import BigNumber from "bignumber.js";
 import {
   getBalanceBonded,
@@ -13,7 +7,7 @@ import {
   getTokenBalance,
   getTokenTotalSupply
 } from "../../utils/infura";
-import {ESD, ESDS, UNI, USDC} from "../../constants/tokens";
+import {ESD, ESDS, UNI} from "../../constants/tokens";
 import {formatBN, toTokenUnitsBN} from "../../utils/number";
 import {getPoolAddress} from "../../utils/pool";
 

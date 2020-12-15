@@ -18,7 +18,7 @@ type AccountPageHeaderProps = {
 const STATUS_MAP = ["Unlocked", "Locked", "Locked"];
 
 function status(accountStatus, unlocked) {
-  return STATUS_MAP[accountStatus] + (accountStatus == 0 ? "" : " until " + unlocked)
+  return STATUS_MAP[accountStatus] + (accountStatus === 0 ? "" : " until " + unlocked)
 }
 
 const AccountPageHeader = ({

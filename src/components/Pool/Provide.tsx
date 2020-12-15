@@ -53,15 +53,15 @@ function Provide({
       {userUSDCAllowance.comparedTo(MAX_UINT256.dividedBy(2)) > 0 ?
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total rewarded */}
-          <div style={{flexBasis: '30%'}}>
+          <div style={{flexBasis: '32%'}}>
             <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
           </div>
-          <div style={{flexBasis: '30%'}}>
+          <div style={{flexBasis: '33%'}}>
             <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
           </div>
-          <div style={{width: '8%'}}/>
+          <div style={{flexBasis: '2%'}}/>
           {/* Provide liquidity using Pool rewards */}
-          <div style={{flexBasis: '32%', paddingTop: '2%'}}>
+          <div style={{flexBasis: '33%', paddingTop: '2%'}}>
             <div style={{display: 'flex'}}>
               <div style={{width: '60%', minWidth: '6em'}}>
                 <>
@@ -91,7 +91,7 @@ function Provide({
                       (hash) => setProvideAmount(new BigNumber(0))
                     );
                   }}
-                  disabled={poolAddress === '' || status === 1 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
+                  disabled={poolAddress === '' || status !== 0 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
                 />
               </div>
             </div>
@@ -100,19 +100,19 @@ function Provide({
         :
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total rewarded */}
-          <div style={{flexBasis: '30%'}}>
+          <div style={{flexBasis: '32%'}}>
             <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
           </div>
-          <div style={{flexBasis: '30%'}}>
+          <div style={{flexBasis: '33%'}}>
             <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
           </div>
-          <div style={{width: '8%'}}/>
+          <div style={{flexBasis: '2%'}}/>
           {/* Approve Pool to spend USDC */}
-          <div style={{flexBasis: '30%', paddingTop: '2%'}}>
+          <div style={{flexBasis: '33%', paddingTop: '2%'}}>
             <Button
               wide
               icon={<IconCirclePlus/>}
-              label="Unlock"
+              label="Approve"
               onClick={() => {
                 approve(USDC.addr, poolAddress);
               }}

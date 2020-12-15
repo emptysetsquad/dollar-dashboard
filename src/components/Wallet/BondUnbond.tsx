@@ -34,7 +34,7 @@ function BondUnbond({
         </div>
         {/* Total bonded */}
         <div style={{flexBasis: '16%'}}>
-          <TextBlock label="Exit Lockup" text={lockup == 0 ? "" : lockup == 1 ? "1 epoch" : `${lockup} epochs`}/>
+          <TextBlock label="Exit Lockup" text={lockup === 0 ? "" : lockup === 1 ? "1 epoch" : `${lockup} epochs`}/>
         </div>
         {/* Bond Døllar within DAO */}
         <div style={{flexBasis: '33%', paddingTop: '2%'}}>
@@ -45,7 +45,7 @@ function BondUnbond({
                   adornment="ESD"
                   value={bondAmount}
                   setter={setBondAmount}
-                  disabled={status != 0}
+                  disabled={status !== 0}
                 />
                 <MaxButton
                   onClick={() => {
@@ -80,7 +80,7 @@ function BondUnbond({
                   adornment="ESD"
                   value={unbondAmount}
                   setter={setUnbondAmount}
-                  disabled={status != 0}
+                  disabled={status !== 0}
                 />
                 <MaxButton
                   onClick={() => {

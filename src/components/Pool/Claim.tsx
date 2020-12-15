@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, IconArrowDown,
+  Box, Button, IconArrowDown
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {
@@ -26,12 +26,12 @@ function Claim({
     <Box heading="Claim">
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
         {/* total Issued */}
-        <div style={{flexBasis: '30%'}}>
+        <div style={{flexBasis: '32%'}}>
           <BalanceBlock asset="Claimable" balance={claimable} suffix={"ESD"} />
         </div>
         {/* Deposit UNI-V2 into Pool */}
-        <div style={{width: '38%'}}/>
-        <div style={{flexBasis: '32%', paddingTop: '2%'}}>
+        <div style={{flexBasis: '35%'}}/>
+        <div style={{flexBasis: '33%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%', minWidth: '6em'}}>
               <>
@@ -39,7 +39,7 @@ function Claim({
                   adornment="ESD"
                   value={claimAmount}
                   setter={setClaimAmount}
-                  disabled={status === 1}
+                  disabled={status !== 0}
                 />
                 <MaxButton
                   onClick={() => {
@@ -60,7 +60,7 @@ function Claim({
                     (hash) => setClaimAmount(new BigNumber(0))
                   );
                 }}
-                disabled={poolAddress === '' || status === 1 || !isPos(claimAmount)}
+                disabled={poolAddress === '' || status !== 0 || !isPos(claimAmount)}
               />
             </div>
           </div>

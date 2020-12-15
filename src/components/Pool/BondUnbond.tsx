@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, IconCirclePlus, IconCircleMinus,
+  Box, Button, IconCirclePlus, IconCircleMinus, IconLock
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {
@@ -8,7 +8,7 @@ import {
 } from '../common/index';
 import {bondPool, unbondPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
-import {ESDS, UNI} from "../../constants/tokens";
+import {UNI} from "../../constants/tokens";
 import BigNumberInput from "../common/BigNumberInput";
 import TextBlock from "../common/TextBlock";
 
@@ -16,11 +16,12 @@ type BondUnbondProps = {
   poolAddress: string,
   staged: BigNumber,
   bonded: BigNumber,
+  status: number,
   lockup: number,
 };
 
 function BondUnbond({
-  poolAddress, staged, bonded, lockup
+  poolAddress, staged, bonded, status, lockup
 }: BondUnbondProps) {
   const [bondAmount, setBondAmount] = useState(new BigNumber(0));
   const [unbondAmount, setUnbondAmount] = useState(new BigNumber(0));
@@ -34,7 +35,7 @@ function BondUnbond({
         </div>
         {/* Exit lockup */}
         <div style={{flexBasis: '16%'}}>
-          <TextBlock label="Exit Lockup" text={lockup == 0 ? "" : lockup == 1 ? "1 epoch" : `${lockup} epochs`}/>
+          <TextBlock label="Exit Lockup" text={lockup === 0 ? "" : lockup === 1 ? "1 epoch" : `${lockup} epochs`}/>
         </div>
         {/* Bond UNI-V2 within Pool */}
         <div style={{flexBasis: '33%', paddingTop: '2%'}}>
@@ -56,7 +57,7 @@ function BondUnbond({
             <div style={{width: '40%', minWidth: '7em'}}>
               <Button
                 wide
-                icon={<IconCirclePlus/>}
+                icon={status === 0 ? <IconCirclePlus/> : <IconLock/>}
                 label="Bond"
                 onClick={() => {
                   bondPool(
@@ -91,7 +92,7 @@ function BondUnbond({
             <div style={{width: '40%', minWidth: '7em'}}>
               <Button
                 wide
-                icon={<IconCircleMinus/>}
+                icon={status === 0 ? <IconCircleMinus/> : <IconLock/>}
                 label="Unbond"
                 onClick={() => {
                   unbondPool(

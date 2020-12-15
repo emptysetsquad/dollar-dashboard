@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 
 import { LinkBase, useTheme } from '@aragon/ui';
 import ConnectButton from './ConnectButton';
-import TotalBalance from "./TotalBalance";
 
 type NavbarProps = {
   hasWeb3: boolean,
@@ -17,16 +16,11 @@ function NavBar({
   const history = useHistory();
   const currentTheme = useTheme();
 
-  const [isHome, updateIsHome] = useState(true);
   const [page, setPage] = useState("");
 
   useEffect(() => {
-    const home = history.location.pathname === '/';
-    updateIsHome(home);
     return history.listen((location) => {
       setPage(location.pathname)
-      const home = history.location.pathname === '/';
-      updateIsHome(home);
     })
   }, [hasWeb3, user, history]);
 
@@ -46,7 +40,7 @@ function NavBar({
           <div style={{ display: 'flex', paddingTop: '24px'}}>
             <div style={{ width: '20%', textAlign: 'left'}}>
               <LinkBase onClick={() => history.push('/')} style={{marginRight: '16px', height: '40px'}}>
-                <img src={logoUrl} height="40px"/>
+                <img src={logoUrl} height="40px" alt="Empty Set Dollar"/>
               </LinkBase>
             </div>
             <div style={{ width: '60%', textAlign: 'center' }}>

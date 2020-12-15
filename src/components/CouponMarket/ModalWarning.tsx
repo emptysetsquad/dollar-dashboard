@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Header, Modal, Button, useTheme } from '@aragon/ui';
+import { Modal, Button, useTheme } from '@aragon/ui';
 import { getPreference, storePreference } from "../../utils/storage";
 import { COUPON_EXPIRATION } from "../../constants/values";
 
@@ -23,7 +23,7 @@ function ModalWarning() {
           <div>
             By purchasing coupons the buyer incurs significant risk of loss.
             Coupons will only become redeemable during the next supply
-            expansion. Each expansionary epoch, a trache of rewards are
+            expansion. Each expansionary epoch, a tranche of rewards are
             reserved for coupon redemptions by the DAO. At that time, the
             redemption process is first come, first served. Coupon redemption
             is not guaranteed.

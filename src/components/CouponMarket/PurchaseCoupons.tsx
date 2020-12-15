@@ -99,7 +99,7 @@ function PurchaseCoupons({
             <Button
               wide
               icon={<IconCirclePlus/>}
-              label="Unlock"
+              label="Approve"
               onClick={() => {
                 approve(ESD.addr, ESDS.addr);
               }}

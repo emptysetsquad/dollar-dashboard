@@ -3,15 +3,16 @@ import { useParams } from 'react-router-dom';
 
 import BigNumber from 'bignumber.js';
 import {
-  getPool,
   getPoolBalanceOfBonded, getPoolBalanceOfClaimable,
   getPoolBalanceOfRewarded,
   getPoolBalanceOfStaged,
   getPoolStatusOf, getPoolTotalBonded,
   getTokenAllowance,
   getTokenBalance,
+  getPoolFluidUntil
 } from '../../utils/infura';
-import {ESD, ESDS, UNI, USDC} from "../../constants/tokens";
+import {ESD, UNI, USDC} from "../../constants/tokens";
+import {POOL_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
 import { Header } from '@aragon/ui';
 
@@ -46,6 +47,7 @@ function Pool({ user }: {user: string}) {
   const [userRewardedBalance, setUserRewardedBalance] = useState(new BigNumber(0));
   const [userClaimableBalance, setUserClaimableBalance] = useState(new BigNumber(0));
   const [userStatus, setUserStatus] = useState(0);
+  const [userStatusUnlocked, setUserStatusUnlocked] = useState(0);
   const [legacyUserStagedBalance, setLegacyUserStagedBalance] = useState(new BigNumber(0));
   const [legacyUserBondedBalance, setLegacyUserBondedBalance] = useState(new BigNumber(0));
   const [legacyUserRewardedBalance, setLegacyUserRewardedBalance] = useState(new BigNumber(0));
@@ -69,6 +71,7 @@ function Pool({ user }: {user: string}) {
       setUserRewardedBalance(new BigNumber(0));
       setUserClaimableBalance(new BigNumber(0));
       setUserStatus(0);
+      setUserStatusUnlocked(0);
       setLegacyUserStagedBalance(new BigNumber(0));
       setLegacyUserBondedBalance(new BigNumber(0));
       setLegacyUserRewardedBalance(new BigNumber(0));
@@ -85,7 +88,7 @@ function Pool({ user }: {user: string}) {
       const [
         poolTotalBondedStr, pairBalanceESDStr, pairBalanceUSDCStr, balance, usdcBalance,
         allowance, usdcAllowance, stagedBalance, bondedBalance,
-        rewardedBalance, claimableBalance, status,
+        rewardedBalance, claimableBalance, status, fluidUntilStr,
         legacyStagedBalance, legacyBondedBalance, legacyRewardedBalance, legacyClaimableBalance, legacyStatus
       ] = await Promise.all([
         getPoolTotalBonded(poolAddressStr),
@@ -102,6 +105,7 @@ function Pool({ user }: {user: string}) {
         getPoolBalanceOfRewarded(poolAddressStr, user),
         getPoolBalanceOfClaimable(poolAddressStr, user),
         getPoolStatusOf(poolAddressStr, user),
+        getPoolFluidUntil(poolAddressStr, user),
 
         getPoolBalanceOfStaged(legacyPoolAddress, user),
         getPoolBalanceOfBonded(legacyPoolAddress, user),
@@ -120,6 +124,7 @@ function Pool({ user }: {user: string}) {
       const userRewardedBalance = toTokenUnitsBN(rewardedBalance, ESD.decimals);
       const userClaimableBalance = toTokenUnitsBN(claimableBalance, ESD.decimals);
       const userStatus = parseInt(status, 10);
+      const fluidUntil = parseInt(fluidUntilStr, 10);
       const legacyUserStagedBalance = toTokenUnitsBN(legacyStagedBalance, UNI.decimals);
       const legacyUserBondedBalance = toTokenUnitsBN(legacyBondedBalance, UNI.decimals);
       const legacyUserRewardedBalance = toTokenUnitsBN(legacyRewardedBalance, UNI.decimals);
@@ -140,12 +145,13 @@ function Pool({ user }: {user: string}) {
         setUserRewardedBalance(new BigNumber(userRewardedBalance));
         setUserClaimableBalance(new BigNumber(userClaimableBalance));
         setUserStatus(userStatus);
+        setUserStatusUnlocked(fluidUntil);
         setLegacyUserStagedBalance(new BigNumber(legacyUserStagedBalance));
         setLegacyUserBondedBalance(new BigNumber(legacyUserBondedBalance));
         setLegacyUserRewardedBalance(new BigNumber(legacyUserRewardedBalance));
         setLegacyUserClaimableBalance(new BigNumber(legacyUserClaimableBalance));
         setLegacyUserStatus(legacyUserStatus);
-        setLockup(poolAddressStr == DollarPool4 ? 5 : 1);
+        setLockup(poolAddressStr === DollarPool4 ? POOL_EXIT_LOCKUP_EPOCHS : 1);
       }
     }
     updateUserInfo();
@@ -186,6 +192,7 @@ function Pool({ user }: {user: string}) {
         accountClaimableESDBalance={userClaimableBalance}
         poolTotalBonded={poolTotalBonded}
         accountPoolStatus={userStatus}
+        unlocked={userStatusUnlocked}
       />
 
       <WithdrawDeposit
@@ -201,6 +208,7 @@ function Pool({ user }: {user: string}) {
         poolAddress={poolAddress}
         staged={userStagedBalance}
         bonded={userBondedBalance}
+        status={userStatus}
         lockup={lockup}
       />
 

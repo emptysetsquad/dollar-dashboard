@@ -10,7 +10,7 @@ import {
   getEpoch,
   getIsInitialized,
   getRejectFor,
-  getTokenTotalSupply, getTotalBonded, getTotalBondedAt
+  getTokenTotalSupply, getTotalBondedAt
 } from '../../utils/infura';
 import {ESDS} from "../../constants/tokens";
 import {AddressBlock} from "../common";

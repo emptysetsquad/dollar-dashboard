@@ -66,7 +66,7 @@ function Migrate({
                     (hash) => setWithdrawn(hash.length > 0)
                   );
                 }}
-                disabled={legacyPoolAddress === '' || !isPos(staged) || withdrawn || status == 1}
+                disabled={legacyPoolAddress === '' || !isPos(staged) || withdrawn || status !== 0}
               />
             </div>
           </div>
@@ -87,7 +87,7 @@ function Migrate({
                     (hash) => setClaimed(hash.length > 0)
                   );
                 }}
-                disabled={legacyPoolAddress === '' || !isPos(claimable) || claimed || status == 1}
+                disabled={legacyPoolAddress === '' || !isPos(claimable) || claimed || status !== 0}
               />
             </div>
           </div>
