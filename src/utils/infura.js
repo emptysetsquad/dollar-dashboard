@@ -568,7 +568,7 @@ export const getPoolFluidUntil = async (pool, account) => {
   const events = bond.map((e) => e.returnValues)
     .concat(unbond.map((e) => e.returnValues));
 
-  const endEpoch = events.reduce(
+  const startEpoch = events.reduce(
     (epoch, event) => {
       if (epoch > event.start)
         return epoch
@@ -576,5 +576,7 @@ export const getPoolFluidUntil = async (pool, account) => {
         return event.start
     }, 0);
 
-  return (parseInt(endEpoch, 10) + POOL_EXIT_LOCKUP_EPOCHS).toString();
+  // these contract events report the start epoch as one more than the active
+  // epoch when the event is emitted, so we subtract 1 here to adjust
+  return (parseInt(startEpoch, 10) + POOL_EXIT_LOCKUP_EPOCHS - 1).toString();
 };
