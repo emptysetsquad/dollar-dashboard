@@ -45,7 +45,6 @@ function BondUnbond({
                   adornment="ESD"
                   value={bondAmount}
                   setter={setBondAmount}
-                  disabled={status !== 0}
                 />
                 <MaxButton
                   onClick={() => {
@@ -80,7 +79,6 @@ function BondUnbond({
                   adornment="ESD"
                   value={unbondAmount}
                   setter={setUnbondAmount}
-                  disabled={status !== 0}
                 />
                 <MaxButton
                   onClick={() => {
