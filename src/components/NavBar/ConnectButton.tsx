@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useWallet } from 'use-wallet';
 
 import {
   Button, IdentityBadge, IconConnect, Box, IconPower, LinkBase,
@@ -6,6 +7,7 @@ import {
 
 import { connect } from '../../utils/web3';
 import TotalBalance from "./TotalBalance";
+import ConnectModal from './ConnectModal';
 
 type connectButtonProps = {
   hasWeb3: boolean,
@@ -14,21 +16,23 @@ type connectButtonProps = {
 }
 
 function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
-  const [isConnected, setIsConnected] = useState(false);
+  const { status, reset } = useWallet();
 
-  const connectWeb3 = async () => {
-    const address = await connect();
-    if (address === false) return;
-    setIsConnected(true);
-    setUser(address);
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const connectWeb3 = async (wallet) => {
+    connect(wallet.ethereum);
+    setUser(wallet.account);
   };
 
   const disconnectWeb3 = async () => {
-    setIsConnected(false);
     setUser('');
+    reset();
   };
 
-  return isConnected ? (
+  const toggleModal = () => setModalOpen(!isModalOpen);
+
+  return status === 'connected' ? (
     <div style={{display: 'flex'}}>
       <div style={{flex: '1'}}/>
       <div>
@@ -52,7 +56,10 @@ function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
       </div>
     </div>
   ) : (
-    <Button icon={<IconConnect />} label="Connect" onClick={connectWeb3} disabled={!hasWeb3}/>
+    <>
+      <ConnectModal visible={isModalOpen} onClose={toggleModal} onConnect={connectWeb3}/>
+      <Button icon={<IconConnect />} label="Connect" onClick={toggleModal} disabled={!hasWeb3}/>
+    </>
   );
 }
 

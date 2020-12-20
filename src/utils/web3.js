@@ -23,8 +23,8 @@ export const updateModalMode = async (theme) => {
   window.darkMode = theme === 'dark';
 };
 
-export const connect = async () => {
-  window.web3 = new Web3(window.ethereum);
+export const connect = async (ethereum) => {
+  window.web3 = new Web3(ethereum);
   let addresses = await window.web3.eth.getAccounts();
   if (!addresses.length) {
     try {

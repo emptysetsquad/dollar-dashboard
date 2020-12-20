@@ -19,6 +19,7 @@
     "react-widgets-moment": "^4.0.20",
     "styled-components": "^5.1.0",
     "typescript": "^3.8.3",
+    "use-wallet": "^0.8.1",
     "web3": "^1.2.6"
   },
   "scripts": {
