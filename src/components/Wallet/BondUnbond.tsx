@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, IconCirclePlus, IconCircleMinus, IconLock
+  Box, Button, IconCirclePlus, IconCircleMinus, IconCaution
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {
@@ -56,7 +56,7 @@ function BondUnbond({
             <div style={{width: '40%', minWidth: '7em'}}>
               <Button
                 wide
-                icon={status === 0 ? <IconCirclePlus/> : <IconLock/>}
+                icon={status === 0 ? <IconCirclePlus/> : <IconCaution/>}
                 label="Bond"
                 onClick={() => {
                   bond(
@@ -90,7 +90,7 @@ function BondUnbond({
             <div style={{width: '40%', minWidth: '7em'}}>
               <Button
                 wide
-                icon={status === 0 ? <IconCircleMinus/> : <IconLock/>}
+                icon={status === 0 ? <IconCircleMinus/> : <IconCaution/>}
                 label="Unbond"
                 onClick={() => {
                   unbondUnderlying(
@@ -103,6 +103,9 @@ function BondUnbond({
             </div>
           </div>
         </div>
+      </div>
+      <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
+        <span style={{ opacity: 0.5 }}> Bonding events will restart the lockup timer </span>
       </div>
     </Box>
   );

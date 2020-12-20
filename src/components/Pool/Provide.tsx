@@ -121,6 +121,9 @@ function Provide({
           </div>
         </div>
       }
+      <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
+        <span style={{ opacity: 0.5 }}> Zap your rewards directly to LP by providing more USDC </span>
+      </div>
     </Box>
   );
 }
