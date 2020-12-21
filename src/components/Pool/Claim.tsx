@@ -66,6 +66,9 @@ function Claim({
           </div>
         </div>
       </div>
+      <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
+        <span style={{ opacity: 0.5 }}> Unbond to make rewards claimable after your status is Unlocked </span>
+      </div>
     </Box>
   );
 }
