@@ -160,6 +160,16 @@ export const getTotalCoupons = async (dao) => {
  * @param {string} dao address
  * @return {Promise<string>}
  */
+export const getTotalCouponUnderlying = async (dao) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  return daoContract.methods.totalCouponUnderlying().call();
+};
+
+/**
+ *
+ * @param {string} dao address
+ * @return {Promise<string>}
+ */
 export const getTotalBonded = async (dao) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
   return daoContract.methods.totalBonded().call();
@@ -263,6 +273,18 @@ export const getRecordedVote = async (dao, account, candidate) => {
 export const getBalanceOfCoupons = async (dao, account, epoch) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
   return daoContract.methods.balanceOfCoupons(account, epoch).call();
+};
+
+/**
+ *
+ * @param {string} dao address
+ * @param {string} account address
+ * @param {number} epoch number
+ * @return {Promise<string>}
+ */
+export const getBalanceOfCouponUnderlying = async (dao, account, epoch) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  return daoContract.methods.balanceOfCouponUnderlying(account, epoch).call();
 };
 
 /**
