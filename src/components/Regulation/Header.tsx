@@ -21,6 +21,7 @@ type RegulationHeaderProps = {
 
   totalDebt: BigNumber,
   totalCoupons: BigNumber,
+  totalCouponsUnderlying: BigNumber,
   couponPremium: BigNumber,
 };
 
@@ -29,7 +30,7 @@ const RegulationHeader = ({
   totalBonded, totalStaged, totalRedeemable,
   poolLiquidity, poolRewarded, poolClaimable,
   legacyPoolRewarded, legacyPoolClaimable,
-  totalDebt, totalCoupons, couponPremium
+  totalDebt, totalCoupons, totalCouponsUnderlying, couponPremium
 }: RegulationHeaderProps) => {
   const daoTotalSupply = totalBonded.plus(totalStaged).plus(totalRedeemable);
   const poolTotalSupply = poolLiquidity.plus(poolRewarded).plus(poolClaimable);

@@ -273,6 +273,19 @@ export const redeemCoupons = async (dao, epoch, amount) => {
     });
 };
 
+export const migrateCoupons = async (dao, epoch) => {
+  const account = await checkConnectedAndGetAddress();
+  const daoContract = new window.web3.eth.Contract(daoAbi, dao);
+  await daoContract.methods
+    .migrateCoupons(epoch)
+    .send({
+      from: account,
+    })
+    .on('transactionHash', (hash) => {
+      notify.hash(hash);
+    });
+};
+
 export const recordVote = async (dao, candidate, voteType) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);

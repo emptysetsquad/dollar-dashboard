@@ -6,7 +6,7 @@ import {
   getCouponPremium,
   getTokenAllowance,
   getTokenBalance,
-  getTokenTotalSupply, getTotalCoupons,
+  getTokenTotalSupply, getTotalCoupons, getTotalCouponsUnderlying,
   getTotalDebt, getTotalRedeemable,
 } from '../../utils/infura';
 import {ESD, ESDS} from "../../constants/tokens";
@@ -75,16 +75,19 @@ function CouponMarket({ user }: {user: string}) {
     let isCancelled = false;
 
     async function updateUserInfo() {
-      const [supplyStr, debtStr, couponsStr, redeemableStr] = await Promise.all([
+      const [supplyStr, debtStr, couponsPremiumStr, couponsPrincipalStr, redeemableStr] = await Promise.all([
         getTokenTotalSupply(ESD.addr),
         getTotalDebt(ESDS.addr),
         getTotalCoupons(ESDS.addr),
+        getTotalCouponsUnderlying(ESDS.addr),
         getTotalRedeemable(ESDS.addr),
       ]);
 
       const totalSupply = toTokenUnitsBN(supplyStr, ESD.decimals);
       const totalDebt = toTokenUnitsBN(debtStr, ESD.decimals);
-      const totalCoupons = toTokenUnitsBN(couponsStr, ESD.decimals);
+      const totalCoupons = toTokenUnitsBN(couponsPrincipalStr, ESD.decimals).plus(
+        toTokenUnitsBN(couponsPremiumStr, ESD.decimals)
+      );
       const totalRedeemable = toTokenUnitsBN(redeemableStr, ESD.decimals);
 
       if (!isCancelled) {
