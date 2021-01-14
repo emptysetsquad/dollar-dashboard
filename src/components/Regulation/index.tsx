@@ -3,8 +3,9 @@ import { Header } from '@aragon/ui';
 
 import {
   getCouponPremium,
+  getTotalCoupons, getTotalCouponsUnderlying,
   getPoolTotalClaimable, getPoolTotalRewarded, getTokenBalance,
-  getTokenTotalSupply, getTotalBonded, getTotalCoupons, getTotalDebt, getTotalRedeemable, getTotalStaged,
+  getTokenTotalSupply, getTotalBonded, getTotalDebt, getTotalRedeemable, getTotalStaged,
 } from '../../utils/infura';
 import {ESD, ESDS, UNI} from "../../constants/tokens";
 import {toTokenUnitsBN} from "../../utils/number";
@@ -29,6 +30,7 @@ function Regulation({ user }: {user: string}) {
   const [legacyPoolTotalClaimable, setLegacyPoolTotalClaimable] = useState(new BigNumber(0));
   const [totalDebt, setTotalDebt] = useState(new BigNumber(0));
   const [totalCoupons, setTotalCoupons] = useState(new BigNumber(0));
+  const [totalCouponsUnderlying, setTotalCouponsUnderlying] = useState(new BigNumber(0));
   const [couponPremium, setCouponPremium] = useState(new BigNumber(0));
 
   useEffect(() => {
@@ -43,7 +45,7 @@ function Regulation({ user }: {user: string}) {
         totalBondedStr, totalStagedStr, totalRedeemableStr,
         poolLiquidityStr, poolTotalRewardedStr, poolTotalClaimableStr,
         legacyPoolTotalRewardedStr, legacyPoolTotalClaimableStr,
-        totalDebtStr, totalCouponsStr
+        totalDebtStr, totalCouponsStr, totalCouponsUnderlyingStr
       ] = await Promise.all([
         getTokenTotalSupply(ESD.addr),
 
@@ -60,6 +62,7 @@ function Regulation({ user }: {user: string}) {
 
         getTotalDebt(ESDS.addr),
         getTotalCoupons(ESDS.addr),
+        getTotalCouponsUnderlying(ESDS.addr),
       ]);
 
       if (!isCancelled) {
@@ -78,6 +81,7 @@ function Regulation({ user }: {user: string}) {
 
         setTotalDebt(toTokenUnitsBN(totalDebtStr, ESD.decimals));
         setTotalCoupons(toTokenUnitsBN(totalCouponsStr, ESD.decimals));
+        setTotalCouponsUnderlying(toTokenUnitsBN(totalCouponsUnderlyingStr, ESD.decimals));
 
         if (new BigNumber(totalDebtStr).isGreaterThan(ONE_COUPON)) {
           const couponPremiumStr = await getCouponPremium(ESDS.addr, ONE_COUPON)
@@ -117,6 +121,7 @@ function Regulation({ user }: {user: string}) {
 
         totalDebt={totalDebt}
         totalCoupons={totalCoupons}
+        totalCouponsUnderlying={totalCouponsUnderlying}
         couponPremium={couponPremium}
       />
 

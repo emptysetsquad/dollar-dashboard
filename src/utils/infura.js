@@ -160,7 +160,7 @@ export const getTotalCoupons = async (dao) => {
  * @param {string} dao address
  * @return {Promise<string>}
  */
-export const getTotalCouponUnderlying = async (dao) => {
+export const getTotalCouponsUnderlying = async (dao) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
   return daoContract.methods.totalCouponUnderlying().call();
 };
@@ -279,10 +279,22 @@ export const getBalanceOfCoupons = async (dao, account, epoch) => {
  *
  * @param {string} dao address
  * @param {string} account address
+ * @param {number[]} epochs number[]
+ * @return {Promise<string[]>}
+ */
+export const getBatchBalanceOfCoupons = async (dao, account, epochs) => {
+  const calls = epochs.map((epoch) => getBalanceOfCoupons(dao, account, epoch));
+  return Promise.all(calls);
+};
+
+/**
+ *
+ * @param {string} dao address
+ * @param {string} account address
  * @param {number} epoch number
  * @return {Promise<string>}
  */
-export const getBalanceOfCouponUnderlying = async (dao, account, epoch) => {
+export const getBalanceOfCouponsUnderlying = async (dao, account, epoch) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
   return daoContract.methods.balanceOfCouponUnderlying(account, epoch).call();
 };
@@ -294,8 +306,8 @@ export const getBalanceOfCouponUnderlying = async (dao, account, epoch) => {
  * @param {number[]} epochs number[]
  * @return {Promise<string[]>}
  */
-export const getBatchBalanceOfCoupons = async (dao, account, epochs) => {
-  const calls = epochs.map((epoch) => getBalanceOfCoupons(dao, account, epoch));
+export const getBatchBalanceOfCouponsUnderlying = async (dao, account, epochs) => {
+  const calls = epochs.map((epoch) => getBalanceOfCouponsUnderlying(dao, account, epoch));
   return Promise.all(calls);
 };
 
