@@ -65,7 +65,7 @@ function PurchaseHistory({
       fields={['Epoch', 'Purchased', 'Principal', 'Premium', 'Expires', '']}
       status={ initialized ? 'default' : 'loading' }
       // @ts-ignore
-      entries={hideRedeemed ? epochs.filter((epoch) => !epoch.balance.isZero()) : epochs}
+      entries={hideRedeemed ? epochs.filter((epoch) => !epoch.principal.isZero() || !epoch.premium.isZero()) : epochs}
       entriesPerPage={10}
       page={page}
       onPageChange={setPage}
