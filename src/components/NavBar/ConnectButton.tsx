@@ -10,23 +10,19 @@ import TotalBalance from "./TotalBalance";
 import ConnectModal from './ConnectModal';
 
 type connectButtonProps = {
-  hasWeb3: boolean,
-  user: string,
-  setUser: Function
+  hasWeb3: boolean;
 }
 
-function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
-  const { status, reset } = useWallet();
+function ConnectButton({ hasWeb3 }: connectButtonProps) {
+  const { account, status, reset } = useWallet();
 
   const [isModalOpen, setModalOpen] = useState(false);
 
   const connectWeb3 = async (wallet) => {
     connect(wallet.ethereum);
-    setUser(wallet.account);
   };
 
   const disconnectWeb3 = async () => {
-    setUser('');
     reset();
   };
 
@@ -44,12 +40,12 @@ function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
               </LinkBase>
             </div>
             <div style={{flex: '1', textAlign: 'right'}}>
-              <IdentityBadge entity={user} />
+              <IdentityBadge entity={account || ''} />
             </div>
           </div>
           <div style={{display: 'flex'}}>
             <div style={{flex: '1', textAlign: 'right'}}>
-              <TotalBalance user={user} />
+              <TotalBalance user={account || ''} />
             </div>
           </div>
         </Box>

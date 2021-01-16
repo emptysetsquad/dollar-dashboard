@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Box, LinkBase, Tag,
-} from '@aragon/ui';
+import { useWallet } from 'use-wallet';
+import { Box, LinkBase, Tag } from '@aragon/ui';
+
 import EpochBlock from "../common/EpochBlock";
 
 function epochformatted() {
@@ -22,11 +22,8 @@ function epochformatted() {
   return `${epoch}-0${epochHour}:${epochMinute > 9 ? epochMinute : "0" + epochMinute.toString()}:${epochRemainder > 9 ? epochRemainder : "0" + epochRemainder.toString()}`;
 }
 
-type HomePageProps = {
-  user: string
-};
-
-function HomePage({user}: HomePageProps) {
+function HomePage() {
+  const { account } = useWallet();
   const history = useHistory();
 
   const [epochTime, setEpochTime] = useState("0-00:00:00");
@@ -47,7 +44,7 @@ function HomePage({user}: HomePageProps) {
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  }, [account]);
 
   return (
     <>

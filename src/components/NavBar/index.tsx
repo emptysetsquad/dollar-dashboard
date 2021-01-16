@@ -6,11 +6,9 @@ import ConnectButton from './ConnectButton';
 
 type NavbarProps = {
   hasWeb3: boolean;
-  user: string;
-  setUser: Function;
 };
 
-function NavBar({ hasWeb3, user, setUser }: NavbarProps) {
+function NavBar({ hasWeb3 }: NavbarProps) {
   const currentTheme = useTheme();
   const logoUrl = `./logo/logo_${currentTheme._name === 'light' ? 'black' : 'white'}.svg`;
 
@@ -42,7 +40,7 @@ function NavBar({ hasWeb3, user, setUser }: NavbarProps) {
               <LinkButton title="Coupons" to="/coupons/" />
             </div>
             <div style={{ width: '20%', textAlign: 'right' }}>
-              <ConnectButton hasWeb3={hasWeb3} user={user} setUser={setUser} />
+              <ConnectButton hasWeb3={hasWeb3} />
             </div>
           </div>
         </div>

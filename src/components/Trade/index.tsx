@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useWallet } from 'use-wallet';
+import BigNumber from 'bignumber.js';
 import { LinkBase, Box } from '@aragon/ui';
 
-import BigNumber from 'bignumber.js';
 import { getTokenBalance } from '../../utils/infura';
 import { toTokenUnitsBN } from '../../utils/number';
 
@@ -10,7 +11,9 @@ import {ESD, UNI, USDC} from "../../constants/tokens";
 import IconHeader from "../common/IconHeader";
 
 
-function UniswapPool({ user }: {user: string}) {
+function UniswapPool() {
+  const { account } = useWallet();
+
   const [pairBalanceESD, setPairBalanceESD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
 
@@ -39,7 +42,7 @@ function UniswapPool({ user }: {user: string}) {
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  }, [account]);
 
   return (
     <>

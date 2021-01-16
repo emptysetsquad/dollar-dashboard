@@ -1,14 +1,11 @@
 import React, {useEffect, useState} from 'react';
+import { useWallet } from 'use-wallet';
+import BigNumber from "bignumber.js";
 import { DataView } from '@aragon/ui';
 
 import {getAllRegulations} from '../../utils/infura';
 import {ESD, ESDS} from "../../constants/tokens";
 import {formatBN, toTokenUnitsBN} from "../../utils/number";
-import BigNumber from "bignumber.js";
-
-type RegulationHistoryProps = {
-  user: string,
-};
 
 type Regulation = {
   type: string,
@@ -57,9 +54,9 @@ function renderEntry({ type, data }: Regulation): string[] {
   ]
 }
 
-function RegulationHistory({
-  user,
-}: RegulationHistoryProps) {
+function RegulationHistory() {
+  const { account } = useWallet();
+
   const [regulations, setRegulations] = useState<Regulation[]>([]);
   const [page, setPage] = useState(0)
   const [initialized, setInitialized] = useState(false)
@@ -87,7 +84,7 @@ function RegulationHistory({
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  }, [account]);
 
   return (
     <DataView

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
+import { useWallet } from 'use-wallet';
 import BigNumber from 'bignumber.js';
+
 import {
   getBalanceBonded,
   getBalanceOfStaged, getFluidUntil, getLockedUntil,
@@ -19,11 +20,10 @@ import IconHeader from "../common/IconHeader";
 import {getPoolAddress} from "../../utils/pool";
 import {DollarPool4} from "../../constants/contracts";
 
-function Wallet({ user }: {user: string}) {
+function Wallet() {
+  const { account } = useWallet();
   const { override } = useParams();
-  if (override) {
-    user = override;
-  }
+  const user = override ? override : account || '';
 
   const [userESDBalance, setUserESDBalance] = useState(new BigNumber(0));
   const [userESDAllowance, setUserESDAllowance] = useState(new BigNumber(0));

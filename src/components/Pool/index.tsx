@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
+import { useWallet } from 'use-wallet';
 import BigNumber from 'bignumber.js';
+import { Header } from '@aragon/ui';
+
 import {
   getPoolBalanceOfBonded, getPoolBalanceOfClaimable,
   getPoolBalanceOfRewarded,
@@ -14,7 +16,6 @@ import {
 import {ESD, UNI, USDC} from "../../constants/tokens";
 import {POOL_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
-import { Header } from '@aragon/ui';
 
 import WithdrawDeposit from "./WithdrawDeposit";
 import BondUnbond from "./BondUnbond";
@@ -28,11 +29,10 @@ import {DollarPool4} from "../../constants/contracts";
 
 
 
-function Pool({ user }: {user: string}) {
+function Pool() {
+  const { account } = useWallet();
   const { override } = useParams();
-  if (override) {
-    user = override;
-  }
+  const user = override ? override : account || '';
 
   const [poolAddress, setPoolAddress] = useState("");
   const [poolTotalBonded, setPoolTotalBonded] = useState(new BigNumber(0));

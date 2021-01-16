@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from '@aragon/ui';
 import { useParams } from 'react-router-dom';
+import { useWallet } from 'use-wallet';
+import BigNumber from "bignumber.js";
+import { Header } from '@aragon/ui';
 
 import {
   getCouponPremium,
@@ -12,7 +14,6 @@ import {
 import {ESD, ESDS} from "../../constants/tokens";
 import CouponMarketHeader from "./Header";
 import {toTokenUnitsBN} from "../../utils/number";
-import BigNumber from "bignumber.js";
 import PurchaseCoupons from "./PurchaseCoupons";
 import PurchaseHistory from "./PurchaseHistory";
 import ModalWarning from "./ModalWarning";
@@ -22,11 +23,10 @@ import {CheckBox} from "../common";
 
 const ONE_COUPON = new BigNumber(10).pow(18);
 
-function CouponMarket({ user }: {user: string}) {
+function CouponMarket() {
+  const { account } = useWallet();
   const { override } = useParams();
-  if (override) {
-    user = override;
-  }
+  const user = override ? override : account || '';
 
   const storedHideRedeemed = getPreference('hideRedeemedCoupons', '0');
 
