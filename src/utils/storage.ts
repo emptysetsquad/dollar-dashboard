@@ -15,3 +15,11 @@ export function getPreference(key:string, defaultValue:string): string {
 export function storePreference(key:string, value:string):void {
   localStorage.setItem(key, value);
 }
+
+/**
+ * remove key from storage
+ * @param {string} key
+ */
+export function removePreference(key:string):void {
+  localStorage.removeItem(key);
+}

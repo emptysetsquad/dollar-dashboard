@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useWallet } from 'use-wallet';
 import { Header } from '@aragon/ui';
 
 import {getEpoch, getEpochTime,
@@ -8,7 +9,8 @@ import AdvanceEpoch from './AdvanceEpoch';
 import EpochPageHeader from "./Header";
 import IconHeader from "../common/IconHeader";
 
-function EpochDetail({ user }: {user: string}) {
+function EpochDetail() {
+  const { account } = useWallet();
 
   const [epoch, setEpoch] = useState(0);
   const [epochTime, setEpochTime] = useState(0);
@@ -34,7 +36,7 @@ function EpochDetail({ user }: {user: string}) {
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  }, [account]);
 
   return (
     <>
@@ -48,7 +50,6 @@ function EpochDetail({ user }: {user: string}) {
       <Header primary="Advance Epoch" />
 
       <AdvanceEpoch
-        user={user}
         epoch={epoch}
         epochTime={epochTime}
       />

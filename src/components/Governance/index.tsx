@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useWallet } from 'use-wallet';
+import BigNumber from "bignumber.js";
 import { Header } from '@aragon/ui';
 
 import {
@@ -9,14 +11,15 @@ import {
 } from '../../utils/infura';
 import {ESDS} from "../../constants/tokens";
 import {toTokenUnitsBN} from "../../utils/number";
-import BigNumber from "bignumber.js";
 import GovernanceHeader from "./Header";
 import ProposeCandidate from "./ProposeCandidate";
 import CandidateHistory from "./CandidateHistory";
 import IconHeader from "../common/IconHeader";
 import {canPropose} from "../../utils/gov";
 
-function Governance({ user }: {user: string}) {
+function Governance() {
+  const { account } = useWallet();
+  const user = account || '';
 
   const [stake, setStake] = useState(new BigNumber(0));
   const [totalStake, setTotalStake] = useState(new BigNumber(0));

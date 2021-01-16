@@ -22,7 +22,6 @@ function App() {
   const storedTheme = getPreference('theme', 'light');
 
   const [hasWeb3, setHasWeb3] = useState(false);
-  const [user, setUser] = useState(''); // the current connected user
   const [theme, setTheme] = useState(storedTheme);
 
   const updateTheme = (newTheme: string) => {
@@ -49,7 +48,7 @@ function App() {
       isCancelled = true;
       clearInterval(id);
     };
-  }, [user]);
+  });
 
   return (
     <Router>
@@ -65,23 +64,23 @@ function App() {
         }}
       >
         <Main assetsUrl={`${process.env.PUBLIC_URL}/aragon-ui/`} theme={theme} layout={false}>
-          <NavBar hasWeb3={hasWeb3} user={user} setUser={setUser} />
+          <NavBar hasWeb3={hasWeb3} />
           <Layout>
           {
             hasWeb3 ?
               <Switch>
-                <Route path="/dao/:override"><Wallet user={user}/></Route>
-                <Route path="/dao/"><Wallet user={user}/></Route>
-                <Route path="/epoch/"><EpochDetail user={user}/></Route>
-                <Route path="/coupons/:override"><CouponMarket user={user}/></Route>
-                <Route path="/coupons/"><CouponMarket user={user}/></Route>
-                <Route path="/governance/candidate/:candidate"><Candidate user={user}/></Route>
-                <Route path="/governance/"><Governance user={user}/></Route>
-                <Route path="/trade/"><Trade user={user}/></Route>
-                <Route path="/regulation/"><Regulation user={user}/></Route>
-                <Route path="/pool/:override"><Pool user={user}/></Route>
-                <Route path="/pool/"><Pool user={user}/></Route>
-                <Route path="/"><HomePage user={user}/></Route>
+                <Route path="/dao/:override"><Wallet /></Route>
+                <Route path="/dao/"><Wallet /></Route>
+                <Route path="/epoch/"><EpochDetail /></Route>
+                <Route path="/coupons/:override"><CouponMarket /></Route>
+                <Route path="/coupons/"><CouponMarket /></Route>
+                <Route path="/governance/candidate/:candidate"><Candidate /></Route>
+                <Route path="/governance/"><Governance /></Route>
+                <Route path="/trade/"><Trade /></Route>
+                <Route path="/regulation/"><Regulation /></Route>
+                <Route path="/pool/:override"><Pool /></Route>
+                <Route path="/pool/"><Pool /></Route>
+                <Route path="/"><HomePage /></Route>
               </Switch>
               :
               <Switch>
