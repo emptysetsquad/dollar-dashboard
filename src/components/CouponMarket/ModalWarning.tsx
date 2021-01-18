@@ -21,12 +21,12 @@ function ModalWarning() {
           padding: 5
         }}>
           <div>
-            By purchasing coupons the buyer incurs significant risk of loss.
             Coupons will only become redeemable during the next supply
             expansion. Each expansionary epoch, a tranche of rewards are
             reserved for coupon redemptions by the DAO. At that time, the
-            redemption process is first come, first served. Coupon redemption
-            is not guaranteed.
+            redemption process is first come, first served. If coupons are not
+            redeemed within {COUPON_EXPIRATION} epochs of purchase, they can be
+            redeemed for the original purchase price and the premium is forfeited.
           </div>
 
           <div style={{
@@ -34,8 +34,7 @@ function ModalWarning() {
             textAlign: 'center',
             color: theme.warningSurfaceContent
           }}>
-            Coupons will expire worthless if not redeemed
-            within {COUPON_EXPIRATION} epochs.
+            Coupon premiums and redemption timing are not guaranteed.
           </div>
         </div>
 
