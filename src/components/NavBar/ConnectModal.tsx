@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Modal, Button, Header } from '@aragon/ui';
 import { useWallet } from 'use-wallet';
+import { getPreference } from '../../utils/storage';
 
 type ConnectModalProps = {
   visible: boolean,
@@ -16,6 +17,17 @@ function ConnectModal({
   const handleConnect = (connector) => {
     connect(connector);
   };
+
+ 
+  useEffect(()=> {
+    // Fire only once
+    const provider = getPreference('walletProvider', 'none');
+    console.log(provider)
+    if (provider != 'none') {
+      const activate = (connector) => connect(connector)
+    }  
+  }, [])
+
 
   useEffect(() => {
     if (account) {
