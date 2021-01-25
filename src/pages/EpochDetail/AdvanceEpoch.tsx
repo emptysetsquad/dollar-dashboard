@@ -3,7 +3,7 @@ import {
   Box, Button, IconCirclePlus,
 } from '@aragon/ui';
 import {advance} from '../../utils/web3';
-import NumberBlock from "../common/NumberBlock";
+import {NumberBlock} from "../../components/common";
 import {ESDS} from "../../constants/tokens";
 
 type AdvanceEpochProps = {

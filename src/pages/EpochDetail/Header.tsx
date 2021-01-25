@@ -1,7 +1,6 @@
 import React from 'react';
 
-import NumberBlock from "../common/NumberBlock";
-import TextBlock from "../common/TextBlock";
+import {NumberBlock, TextBlock} from "../../components/common";
 
 type AccountPageHeaderProps = {
   epoch: number,

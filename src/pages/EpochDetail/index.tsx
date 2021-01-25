@@ -7,7 +7,7 @@ import {getEpoch, getEpochTime,
 import {ESDS} from "../../constants/tokens";
 import AdvanceEpoch from './AdvanceEpoch';
 import EpochPageHeader from "./Header";
-import IconHeader from "../common/IconHeader";
+import {IconHeader} from "../../components/common";
 
 function EpochDetail() {
   const { account } = useWallet();
