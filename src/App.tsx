@@ -10,7 +10,7 @@ import HomePage from './pages/HomePage';
 import Trade from './pages/Trade/index';
 import Footer from './components/Footer';
 import Wallet from "./pages/Wallet";
-import EpochDetail from "./components/EpochDetail";
+import EpochDetail from "./pages/EpochDetail";
 import CouponMarket from "./pages/CouponMarket";
 import Governance from "./pages/Governance";
 import Candidate from "./pages/Candidate";
