@@ -6,17 +6,17 @@ import { UseWalletProvider } from 'use-wallet';
 import { updateModalMode } from './utils/web3';
 import { storePreference, getPreference } from './utils/storage';
 import NavBar from './components/NavBar';
-import HomePage from './components/HomePage';
-import Trade from './components/Trade/index';
+import HomePage from './pages/HomePage';
+import Trade from './pages/Trade/index';
 import Footer from './components/Footer';
-import Wallet from "./components/Wallet";
-import EpochDetail from "./components/EpochDetail";
-import CouponMarket from "./components/CouponMarket";
-import Governance from "./components/Governance";
-import Candidate from "./components/Candidate";
-import Regulation from "./components/Regulation";
-import Pool from "./components/Pool";
-import HomePageNoWeb3 from "./components/HomePageNoWeb3";
+import Wallet from "./pages/Wallet";
+import EpochDetail from "./pages/EpochDetail";
+import CouponMarket from "./pages/CouponMarket";
+import Governance from "./pages/Governance";
+import Candidate from "./pages/Candidate";
+import Regulation from "./pages/Regulation";
+import Pool from "./pages/Pool";
+import HomePageNoWeb3 from "./pages/HomePageNoWeb3";
 
 function App() {
   const storedTheme = getPreference('theme', 'light');
