@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import { useWallet } from 'use-wallet';
-import { Box, LinkBase, Tag } from '@aragon/ui';
+import { Row, Column } from '../../components/helpers'
+import styled from 'styled-components'
 
-import {EpochBlock} from "../../components/common";
+import { EpochBlock } from "../../components/common";
 
 function epochformatted() {
   const epochStart = 1599148800;
@@ -48,117 +49,169 @@ function HomePage() {
 
   return (
     <>
-      <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <div style={{ flexBasis: '68%' }} />
-        <div style={{ flexBasis: '30%', flexGrow: 1, marginRight: '2%', textAlign: 'right'}}>
-          <Box>
-            <EpochBlock epoch={epochTime}/>
-          </Box>
-        </div>
-      </div>
-      <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <div style={{ flexBasis: '30%', marginRight: '3%', marginLeft: '2%'  }}>
-          <MainButton
-            title="DAO"
-            description="Earn rewards for governing"
-            icon={<i className="fas fa-dot-circle"/>}
-            onClick={() => {
-              history.push('/dao/');
-            }}
-          />
-        </div>
-
-        <div style={{ flexBasis: '30%' }}>
-          <MainButton
-            title="LP Rewards"
-            description="Earn rewards for providing liquidity."
-            icon={<i className="fas fa-parachute-box"/>}
-            onClick={() => {
-              history.push('/pool/');
-            }}
-          />
-        </div>
-
-        <div style={{ flexBasis: '30%', marginLeft: '3%', marginRight: '2%' }}>
-          <MainButton
-            title="Regulation"
-            description="Network supply regulation statistics."
-            icon={<i className="fas fa-chart-area"/>}
-            onClick={() => {
-              history.push('/regulation/');
-            }}
-          />
-        </div>
-      </div>
-      <div style={{ padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <div style={{ flexBasis: '30%', marginRight: '3%', marginLeft: '2%' }}>
-          <MainButton
-            title="Governance"
-            description="Vote on upgrades."
-            icon={<i className="fas fa-poll"/>}
-            onClick={() => {
-              history.push('/governance/');
-            }}
-          />
-        </div>
-
-        <div style={{ flexBasis: '30%' }}>
-          <MainButton
-            title="Trade"
-            description="Trade døllar tokens."
-            icon={<i className="fas fa-exchange-alt"/>}
-            onClick={() => {
-              history.push('/trade/');
-            }}
-          />
-        </div>
-
-        <div style={{ flexBasis: '30%', marginLeft: '3%', marginRight: '2%'  }}>
-          <MainButton
-            title="Coupons"
-            description="Purchase and redeem coupons."
-            icon={<i className="fas fa-ticket-alt"/>}
-            onClick={() => {
-              history.push('/coupons/');
-            }}
-          />
-        </div>
-      </div>
+      <Wrapper>
+        <Column w={'100%'} style={{maxWidth: '1200px'}} m={'50px 0 0'}>
+          <Title>Greeetings Traveller</Title>
+          <Subtitle>Small conditional description here</Subtitle>
+        </Column>
+      </Wrapper>
+      <ContentWrapper ai={'center'} >
+        <CardRow>
+          <Card>
+            <CardTitle>Protocol Status</CardTitle>
+            <Grid>
+              <div>
+                <InfoTitle>Status</InfoTitle>
+                <b>Expanding</b>
+              </div>
+              <div>
+                <InfoTitle>Current Epoch</InfoTitle>
+                <div style={{width: '130px'}}>{epochTime}</div>
+              </div>
+              <div>
+                <InfoTitle>Uniswap TWAP</InfoTitle>
+                <div>1.034 USDC</div>
+              </div>
+              <div>
+                <InfoTitle>Spot Price</InfoTitle>
+                <div>0.9983 USDC</div>
+              </div>
+              <div>
+                <InfoTitle>Protocol Debt</InfoTitle>
+                <div>84,201,290 ESD</div>
+              </div>
+              <div>
+                <InfoTitle>Purchased Coupons</InfoTitle>
+                <div>32,892,199 ESD</div>
+              </div>
+            </Grid>
+          </Card>  
+          <Card>
+            <CardTitle>Your Balance</CardTitle>
+              <Row jc={'space-between'} ai={'center'} h={'100%'} w={'auto'}>
+                <div>Please connect your wallet</div>
+                <Button>Connect Wallet</Button>
+              </Row>
+          </Card>  
+        </CardRow>
+        <Infobox ai={'center'}>
+          <h1>Need to know more?</h1>
+          <Row>
+            <InfoCard href={'https://docs.emptyset.finance/'} target={'_blank'}>
+              <img src={'/graphics/new.png'} style={{width: '100%'}} />
+              <h3>New to Empty Set Dollar?</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque luctus, velit ac tincidunt ultrices, mauris arcu imperdiet </p>
+            </InfoCard>
+            <InfoCard href={'https://docs.emptyset.finance/faqs/bonding'} target={'_blank'}> 
+              <img src={'/graphics/how.png'} style={{width: '100%'}}/>
+              <h3>How do you use the DAO/LP?</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque luctus, velit ac tincidunt ultrices, mauris arcu imperdiet </p>
+            </InfoCard>
+            <InfoCard href={'https://docs.emptyset.finance/faqs/risks'} target={'_blank'}>
+              <img src={'/graphics/risks.png'} style={{width: '100%'}}/>
+              <h3>Learn about the Risks?</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque luctus, velit ac tincidunt ultrices, mauris arcu imperdiet </p>
+            </InfoCard>
+          </Row>
+        </Infobox>
+      </ContentWrapper>
     </>
   );
 }
 
-type MainButtonPropx = {
-  title: string,
-  description: string,
-  icon: any,
-  onClick: Function,
-  tag?:string
-}
 
-function MainButton({
-  title, description, icon, onClick, tag,
-}:MainButtonPropx) {
-  return (
-    <LinkBase onClick={onClick} style={{ width: '100%' }}>
-      <Box>
-        <div style={{ padding: 10, fontSize: 18 }}>
-          {title}
-          {tag ? <Tag>{tag}</Tag> : <></>}
-        </div>
-        <span style={{ fontSize: 48 }}>
-          {icon}
-        </span>
-        {/*<img alt="icon" style={{ padding: 10, height: 64 }} src={iconUrl} />*/}
-        <div style={{ paddingTop: 5, opacity: 0.5 }}>
-          {' '}
-          {description}
-          {' '}
-        </div>
+const Title = styled.h1`
+  color: ${({black}) => black ? 'black':'white'};
+  margin-bottom: 0px;
+  font-weight: bold;
+`
+const CardTitle = styled.h2`
+  margin: 0px;
+  font-weight: bold;
+`
+const InfoTitle = styled.h3`
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #00D661;
+`
 
-      </Box>
-    </LinkBase>
-  );
-}
+const Subtitle = styled.p`
+  color: white;
+`
+const ContentWrapper = styled(Column)`
+  background: white;
+  width: 100%;
+  flex-grow: 1;
+  margin: 150px 0 0;
+  padding: 0 20px 50px;
+  box-sizing: border-box;
 
+`
+const Infobox = styled(Column)`
+  margin: 50px 0 0;
+  max-width: 1200px;
+  h3 {
+    margin: 10px 0px 0px;
+  }
+  p {
+    padding: 0px 10px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 32px;
+  }
+`
+const InfoCard = styled.a`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 30px;
+  flex-grow: 1;
+  :last-child {
+    margin-right: 0px;
+  }
+`
+
+
+const CardRow = styled(Row)`
+  width: 100%;
+  max-width: 1200px;
+  margin: -97px 0 0;
+`
+
+const Card = styled(Column)`
+  background: #FFFFFF;
+  border: 1px solid #E8E8E8;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 34px 68px;
+  margin-right: 30px;
+  flex-grow: 1;
+  max-width: calc(50% - 15px);
+  :last-child {
+    margin-right: 0px;
+  }
+`
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  grid-auto-rows: minmax(70px, auto);
+`
+const Button = styled.button`
+  color: #00D661;
+  border: 1px solid;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 8px 16px 6px;
+  background: none;
+  font-size: 18px;
+  outline: none;
+`
+
+const Wrapper = styled(Row)`
+  width: 100%;
+  padding: 0px 20px;
+  box-sizing: border-box;
+  justify-content: center;
+`
 export default HomePage;
