@@ -1,7 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import styled from 'styled-components'
 
-import { LinkBase, useTheme } from '@aragon/ui';
+import {Row, Column} from '../helpers'
+// import { LinkBase, useTheme } from '@aragon/ui';
 import ConnectButton from './ConnectButton';
 
 type NavbarProps = {
@@ -9,70 +11,62 @@ type NavbarProps = {
 };
 
 function NavBar({ hasWeb3 }: NavbarProps) {
-  const currentTheme = useTheme();
-  const logoUrl = `./logo/logo_${currentTheme._name === 'light' ? 'black' : 'white'}.svg`;
+  // const currentTheme = useTheme();
+  const logoUrl = `./logo/logo_${false ? 'black' : 'white'}.svg`;
 
   return (
-    <>
-      <div
-        style={{
-          borderTop: '1px solid ' + currentTheme.border,
-          backgroundColor: 'none',
-          textAlign: 'center',
-          height: '128px',
-          width: '100%',
-          fontSize: '14px',
-        }}
-      >
-        <div style={{ maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto' }}>
-          <div style={{ display: 'flex', paddingTop: '24px' }}>
-            <div style={{ width: '20%', textAlign: 'left' }}>
-              <NavLink to="/" component={LinkBase} style={{ marginRight: '16px', height: '40px' }}>
-                <img src={logoUrl} height="40px" alt="Empty Set Dollar" />
-              </NavLink>
-            </div>
-            <div style={{ width: '60%', textAlign: 'center' }}>
-              <LinkButton title="DAO" to="/dao/" />
-              <LinkButton title="Liquidity" to="/pool/" />
-              <LinkButton title="Regulation" to="/regulation/" />
-              <LinkButton title="Governance" to="/governance/" />
-              <LinkButton title="Trade" to="/trade/" />
-              <LinkButton title="Coupons" to="/coupons/" />
-            </div>
-            <div style={{ width: '20%', textAlign: 'right' }}>
-              <ConnectButton hasWeb3={hasWeb3} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <Wrapper>
+      <Section>
+            <NavLink to="/" external={false} style={{ marginRight: '16px', height: '40px' }}>
+              <img src={logoUrl} height="40px" alt="Empty Set Dollar" />
+            </NavLink>
+            <Row w={'auto'}>
+              <Button to="/staking/" external={false} >Staking</Button>
+              <Button to="/coupons/" external={false} >Coupons</Button>
+              <Button to="/regulation/" external={false} >Regulation</Button>
+              <Button to="/governance/" external={false} >Governance</Button>
+              {/* <LinkButton title="Liquidity" to="/pool/" /> */}
+              {/* <LinkButton title="Trade" to="/trade/" /> */}
+            </Row>
+            <ConnectButton hasWeb3={hasWeb3} />
+      </Section>
+    </Wrapper>
   );
 }
 
-type linkButtonProps = {
-  title: string;
-  to: string;
-};
+const Wrapper = styled(Row)`
+  width: 100%;
+  padding: 0px 20px;
+  box-sizing: border-box;
+  justify-content: center;
+  @media (max-width: 960px) {
+      padding: 20px 20px;
+  }
+`
 
-function LinkButton({ title, to }: linkButtonProps) {
-  return (
-    <NavLink
-      to={to}
-      component={LinkBase}
-      external={false}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        marginLeft: '8px',
-        marginRight: '8px',
-        height: '40px',
-        opacity: 0.5,
-      }}
-      activeStyle={{ opacity: 1 }}
-    >
-      <span style={{ display: 'block', padding: '1%', fontSize: '17px' }}>{title}</span>
-    </NavLink>
-  );
-}
+const Section = styled.header`
+  background: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  width: 100%;
+  max-width: 1200px;
+  @media (max-width: 960px) {
+    flex-direction: column;
+  }
+`
+
+const Button = styled(NavLink)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 16px;
+  font-size: 14px;
+  height: 40px;
+  color: white !important; 
+`
+
 
 export default NavBar;

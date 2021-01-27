@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from 'use-wallet';
+import styled from 'styled-components'
+import {Row, Column} from '../helpers'
 
-import {
-  Button, IdentityBadge, IconConnect, Box, IconPower, LinkBase,
-} from '@aragon/ui';
 
 import { connect } from '../../utils/web3';
 import { storePreference, getPreference, removePreference } from '../../utils/storage';
@@ -51,35 +50,27 @@ function ConnectButton({ hasWeb3 }: connectButtonProps) {
   });
 
   return wallet.status === 'connected' ? (
-    <div style={{display: 'flex'}}>
-      <div style={{flex: '1'}}/>
-      <div>
-        <Box padding={4} style={{width: '192px'}}>
-          <div style={{display: 'flex'}}>
-            <div>
-              <LinkBase onClick={disconnectWeb3} style={{marginRight: '8px', height: '24px'}}>
-                <IconPower />
-              </LinkBase>
-            </div>
-            <div style={{flex: '1', textAlign: 'right'}}>
-              <IdentityBadge entity={wallet.account || ''} />
-            </div>
-          </div>
-          <div style={{display: 'flex'}}>
-            <div style={{flex: '1', textAlign: 'right'}}>
-              <TotalBalance user={wallet.account || ''} />
-            </div>
-          </div>
-        </Box>
-      </div>
-    </div>
+      <Button onClick={disconnectWeb3}>
+          {wallet.account ? wallet.account.slice(0,5) + '...' + wallet.account.slice(-5, -1) : ''}
+      </Button>
   ) : (
     <>
       <ConnectModal visible={isModalOpen} onClose={toggleModal} onConnect={connectWeb3}/>
-      <Button icon={<IconConnect />} label="Connect" onClick={toggleModal} disabled={!hasWeb3}/>
+      <Button onClick={toggleModal} disabled={!hasWeb3}>Connect Wallet</Button>
     </>
   );
 }
 
+const Button = styled.button`
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 16px 6px;
+  background: #00D661;
+  color: white;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  font-size: 18px;
+`
 
 export default ConnectButton;
