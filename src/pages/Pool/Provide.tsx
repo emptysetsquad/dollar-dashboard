@@ -1,34 +1,45 @@
 import React, { useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box, Button, IconArrowUp, IconCirclePlus
 } from '@aragon/ui';
-import BigNumber from 'bignumber.js';
+
+import useBalances from "../../hooks/useBalances";
+import usePool from "../../hooks/usePool";
+import { isPos, toBaseUnitBN, toTokenUnitsBN } from '../../utils/number';
+import { ESD, USDC } from "../../constants/tokens";
+import { MAX_UINT256 } from "../../constants/values";
+
 import {
   BalanceBlock, MaxButton, PriceSection, BigNumberInput
 } from '../../components/common';
-import {approve, providePool} from '../../utils/web3';
-import {isPos, toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
-import {ESD, USDC} from "../../constants/tokens";
-import {MAX_UINT256} from "../../constants/values";
 
 type ProvideProps = {
-  poolAddress: string,
   user: string,
-  rewarded: BigNumber,
-  pairBalanceESD: BigNumber,
-  pairBalanceUSDC: BigNumber,
-  userUSDCBalance: BigNumber,
-  userUSDCAllowance: BigNumber,
-  status: number,
 };
 
-function Provide({
-  poolAddress, user, rewarded, pairBalanceESD, pairBalanceUSDC, userUSDCBalance, userUSDCAllowance, status
-}: ProvideProps) {
+function Provide({ user }: ProvideProps) {
   const [provideAmount, setProvideAmount] = useState(new BigNumber(0));
   const [usdcAmount, setUsdcAmount] = useState(new BigNumber(0));
 
-  const USDCToESDRatio = pairBalanceUSDC.isZero() ? new BigNumber(1) : pairBalanceUSDC.div(pairBalanceESD);
+  const { userUSDCFreeBalance } = useBalances();
+  const {
+    poolAddress,
+    pairESDBalance,
+    pairUSDCBalance,
+
+    userUSDCAllowance,
+    userESDRewardedBalance,
+    userStatus,
+
+    onApprove,
+    onProvide
+  } = usePool();
+
+  const USDCToESDRatio = pairUSDCBalance.isZero() ? new BigNumber(1) : pairUSDCBalance.div(pairESDBalance);
+
+  const isRewardedNegative = userESDRewardedBalance.isGreaterThan(new BigNumber("1000000000000000000"));
+  const rewarded = isRewardedNegative ? new BigNumber(0) : userESDRewardedBalance;
 
   const onChangeAmountESD = (amountESD) => {
     if (!amountESD) {
@@ -56,7 +67,7 @@ function Provide({
             <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
           </div>
           <div style={{flexBasis: '33%'}}>
-            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
+            <BalanceBlock asset="USDC Balance" balance={userUSDCFreeBalance} suffix={"USDC"} />
           </div>
           <div style={{flexBasis: '2%'}}/>
           {/* Provide liquidity using Pool rewards */}
@@ -68,7 +79,7 @@ function Provide({
                     adornment="ESD"
                     value={provideAmount}
                     setter={onChangeAmountESD}
-                    disabled={status === 1}
+                    disabled={userStatus === 1}
                   />
                   <PriceSection label="Requires " amt={usdcAmount} symbol=" USDC"/>
                   <MaxButton
@@ -84,13 +95,13 @@ function Provide({
                   icon={<IconArrowUp/>}
                   label="Provide"
                   onClick={() => {
-                    providePool(
-                      poolAddress,
-                      toBaseUnitBN(provideAmount, ESD.decimals),
+                    onProvide(
+                      provideAmount,
                       (hash) => setProvideAmount(new BigNumber(0))
                     );
                   }}
-                  disabled={poolAddress === '' || status !== 0 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
+                  disabled={poolAddress === '' || userStatus !== 0 ||
+                    !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCFreeBalance)}
                 />
               </div>
             </div>
@@ -103,7 +114,7 @@ function Provide({
             <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
           </div>
           <div style={{flexBasis: '33%'}}>
-            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
+            <BalanceBlock asset="USDC Balance" balance={userUSDCFreeBalance} suffix={"USDC"} />
           </div>
           <div style={{flexBasis: '2%'}}/>
           {/* Approve Pool to spend USDC */}
@@ -112,9 +123,7 @@ function Provide({
               wide
               icon={<IconCirclePlus/>}
               label="Approve"
-              onClick={() => {
-                approve(USDC.addr, poolAddress);
-              }}
+              onClick={() => {onApprove(USDC.addr)}}
               disabled={poolAddress === '' || user === ''}
             />
           </div>

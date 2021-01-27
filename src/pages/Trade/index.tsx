@@ -1,56 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useWallet } from 'use-wallet';
-import BigNumber from 'bignumber.js';
+import React from 'react';
 import { LinkBase, Box } from '@aragon/ui';
 
-import { getTokenBalance } from '../../utils/infura';
-import { toTokenUnitsBN } from '../../utils/number';
+import usePool from "../../hooks/usePool";
+import { UNI } from "../../constants/tokens";
 
+import { IconHeader } from "../../components/common";
 import TradePageHeader from './Header';
-import {ESD, UNI, USDC} from "../../constants/tokens";
-import {IconHeader} from "../../components/common";
 
 
 function UniswapPool() {
-  const { account } = useWallet();
-
-  const [pairBalanceESD, setPairBalanceESD] = useState(new BigNumber(0));
-  const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
-
-  useEffect(() => {
-    let isCancelled = false;
-
-    async function updateUserInfo() {
-      const [
-        pairBalanceESDStr, pairBalanceUSDCStr,
-      ] = await Promise.all([
-        getTokenBalance(ESD.addr, UNI.addr),
-        getTokenBalance(USDC.addr, UNI.addr),
-      ]);
-
-      if (!isCancelled) {
-        setPairBalanceESD(toTokenUnitsBN(pairBalanceESDStr, ESD.decimals));
-        setPairBalanceUSDC(toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals));
-      }
-    }
-
-    updateUserInfo();
-    const id = setInterval(updateUserInfo, 15000);
-
-    // eslint-disable-next-line consistent-return
-    return () => {
-      isCancelled = true;
-      clearInterval(id);
-    };
-  }, [account]);
+  const {
+    pairESDBalance,
+    pairUSDCBalance,
+  } = usePool();
 
   return (
     <>
       <IconHeader icon={<i className="fas fa-exchange-alt"/>} text="Trade"/>
 
       <TradePageHeader
-        pairBalanceESD={pairBalanceESD}
-        pairBalanceUSDC={pairBalanceUSDC}
+        pairBalanceESD={pairESDBalance}
+        pairBalanceUSDC={pairUSDCBalance}
         uniswapPair={UNI.addr}
       />
 

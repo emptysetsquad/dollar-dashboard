@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box, Button, IconCirclePlus, IconCircleMinus, IconLock
 } from '@aragon/ui';
-import BigNumber from 'bignumber.js';
+
+import useDAO from "../../hooks/useDAO";
+import { isPos } from '../../utils/number';
+import { MAX_UINT256 } from "../../constants/values";
+
 import {
   BalanceBlock, MaxButton, BigNumberInput
 } from '../../components/common';
-import {approve, deposit, withdraw} from '../../utils/web3';
-import {isPos, toBaseUnitBN} from '../../utils/number';
-import {ESD, ESDS} from "../../constants/tokens";
-import {MAX_UINT256} from "../../constants/values";
 
 type WithdrawDepositProps = {
   user: string
@@ -24,6 +25,8 @@ function WithdrawDeposit({
 }: WithdrawDepositProps) {
   const [depositAmount, setDepositAmount] = useState(new BigNumber(0));
   const [withdrawAmount, setWithdrawAmount] = useState(new BigNumber(0));
+
+  const { onApprove, onDeposit, onWithdraw } = useDAO();
 
   return (
     <Box heading="Stage">
@@ -56,12 +59,7 @@ function WithdrawDeposit({
                   wide
                   icon={status === 0 ? <IconCirclePlus/> : <IconLock/>}
                   label="Deposit"
-                  onClick={() => {
-                    deposit(
-                      ESDS.addr,
-                      toBaseUnitBN(depositAmount, ESD.decimals),
-                    );
-                  }}
+                  onClick={() => {onDeposit(depositAmount)}}
                   disabled={status === 1 || !isPos(depositAmount) || depositAmount.isGreaterThan(balance)}
                 />
               </div>
@@ -91,12 +89,7 @@ function WithdrawDeposit({
                   wide
                   icon={status === 0 ? <IconCircleMinus/> : <IconLock/>}
                   label="Withdraw"
-                  onClick={() => {
-                    withdraw(
-                      ESDS.addr,
-                      toBaseUnitBN(withdrawAmount, ESD.decimals),
-                    );
-                  }}
+                  onClick={() => {onWithdraw(withdrawAmount)}}
                   disabled={status === 1 || !isPos(withdrawAmount) || withdrawAmount.isGreaterThan(stagedBalance)}
                 />
               </div>
@@ -116,9 +109,7 @@ function WithdrawDeposit({
               wide
               icon={<IconCirclePlus />}
               label="Approve"
-              onClick={() => {
-                approve(ESD.addr, ESDS.addr);
-              }}
+              onClick={onApprove}
               disabled={user === ''}
             />
           </div>

@@ -3,16 +3,16 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import {formatBN} from "../../utils/number";
 
-type BlanceBlockProps = {
+type BalanceBlockProps = {
   asset: string,
-  balance: BigNumber | string | number
+  balance?: BigNumber | string | number
   suffix?: string
 }
 
-function BalanceBlock({ asset, balance, suffix=""}: BlanceBlockProps) {
+function BalanceBlock({ asset, balance, suffix=""}: BalanceBlockProps) {
   let integer = '0';
   let digits = '0';
-  const balanceBN = new BigNumber(balance);
+  const balanceBN = new BigNumber(balance || 0);
   if (balanceBN.gte(new BigNumber(0))) {
     const tokens = formatBN(balanceBN, 2).split('.')
     integer = tokens[0];

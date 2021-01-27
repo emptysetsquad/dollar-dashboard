@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box, Button, IconCirclePlus, IconCircleMinus, IconCaution
 } from '@aragon/ui';
-import BigNumber from 'bignumber.js';
+
+import usePool from "../../hooks/usePool";
+import { isPos } from '../../utils/number';
+
 import {
-  BalanceBlock, MaxButton,BigNumberInput, TextBlock
+  BalanceBlock, MaxButton, BigNumberInput, TextBlock
 } from '../../components/common';
-import {bondPool, unbondPool} from '../../utils/web3';
-import {isPos, toBaseUnitBN} from '../../utils/number';
-import {UNI} from "../../constants/tokens";
 
 type BondUnbondProps = {
   poolAddress: string,
@@ -23,6 +24,8 @@ function BondUnbond({
 }: BondUnbondProps) {
   const [bondAmount, setBondAmount] = useState(new BigNumber(0));
   const [unbondAmount, setUnbondAmount] = useState(new BigNumber(0));
+
+  const { onBond, onUnbond } = usePool();
 
   return (
     <Box heading="Bond">
@@ -58,9 +61,8 @@ function BondUnbond({
                 icon={status === 0 ? <IconCirclePlus/> : <IconCaution/>}
                 label="Bond"
                 onClick={() => {
-                  bondPool(
-                    poolAddress,
-                    toBaseUnitBN(bondAmount, UNI.decimals),
+                  onBond(
+                    bondAmount,
                     (hash) => setBondAmount(new BigNumber(0))
                   );
                 }}
@@ -93,9 +95,9 @@ function BondUnbond({
                 icon={status === 0 ? <IconCircleMinus/> : <IconCaution/>}
                 label="Unbond"
                 onClick={() => {
-                  unbondPool(
+                  onUnbond(
                     poolAddress,
-                    toBaseUnitBN(unbondAmount, UNI.decimals),
+                    unbondAmount,
                     (hash) => setUnbondAmount(new BigNumber(0))
                   );
                 }}
