@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box, Button, IconCirclePlus, IconCircleMinus, IconCaution
 } from '@aragon/ui';
-import BigNumber from 'bignumber.js';
+
+import useDAO from "../../hooks/useDAO";
+import { isPos } from '../../utils/number';
+
 import {
   BalanceBlock, MaxButton, BigNumberInput, TextBlock
 } from '../../components/common';
-import { bond, unbondUnderlying } from '../../utils/web3';
-import {isPos, toBaseUnitBN} from '../../utils/number';
-import { ESD, ESDS } from "../../constants/tokens";
 
 type BondUnbondProps = {
   staged: BigNumber,
@@ -22,6 +23,8 @@ function BondUnbond({
 }: BondUnbondProps) {
   const [bondAmount, setBondAmount] = useState(new BigNumber(0));
   const [unbondAmount, setUnbondAmount] = useState(new BigNumber(0));
+
+  const { onBond, onUnbond } = useDAO();
 
   return (
     <Box heading="Bond">
@@ -56,12 +59,7 @@ function BondUnbond({
                 wide
                 icon={status === 0 ? <IconCirclePlus/> : <IconCaution/>}
                 label="Bond"
-                onClick={() => {
-                  bond(
-                    ESDS.addr,
-                    toBaseUnitBN(bondAmount, ESD.decimals),
-                  );
-                }}
+                onClick={() => {onBond(bondAmount);}}
                 disabled={status === 2 || !isPos(bondAmount) || bondAmount.isGreaterThan(staged)}
               />
             </div>
@@ -90,12 +88,7 @@ function BondUnbond({
                 wide
                 icon={status === 0 ? <IconCircleMinus/> : <IconCaution/>}
                 label="Unbond"
-                onClick={() => {
-                  unbondUnderlying(
-                    ESDS.addr,
-                    toBaseUnitBN(unbondAmount, ESD.decimals),
-                  );
-                }}
+                onClick={() => {onUnbond(unbondAmount)}}
                 disabled={status === 2 || !isPos(unbondAmount) || unbondAmount.isGreaterThan(bonded)}
               />
             </div>

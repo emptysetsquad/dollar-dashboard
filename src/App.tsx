@@ -18,6 +18,10 @@ import Regulation from "./pages/Regulation";
 import Pool from "./pages/Pool";
 import HomePageNoWeb3 from "./pages/HomePageNoWeb3";
 
+import { BalancesProvider } from "./contexts/Balances";
+import { DAOProvider } from "./contexts/DAO";
+import { PoolProvider } from "./contexts/Pool";
+
 function App() {
   const storedTheme = getPreference('theme', 'light');
 
@@ -52,17 +56,7 @@ function App() {
 
   return (
     <Router>
-      <UseWalletProvider
-        chainId={1}
-        connectors={{
-          walletconnect: { rpcUrl: 'https://mainnet.eth.aragon.network/' },
-          walletlink: {
-            url: 'https://mainnet.eth.aragon.network/',
-            appName:'Coinbase Wallet',
-            appLogoUrl: ''
-          }
-        }}
-      >
+      <Providers>
         <Main assetsUrl={`${process.env.PUBLIC_URL}/aragon-ui/`} theme={theme} layout={false}>
           <NavBar hasWeb3={hasWeb3} />
           <Layout>
@@ -91,10 +85,33 @@ function App() {
           <div style={{height: '128px', width: '100%'}}/>
           <Footer hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
         </Main>
-      </UseWalletProvider>
+      </Providers>
     </Router>
   );
 }
 
+const Providers: React.FC = ({ children }) => {
+  return (
+    <UseWalletProvider
+      chainId={1}
+      connectors={{
+        walletconnect: { rpcUrl: 'https://mainnet.eth.aragon.network/' },
+        walletlink: {
+          url: 'https://mainnet.eth.aragon.network/',
+          appName:'Coinbase Wallet',
+          appLogoUrl: ''
+        }
+      }}
+    >
+      <BalancesProvider>
+        <DAOProvider>
+          <PoolProvider>
+            { children }
+          </PoolProvider>
+        </DAOProvider>
+      </BalancesProvider>
+    </UseWalletProvider>
+  );
+};
 
 export default App;

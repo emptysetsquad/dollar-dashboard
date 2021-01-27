@@ -1,38 +1,46 @@
 import React, { useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box, Button, IconCirclePlus, IconCircleMinus, IconLock
 } from '@aragon/ui';
-import BigNumber from 'bignumber.js';
+
+import useBalances from "../../hooks/useBalances";
+import usePool from "../../hooks/usePool";
+import { isPos } from '../../utils/number';
+import { ESD } from "../../constants/tokens";
+import { MAX_UINT256 } from "../../constants/values";
+
 import {
   BalanceBlock, MaxButton, BigNumberInput
 } from '../../components/common';
-import {approve, depositPool, withdrawPool} from '../../utils/web3';
-import {isPos, toBaseUnitBN} from '../../utils/number';
-import {UNI} from "../../constants/tokens";
-import {MAX_UINT256} from "../../constants/values";
 
 type WithdrawDepositProps = {
-  poolAddress: string
   user: string
-  balance: BigNumber,
-  allowance: BigNumber,
-  stagedBalance: BigNumber,
-  status: number
 };
 
-function WithdrawDeposit({
-  poolAddress, user, balance, allowance, stagedBalance, status
-}: WithdrawDepositProps) {
+function WithdrawDeposit({ user }: WithdrawDepositProps) {
   const [depositAmount, setDepositAmount] = useState(new BigNumber(0));
   const [withdrawAmount, setWithdrawAmount] = useState(new BigNumber(0));
 
+  const { userLPFreeBalance } = useBalances();
+  const {
+    poolAddress,
+    userLPAllowance,
+    userLPStagedBalance,
+    userStatus,
+
+    onApprove,
+    onDeposit,
+    onWithdraw
+  } = usePool();
+
   return (
     <Box heading="Stage">
-      {allowance.comparedTo(MAX_UINT256) === 0 ?
+      {userLPAllowance.comparedTo(MAX_UINT256) === 0 ?
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total Issued */}
           <div style={{flexBasis: '32%'}}>
-            <BalanceBlock asset="Staged" balance={stagedBalance} suffix={"UNI-V2"}/>
+            <BalanceBlock asset="Staged" balance={userLPStagedBalance} suffix={"UNI-V2"}/>
           </div>
           {/* Deposit UNI-V2 into Pool */}
           <div style={{flexBasis: '33%', paddingTop: '2%'}}>
@@ -43,11 +51,11 @@ function WithdrawDeposit({
                     adornment="UNI-V2"
                     value={depositAmount}
                     setter={setDepositAmount}
-                    disabled={status !== 0}
+                    disabled={userStatus !== 0}
                   />
                   <MaxButton
                     onClick={() => {
-                      setDepositAmount(balance);
+                      setDepositAmount(userLPFreeBalance);
                     }}
                   />
                 </>
@@ -55,16 +63,15 @@ function WithdrawDeposit({
               <div style={{width: '40%', minWidth: '7em'}}>
                 <Button
                   wide
-                  icon={status === 0 ? <IconCirclePlus/> : <IconLock/>}
+                  icon={userStatus === 0 ? <IconCirclePlus/> : <IconLock/>}
                   label="Deposit"
                   onClick={() => {
-                    depositPool(
-                      poolAddress,
-                      toBaseUnitBN(depositAmount, UNI.decimals),
+                    onDeposit(
+                      depositAmount,
                       (hash) => setDepositAmount(new BigNumber(0))
                     );
                   }}
-                  disabled={poolAddress === '' || status !== 0 || !isPos(depositAmount)}
+                  disabled={poolAddress === '' || userStatus !== 0 || !isPos(depositAmount)}
                 />
               </div>
             </div>
@@ -79,11 +86,11 @@ function WithdrawDeposit({
                     adornment="UNI-V2"
                     value={withdrawAmount}
                     setter={setWithdrawAmount}
-                    disabled={status !== 0}
+                    disabled={userStatus !== 0}
                   />
                   <MaxButton
                     onClick={() => {
-                      setWithdrawAmount(stagedBalance);
+                      setWithdrawAmount(userLPStagedBalance);
                     }}
                   />
                 </>
@@ -91,16 +98,16 @@ function WithdrawDeposit({
               <div style={{width: '40%', minWidth: '7em'}}>
                 <Button
                   wide
-                  icon={status === 0 ? <IconCircleMinus/> : <IconLock/>}
+                  icon={userStatus === 0 ? <IconCircleMinus/> : <IconLock/>}
                   label="Withdraw"
                   onClick={() => {
-                    withdrawPool(
+                    onWithdraw(
                       poolAddress,
-                      toBaseUnitBN(withdrawAmount, UNI.decimals),
+                      withdrawAmount,
                       (hash) => setWithdrawAmount(new BigNumber(0))
                     );
                   }}
-                  disabled={poolAddress === '' || status !== 0 || !isPos(withdrawAmount)}
+                  disabled={poolAddress === '' || userStatus !== 0 || !isPos(withdrawAmount)}
                 />
               </div>
             </div>
@@ -110,7 +117,7 @@ function WithdrawDeposit({
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total Issued */}
           <div style={{flexBasis: '32%'}}>
-            <BalanceBlock asset="Staged" balance={stagedBalance} suffix={"UNI-V2"}/>
+            <BalanceBlock asset="Staged" balance={userLPStagedBalance} suffix={"UNI-V2"}/>
           </div>
           <div style={{flexBasis: '35%'}}/>
           {/* Approve Pool to spend UNI-V2 */}
@@ -119,9 +126,7 @@ function WithdrawDeposit({
               wide
               icon={<IconCirclePlus />}
               label="Approve"
-              onClick={() => {
-                approve(UNI.addr, poolAddress);
-              }}
+              onClick={onApprove(ESD.addr)}
               disabled={poolAddress === '' || user === ''}
             />
           </div>

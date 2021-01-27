@@ -1,32 +1,32 @@
 import React, { useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box, Button, IconArrowDown
 } from '@aragon/ui';
-import BigNumber from 'bignumber.js';
+
+import usePool from "../../hooks/usePool";
+import { isPos } from '../../utils/number';
+
 import {
   BalanceBlock, MaxButton, BigNumberInput,
 } from '../../components/common';
-import {claimPool} from '../../utils/web3';
-import {isPos, toBaseUnitBN} from '../../utils/number';
-import {ESD} from "../../constants/tokens";
 
-type ClaimProps = {
-  poolAddress: string
-  claimable: BigNumber,
-  status: number
-};
-
-function Claim({
-  poolAddress, claimable, status
-}: ClaimProps) {
+function Claim() {
   const [claimAmount, setClaimAmount] = useState(new BigNumber(0));
+
+  const {
+    poolAddress,
+    userESDClaimableBalance,
+    userStatus,
+    onClaim,
+  } = usePool();
 
   return (
     <Box heading="Claim">
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
         {/* total Issued */}
         <div style={{flexBasis: '32%'}}>
-          <BalanceBlock asset="Claimable" balance={claimable} suffix={"ESD"} />
+          <BalanceBlock asset="Claimable" balance={userESDClaimableBalance} suffix={"ESD"} />
         </div>
         {/* Deposit UNI-V2 into Pool */}
         <div style={{flexBasis: '35%'}}/>
@@ -38,11 +38,11 @@ function Claim({
                   adornment="ESD"
                   value={claimAmount}
                   setter={setClaimAmount}
-                  disabled={status !== 0}
+                  disabled={userStatus !== 0}
                 />
                 <MaxButton
                   onClick={() => {
-                    setClaimAmount(claimable);
+                    setClaimAmount(userESDClaimableBalance);
                   }}
                 />
               </>
@@ -53,13 +53,13 @@ function Claim({
                 icon={<IconArrowDown/>}
                 label="Claim"
                 onClick={() => {
-                  claimPool(
+                  onClaim(
                     poolAddress,
-                    toBaseUnitBN(claimAmount, ESD.decimals),
+                    claimAmount,
                     (hash) => setClaimAmount(new BigNumber(0))
                   );
                 }}
-                disabled={poolAddress === '' || status !== 0 || !isPos(claimAmount)}
+                disabled={poolAddress === '' || userStatus !== 0 || !isPos(claimAmount)}
               />
             </div>
           </div>

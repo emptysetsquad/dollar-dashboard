@@ -2,9 +2,10 @@ import React from 'react';
 import {
   Box, Button, IconCirclePlus,
 } from '@aragon/ui';
-import {advance} from '../../utils/web3';
-import {NumberBlock} from "../../components/common";
-import {ESDS} from "../../constants/tokens";
+
+import useDAO from "../../hooks/useDAO";
+
+import { NumberBlock } from "../../components/common";
 
 type AdvanceEpochProps = {
   epoch: number,
@@ -15,6 +16,8 @@ function AdvanceEpoch({
   epoch,
   epochTime,
 }: AdvanceEpochProps) {
+  const { onAdvance } = useDAO();
+
   return (
     <Box heading="Advance Epoch">
       <div style={{ display: 'flex' }}>
@@ -29,9 +32,7 @@ function AdvanceEpoch({
             wide
             icon={<IconCirclePlus />}
             label="Advance"
-            onClick={() => {
-              advance(ESDS.addr);
-            }}
+            onClick={onAdvance}
             disabled={epoch >= epochTime}
           />
         </div>
