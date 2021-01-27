@@ -1,64 +1,60 @@
 import React from 'react';
-import { LinkBase, useTheme } from '@aragon/ui';
-import ChangeModeButton from "./SwitchTheme";
+import styled from 'styled-components'
+import {Row, Column} from '../helpers'
+import { NavLink } from 'react-router-dom';
 
-type FooterProps = {
-  updateTheme: Function,
-  theme: string,
-  hasWeb3: boolean,
-}
-
-function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
-  const currentTheme = useTheme();
+const Footer = () => {
+  const logoUrl = `./logo/logo_${false ? 'black' : 'white'}.svg`;
 
   return (
-    <>
-      <div style={{
-        borderTop: '1px solid ' + currentTheme.border,
-        backgroundColor: currentTheme.surface,
-        textAlign: 'center',
-        position: 'fixed',
-        left: '0',
-        bottom: '0',
-        height: 'auto',
-        width: '100%',
-        fontSize: '14px'
-      }}>
-        <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
-          <div style={{ padding: '2%', display: 'flex'}}>
-            <div style={{ width: '50%', textAlign: 'left' }}>
-              <FooterLink icon={<i className="fab fa-github"/>} href={"https://www.github.com/emptysetsquad/dollar"}/>
-              <FooterLink icon={<i className="fab fa-twitter"/>} href={"https://www.twitter.com/emptysetsquad"}/>
-              <FooterLink icon={<i className="fab fa-medium"/>} href={"https://www.medium.com/@emptysetsquad"}/>
-              <FooterLink icon={<i className="fab fa-telegram"/>} href={"https://www.t.me/emptysetdollar"}/>
-              <FooterLink icon={<i className="fab fa-discord"/>} href={"https://discord.gg/vPws9Vp"}/>
-            </div>
-            <div style={{ width: '45%', textAlign: 'right', height: '18px', marginTop: '15px', marginBottom: '15px'}}>
-              made with <span role="img" aria-labelledby="heartbreak">💔️</span> by the &#123;ess&#125;.
-            </div>
-            <div style={{ width: '5%', textAlign: 'right', marginTop: '4px' }}>
-              <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <Wrapper>
+      <Section>
+            <NavLink to="/" external={false} style={{ marginRight: '16px', height: '40px' }}>
+              <img src={logoUrl} height="40px" alt="Empty Set Dollar" />
+            </NavLink>
+           <Row w={'auto'}>
+              <Button href={'https://emptyset.finance/'} target={'_blank'} >Home</Button>
+              <Button href={'https://docs.emptyset.finance/'} target={'_blank'} >Documentation</Button>
+              <Button href={'https://explore.duneanalytics.com/dashboard/empty-set-dollar'} target={'_blank'} >Analytics</Button>
+              <Button href={'https://app.uniswap.org/#/swap?inputCurrency=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&outputCurrency=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723'} target={'_blank'} >Trade</Button>
+            </Row>
+      </Section>
+    </Wrapper>
   );
 }
 
-type FooterLinkProp = {
-  icon: any,
-  href: string,
-}
 
-function FooterLink({
-  icon, href,
-}:FooterLinkProp) {
-  return (
-    <LinkBase href={href} style={{marginLeft: '8px', marginRight: '8px'}}>
-      <span style={{ fontSize: 32 }}>{icon}</span>
-    </LinkBase>
-  );
-}
+const Wrapper = styled(Row)`
+  width: 100%;
+  padding: 0px 20px;
+  box-sizing: border-box;
+  justify-content: center;
+  @media (max-width: 960px) {
+      padding: 20px 20px;
+  }
+`
 
+const Section = styled.header`
+  background: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 150px;
+  width: 100%;
+  max-width: 1200px;
+  @media (max-width: 960px) {
+    flex-direction: column;
+  }
+`
+
+const Button = styled.a`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 16px;
+  font-size: 14px;
+  height: 40px;
+  color: white !important; 
+`
 export default Footer;
