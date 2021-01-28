@@ -19,7 +19,9 @@ import Pool from "./pages/Pool";
 import HomePageNoWeb3 from "./pages/HomePageNoWeb3";
 
 import { BalancesProvider } from "./contexts/Balances";
+import { CouponsProvider } from "./contexts/Coupons";
 import { DAOProvider } from "./contexts/DAO";
+import { GovernanceProvider } from "./contexts/Governance";
 import { PoolProvider } from "./contexts/Pool";
 
 function App() {
@@ -104,11 +106,15 @@ const Providers: React.FC = ({ children }) => {
       }}
     >
       <BalancesProvider>
-        <DAOProvider>
-          <PoolProvider>
-            { children }
-          </PoolProvider>
-        </DAOProvider>
+        <CouponsProvider>
+          <DAOProvider>
+            <GovernanceProvider>
+              <PoolProvider>
+                { children }
+              </PoolProvider>
+            </GovernanceProvider>
+          </DAOProvider>
+        </CouponsProvider>
       </BalancesProvider>
     </UseWalletProvider>
   );

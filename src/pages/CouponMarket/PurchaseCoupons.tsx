@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box, Button, IconCirclePlus, IconCircleMinus
 } from '@aragon/ui';
-import BigNumber from 'bignumber.js';
+
+import useBalances from "../../hooks/useBalances";
+import useCoupons from "../../hooks/useCoupons";
+import useDAO from "../../hooks/useDAO";
+
 import {
   BalanceBlock, MaxButton, PriceSection, BigNumberInput,
 } from '../../components/common/index';
-import {approve, purchaseCoupons} from '../../utils/web3';
 
 import {isPos, toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
 import {ESD, ESDS} from "../../constants/tokens";
@@ -15,16 +19,15 @@ import {getCouponPremium} from "../../utils/infura";
 
 type PurchaseCouponsProps = {
   user: string,
-  allowance: BigNumber,
-  balance: BigNumber,
-  debt: BigNumber,
 };
 
-function PurchaseCoupons({
-  user, balance, allowance, debt,
-}: PurchaseCouponsProps) {
+function PurchaseCoupons({ user }: PurchaseCouponsProps) {
   const [purchaseAmount, setPurchaseAmount] = useState(new BigNumber(0));
   const [premium, setPremium] = useState(new BigNumber(0));
+
+  const { userESDFreeBalance } = useBalances();
+  const { userESDAllowance, onApprove } = useDAO();
+  const { totalESDDebt, onPurchase } = useCoupons();
 
   const updatePremium = async (purchaseAmount) => {
     if (purchaseAmount.lte(new BigNumber(0))) {
@@ -39,11 +42,11 @@ function PurchaseCoupons({
 
   return (
     <Box heading="Purchase">
-      {allowance.comparedTo(MAX_UINT256) === 0 ?
+      {userESDAllowance.comparedTo(MAX_UINT256) === 0 ?
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* User balance */}
           <div style={{flexBasis: '30%'}}>
-            <BalanceBlock asset={`Balance`} balance={balance} suffix={" ESD"}/>
+            <BalanceBlock asset={`Balance`} balance={userESDFreeBalance} suffix={" ESD"}/>
           </div>
           <div style={{flexBasis: '38%'}}/>
           {/* Purchase coupons */}
@@ -61,7 +64,7 @@ function PurchaseCoupons({
                   />
                   <MaxButton
                     onClick={() => {
-                      const maxPurchaseAmount = debt.comparedTo(balance) > 0 ? balance : debt
+                      const maxPurchaseAmount = totalESDDebt.comparedTo(userESDFreeBalance) > 0 ? userESDFreeBalance : totalESDDebt;
                       setPurchaseAmount(maxPurchaseAmount);
                       updatePremium(maxPurchaseAmount);
                     }}
@@ -73,13 +76,8 @@ function PurchaseCoupons({
                   wide
                   icon={<IconCircleMinus/>}
                   label="Burn"
-                  onClick={() => {
-                    purchaseCoupons(
-                      ESDS.addr,
-                      toBaseUnitBN(purchaseAmount, ESD.decimals),
-                    );
-                  }}
-                  disabled={user === '' || debt.isZero() || balance.isZero() || !isPos(purchaseAmount)}
+                  onClick={() => {onPurchase(purchaseAmount)}}
+                  disabled={user === '' || totalESDDebt.isZero() || userESDFreeBalance.isZero() || !isPos(purchaseAmount)}
                 />
               </div>
             </div>
@@ -90,7 +88,7 @@ function PurchaseCoupons({
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* User balance */}
           <div style={{flexBasis: '30%'}}>
-            <BalanceBlock asset={`Døllar Balance`} balance={balance}/>
+            <BalanceBlock asset={`Døllar Balance`} balance={userESDFreeBalance}/>
           </div>
           <div style={{flexBasis: '40%'}}/>
           {/* Approve DAO to spend Døllar */}
@@ -99,9 +97,7 @@ function PurchaseCoupons({
               wide
               icon={<IconCirclePlus/>}
               label="Approve"
-              onClick={() => {
-                approve(ESD.addr, ESDS.addr);
-              }}
+              onClick={onApprove}
               disabled={user === ''}
             />
           </div>

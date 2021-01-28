@@ -3,10 +3,9 @@ import {
   Box, TextInput, Button, IconToken,
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
-import {recordVote} from '../../utils/web3';
 
-import {ESDS} from "../../constants/tokens";
-import {canPropose} from "../../utils/gov";
+import useGovernance from "../../hooks/useGovernance";
+import { canPropose } from "../../utils/gov";
 
 type ProposeCandidateProps = {
   user: string,
@@ -23,6 +22,8 @@ function ProposeCandidate({
   user, stake, totalStake, accountStatus,
 }: ProposeCandidateProps) {
   const [candidate, setCandidate] = useState("0x");
+
+  const { onRecordVote } = useGovernance();
 
   return (
     <Box heading="Propose">
@@ -51,8 +52,7 @@ function ProposeCandidate({
             icon={<IconToken/>}
             label="Propose"
             onClick={() => {
-              recordVote(
-                ESDS.addr,
+              onRecordVote(
                 candidate,
                 1 // APPROVE
               );
