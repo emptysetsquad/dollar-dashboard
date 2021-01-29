@@ -14,7 +14,7 @@ import ModalWarning from "./ModalWarning";
 
 function CouponMarket() {
   const { account } = useWallet();
-  const { totalESDSSupply } = useDAO();
+  const { epoch, totalESDSSupply } = useDAO();
   const {
     totalESDDebt,
     totalESDRedeemable,
@@ -62,6 +62,7 @@ function CouponMarket() {
 
       <PurchaseHistory
         user={account || ''}
+        epoch={epoch}
         hideRedeemed={hideRedeemed}
         totalRedeemable={totalESDRedeemable}
       />

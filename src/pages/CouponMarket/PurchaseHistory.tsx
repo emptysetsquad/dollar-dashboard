@@ -10,6 +10,7 @@ import { formatBN, toBaseUnitBN, toTokenUnitsBN } from "../../utils/number";
 
 type PurchaseHistoryProps = {
   user: string,
+  epoch: number,
   hideRedeemed: boolean,
   totalRedeemable: BigNumber
 };
@@ -37,19 +38,21 @@ function PurchaseHistory({
         formatBN(toTokenUnitsBN(epoch.principal, ESD.decimals), 2),
         formatBN(toTokenUnitsBN(epoch.premium, ESD.decimals), 2),
         epoch.expiration.toString(),
-        <CouponAction coupon={epoch} totalRedeemable={totalRedeemable} />
+        <CouponAction epoch={epoch} coupon={epoch} totalRedeemable={totalRedeemable} />
       ]}
     />
   );
 }
 
 type CouponActionProps = {
+  epoch: number,
   coupon: any,
   totalRedeemable: BigNumber
 }
 
-function CouponAction({coupon, totalRedeemable}:CouponActionProps) {
+function CouponAction({epoch, coupon, totalRedeemable}:CouponActionProps) {
   const { onRedeem, onMigrate } = useCoupons();
+  const isRedeemable = !totalRedeemable.isZero() || (coupon.expiration < epoch);
 
   return (
     <>
@@ -70,7 +73,7 @@ function CouponAction({coupon, totalRedeemable}:CouponActionProps) {
       /* redeemable coupons */
       :
       <Button
-        icon={totalRedeemable.isZero() ? <IconLock /> : <IconCirclePlus />}
+        icon={isRedeemable ? <IconCirclePlus /> : <IconLock />}
         label="Redeem"
         onClick={() => onRedeem(
           coupon.epoch,
@@ -78,7 +81,7 @@ function CouponAction({coupon, totalRedeemable}:CouponActionProps) {
             ? toBaseUnitBN(totalRedeemable, ESD.decimals)
             : coupon.principal
         )}
-        disabled={totalRedeemable.isZero()}
+        disabled={!isRedeemable}
       />
     }
     </>
