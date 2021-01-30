@@ -118,7 +118,7 @@ function CouponAction({epoch, coupon, totalRedeemable}:CouponActionProps) {
         onClick={() => redeemCoupons(
           ESDS.addr,
           coupon.epoch,
-          coupon.principal.isGreaterThan(toBaseUnitBN(totalRedeemable, ESD.decimals))
+          !totalRedeemable.isZero() && coupon.principal.isGreaterThan(toBaseUnitBN(totalRedeemable, ESD.decimals))
             ? toBaseUnitBN(totalRedeemable, ESD.decimals)
             : coupon.principal
         )}
