@@ -4,6 +4,7 @@ import {
 } from '@aragon/ui';
 
 import {
+  getEpoch,
   getBatchBalanceOfCoupons, getBatchBalanceOfCouponsUnderlying,
   getBatchCouponsExpiration, getCouponEpochs
 } from '../../utils/infura';
@@ -24,6 +25,7 @@ function PurchaseHistory({
   const [epochs, setEpochs] = useState([]);
   const [page, setPage] = useState(0)
   const [initialized, setInitialized] = useState(false)
+  const [currentEpoch, setCurrentEpoch] = useState(0);
 
   //Update User balances
   useEffect(() => {
@@ -31,6 +33,7 @@ function PurchaseHistory({
     let isCancelled = false;
 
     async function updateUserInfo() {
+      const epochStr = await getEpoch(ESDS.addr);
       const epochsFromEvents = await getCouponEpochs(ESDS.addr, user);
       const epochNumbers = epochsFromEvents.map(e => parseInt(e.epoch));
       const balanceOfCouponsPremium = await getBatchBalanceOfCoupons(ESDS.addr, user, epochNumbers);
@@ -47,6 +50,7 @@ function PurchaseHistory({
       if (!isCancelled) {
         // @ts-ignore
         setEpochs(couponEpochs);
+        setCurrentEpoch(parseInt(epochStr, 10));
         setInitialized(true);
       }
     }
@@ -75,18 +79,20 @@ function PurchaseHistory({
         formatBN(toTokenUnitsBN(epoch.principal, ESD.decimals), 2),
         formatBN(toTokenUnitsBN(epoch.premium, ESD.decimals), 2),
         epoch.expiration.toString(),
-        <CouponAction coupon={epoch} totalRedeemable={totalRedeemable} />
+        <CouponAction epoch={currentEpoch} coupon={epoch} totalRedeemable={totalRedeemable} />
       ]}
     />
   );
 }
 
 type CouponActionProps = {
+  epoch: number,
   coupon: any,
   totalRedeemable: BigNumber
 }
 
-function CouponAction({coupon, totalRedeemable}:CouponActionProps) {
+function CouponAction({epoch, coupon, totalRedeemable}:CouponActionProps) {
+  const isRedeemable = !totalRedeemable.isZero() || (coupon.expiration < epoch);
 
   return (
     <>
@@ -107,7 +113,7 @@ function CouponAction({coupon, totalRedeemable}:CouponActionProps) {
       /* redeemable coupons */
       :
       <Button
-        icon={totalRedeemable.isZero() ? <IconLock /> : <IconCirclePlus />}
+        icon={isRedeemable ? <IconCirclePlus /> : <IconLock />}
         label="Redeem"
         onClick={() => redeemCoupons(
           ESDS.addr,
@@ -116,7 +122,7 @@ function CouponAction({coupon, totalRedeemable}:CouponActionProps) {
             ? toBaseUnitBN(totalRedeemable, ESD.decimals)
             : coupon.principal
         )}
-        disabled={totalRedeemable.isZero()}
+        disabled={!isRedeemable}
       />
     }
     </>
