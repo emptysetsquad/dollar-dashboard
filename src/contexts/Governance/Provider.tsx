@@ -6,6 +6,8 @@ import { provider } from "web3-core";
 import Context from "./Context";
 import { Proposal } from "./types";
 
+import useTxHistory from "../../hooks/useTxHistory";
+
 import {
   getEpoch,
   getImplementation,
@@ -25,6 +27,7 @@ const Provider: React.FC = ({ children }) => {
   const [proposals, setProposals] = useState<Proposal[]>([]);
 
   const { account, ethereum }: { account: string | null; ethereum: provider } = useWallet();
+  const { onAddTx } = useTxHistory();
 
   const fetchData = useCallback(
     async (provider: provider) => {
@@ -79,14 +82,31 @@ const Provider: React.FC = ({ children }) => {
 
   const handleRecordVote = useCallback(
     async (candidate: string, voteType: number) => {
-      recordVote(ESDS.addr, candidate, voteType);
-    }, []
+      recordVote(
+        ESDS.addr,
+        candidate,
+        voteType,
+        (hash) => onAddTx({
+          hash: hash,
+          description: 'Record Vote',
+          status: 'Pending'
+        })
+      );
+    }, [onAddTx]
   );
 
   const handleCommit = useCallback(
     async (candidate: string) => {
-      commit(ESDS.addr, candidate);
-    }, []
+      commit(
+        ESDS.addr,
+        candidate,
+        (hash) => onAddTx({
+          hash: hash,
+          description: 'Commit',
+          status: 'Pending'
+        })
+      );
+    }, [onAddTx]
   );
 
   useEffect(() => {

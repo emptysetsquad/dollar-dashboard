@@ -6,6 +6,8 @@ import { provider } from "web3-core";
 import Context from "./Context";
 import { Coupon } from "./types";
 
+import useTxHistory from "../../hooks/useTxHistory";
+
 import {
   getTotalDebt,
   getTotalRedeemable,
@@ -33,6 +35,7 @@ const Provider: React.FC = ({ children }) => {
   const [userCoupons, setUserCoupons] = useState<Coupon[]>([]);
 
   const { account, ethereum }: { account: string | null; ethereum: provider } = useWallet();
+  const { onAddTx } = useTxHistory();
 
   const fetchData = useCallback(
     async (provider: provider) => {
@@ -87,23 +90,38 @@ const Provider: React.FC = ({ children }) => {
     purchaseCoupons(
       ESDS.addr,
       toBaseUnitBN(amount, ESD.decimals),
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Purchase Coupons',
+        status: 'Pending'
+      })
     );
-  }, []);
+  }, [onAddTx]);
 
   const handleRedeem = useCallback(async (epoch: number, amount: BigNumber) => {
     redeemCoupons(
       ESDS.addr,
       epoch,
       amount,
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Redeem Coupons',
+        status: 'Pending'
+      })
     );
-  }, []);
+  }, [onAddTx]);
 
   const handleMigrate = useCallback(async (epoch: number) => {
     migrateCoupons(
       ESDS.addr,
       epoch,
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Migrate Coupons',
+        status: 'Pending'
+      })
     );
-  }, []);
+  }, [onAddTx]);
 
   useEffect(() => {
     if (ethereum) {

@@ -5,6 +5,8 @@ import { provider } from "web3-core";
 
 import Context from "./Context";
 
+import useTxHistory from "../../hooks/useTxHistory";
+
 import {
   getPoolTotalBonded,
   getTokenAllowance,
@@ -53,6 +55,7 @@ const Provider: React.FC = ({ children }) => {
   const [hasLegacyBalance, setHasLegacyBalance] = useState(false);
 
   const { account, ethereum }: { account: string | null; ethereum: provider } = useWallet();
+  const { onAddTx } = useTxHistory();
 
   const fetchData = useCallback(
     async (userAddress: string, provider: provider) => {
@@ -118,56 +121,106 @@ const Provider: React.FC = ({ children }) => {
   );
 
   const handleApprove = useCallback(async (address: string) => {
-    approve(address, poolAddress);
-  }, [poolAddress]);
+    approve(
+      address,
+      poolAddress,
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Approve',
+        status: 'Pending'
+      })
+    );
+  }, [poolAddress, onAddTx]);
 
   const handleDeposit = useCallback(async (amount: BigNumber, callback) => {
     depositPool(
       poolAddress,
       toBaseUnitBN(amount, UNI.decimals),
-      callback,
+      (hash) => {
+        onAddTx({
+          hash: hash,
+          description: 'Deposit UNI-V2',
+          status: 'Pending'
+        });
+        callback(hash);
+      }
     );
-  }, [poolAddress]);
+  }, [poolAddress, onAddTx]);
 
   const handleWithdraw = useCallback(async (pool: string, amount: BigNumber, callback) => {
     withdrawPool(
       pool,
       toBaseUnitBN(amount, UNI.decimals),
-      callback,
+      (hash) => {
+        onAddTx({
+          hash: hash,
+          description: 'Withdraw UNI-V2',
+          status: 'Pending'
+        });
+        callback(hash);
+      }
     );
-  }, []);
+  }, [onAddTx]);
 
   const handleBond = useCallback(async (amount: BigNumber, callback) => {
     bondPool(
       poolAddress,
       toBaseUnitBN(amount, UNI.decimals),
-      callback,
+      (hash) => {
+        onAddTx({
+          hash: hash,
+          description: 'Bond UNI-V2',
+          status: 'Pending'
+        });
+        callback(hash);
+      }
     );
-  }, [poolAddress]);
+  }, [poolAddress, onAddTx]);
 
   const handleUnbond = useCallback(async (pool: string, amount: BigNumber, callback) => {
     unbondPool(
       pool,
       toBaseUnitBN(amount, UNI.decimals),
-      callback,
+      (hash) => {
+        onAddTx({
+          hash: hash,
+          description: 'Unbond UNI-V2',
+          status: 'Pending'
+        });
+        callback(hash);
+      }
     );
-  }, []);
+  }, [onAddTx]);
 
   const handleClaim = useCallback(async (pool: string, amount: BigNumber, callback) => {
     claimPool(
       pool,
       toBaseUnitBN(amount, ESD.decimals),
-      callback,
+      (hash) => {
+        onAddTx({
+          hash: hash,
+          description: 'Claim ESD',
+          status: 'Pending'
+        });
+        callback(hash);
+      }
     );
-  }, []);
+  }, [onAddTx]);
 
   const handleProvide = useCallback(async (amount: BigNumber, callback) => {
     providePool(
       poolAddress,
       toBaseUnitBN(amount, ESD.decimals),
-      callback,
+      (hash) => {
+        onAddTx({
+          hash: hash,
+          description: 'Provide USDC',
+          status: 'Pending'
+        });
+        callback(hash);
+      }
     );
-  }, [poolAddress]);
+  }, [poolAddress, onAddTx]);
 
   useEffect(() => {
     if (account && ethereum) {

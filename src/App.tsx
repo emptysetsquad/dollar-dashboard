@@ -6,6 +6,7 @@ import { UseWalletProvider } from 'use-wallet';
 import { updateModalMode } from './utils/web3';
 import { storePreference, getPreference } from './utils/storage';
 import NavBar from './components/NavBar';
+import TxList from './components/TxList';
 import HomePage from './pages/HomePage';
 import Trade from './pages/Trade/index';
 import Footer from './components/Footer';
@@ -23,6 +24,7 @@ import { CouponsProvider } from "./contexts/Coupons";
 import { DAOProvider } from "./contexts/DAO";
 import { GovernanceProvider } from "./contexts/Governance";
 import { PoolProvider } from "./contexts/Pool";
+import { TxHistoryProvider } from "./contexts/TxHistory";
 
 function App() {
   const storedTheme = getPreference('theme', 'light');
@@ -61,6 +63,7 @@ function App() {
       <Providers>
         <Main assetsUrl={`${process.env.PUBLIC_URL}/aragon-ui/`} theme={theme} layout={false}>
           <NavBar hasWeb3={hasWeb3} />
+          <TxList />
           <Layout>
           {
             hasWeb3 ?
@@ -105,17 +108,19 @@ const Providers: React.FC = ({ children }) => {
         }
       }}
     >
-      <BalancesProvider>
-        <CouponsProvider>
-          <DAOProvider>
-            <GovernanceProvider>
-              <PoolProvider>
-                { children }
-              </PoolProvider>
-            </GovernanceProvider>
-          </DAOProvider>
-        </CouponsProvider>
-      </BalancesProvider>
+      <TxHistoryProvider>
+        <BalancesProvider>
+          <CouponsProvider>
+            <DAOProvider>
+              <GovernanceProvider>
+                <PoolProvider>
+                  { children }
+                </PoolProvider>
+              </GovernanceProvider>
+            </DAOProvider>
+          </CouponsProvider>
+        </BalancesProvider>
+      </TxHistoryProvider>
     </UseWalletProvider>
   );
 };
