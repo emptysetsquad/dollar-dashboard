@@ -1,15 +1,14 @@
 import React from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box, Button, IconRotateLeft, IconCircleCheck, IconProhibited
 } from '@aragon/ui';
-import BigNumber from 'bignumber.js';
+
+import useGovernance from "../../hooks/useGovernance";
+
 import {
   BalanceBlock, TextBlock,
 } from '../../components/common/index';
-import {recordVote} from '../../utils/web3';
-
-import {ESDS} from "../../constants/tokens";
-
 
 type VoteProps = {
   candidate: string,
@@ -23,6 +22,8 @@ const VOTE_TYPE_MAP = ["Undecided", "Approve", "Reject"]
 function Vote({
   candidate, stake, vote, status
 }: VoteProps) {
+  const { onRecordVote } = useGovernance();
+
   return (
     <Box heading="Vote">
       <div style={{display: 'flex'}}>
@@ -40,8 +41,7 @@ function Vote({
             icon={<IconRotateLeft/>}
             label="Unvote"
             onClick={() => {
-              recordVote(
-                ESDS.addr,
+              onRecordVote(
                 candidate,
                 0 // UNDECIDED
               );
@@ -57,8 +57,7 @@ function Vote({
             icon={<IconCircleCheck/>}
             label="Accept"
             onClick={() => {
-              recordVote(
-                ESDS.addr,
+              onRecordVote(
                 candidate,
                 1 // APPROVE
               );
@@ -75,8 +74,7 @@ function Vote({
                 icon={<IconProhibited/>}
                 label="Reject"
                 onClick={() => {
-                  recordVote(
-                    ESDS.addr,
+                  onRecordVote(
                     candidate,
                     2 // REJECT
                   );

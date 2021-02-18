@@ -1,19 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
+import BigNumber from "bignumber.js";
 import {
   DataView, Button, IconCirclePlus, IconRefresh, IconCheck, IconLock
 } from '@aragon/ui';
 
-import {
-  getBatchBalanceOfCoupons, getBatchBalanceOfCouponsUnderlying,
-  getBatchCouponsExpiration, getCouponEpochs
-} from '../../utils/infura';
-import {ESD, ESDS} from "../../constants/tokens";
-import {formatBN, toBaseUnitBN, toTokenUnitsBN} from "../../utils/number";
-import BigNumber from "bignumber.js";
-import { redeemCoupons, migrateCoupons } from "../../utils/web3";
+import useCoupons from "../../hooks/useCoupons";
+import { ESD } from "../../constants/tokens";
+import { formatBN, toBaseUnitBN, toTokenUnitsBN } from "../../utils/number";
 
 type PurchaseHistoryProps = {
   user: string,
+  epoch: number,
   hideRedeemed: boolean,
   totalRedeemable: BigNumber
 };
@@ -21,51 +18,17 @@ type PurchaseHistoryProps = {
 function PurchaseHistory({
   user, hideRedeemed, totalRedeemable
 }: PurchaseHistoryProps) {
-  const [epochs, setEpochs] = useState([]);
   const [page, setPage] = useState(0)
-  const [initialized, setInitialized] = useState(false)
 
-  //Update User balances
-  useEffect(() => {
-    if (user === '') return;
-    let isCancelled = false;
-
-    async function updateUserInfo() {
-      const epochsFromEvents = await getCouponEpochs(ESDS.addr, user);
-      const epochNumbers = epochsFromEvents.map(e => parseInt(e.epoch));
-      const balanceOfCouponsPremium = await getBatchBalanceOfCoupons(ESDS.addr, user, epochNumbers);
-      const balanceOfCouponsPrincipal = await getBatchBalanceOfCouponsUnderlying(ESDS.addr, user, epochNumbers);
-      const couponsExpirations = await getBatchCouponsExpiration(ESDS.addr, epochNumbers);
-
-      const couponEpochs = epochsFromEvents.map((epoch, i) => {
-        epoch.principal = new BigNumber(balanceOfCouponsPrincipal[i]);
-        epoch.premium = new BigNumber(balanceOfCouponsPremium[i]);
-        epoch.expiration = couponsExpirations[i];
-        return epoch;
-      });
-
-      if (!isCancelled) {
-        // @ts-ignore
-        setEpochs(couponEpochs);
-        setInitialized(true);
-      }
-    }
-    updateUserInfo();
-    const id = setInterval(updateUserInfo, 15000);
-
-    // eslint-disable-next-line consistent-return
-    return () => {
-      isCancelled = true;
-      clearInterval(id);
-    };
-  }, [user, totalRedeemable]);
+  const { userCoupons } = useCoupons();
+  const initialized = userCoupons.length > 0;
 
   return (
     <DataView
       fields={['Epoch', 'Purchased', 'Principal', 'Premium', 'Expires', '']}
       status={ initialized ? 'default' : 'loading' }
       // @ts-ignore
-      entries={hideRedeemed ? epochs.filter((epoch) => !epoch.principal.isZero() || !epoch.premium.isZero()) : epochs}
+      entries={hideRedeemed ? userCoupons.filter((epoch) => !epoch.principal.isZero() || !epoch.premium.isZero()) : userCoupons}
       entriesPerPage={10}
       page={page}
       onPageChange={setPage}
@@ -75,18 +38,21 @@ function PurchaseHistory({
         formatBN(toTokenUnitsBN(epoch.principal, ESD.decimals), 2),
         formatBN(toTokenUnitsBN(epoch.premium, ESD.decimals), 2),
         epoch.expiration.toString(),
-        <CouponAction coupon={epoch} totalRedeemable={totalRedeemable} />
+        <CouponAction epoch={epoch} coupon={epoch} totalRedeemable={totalRedeemable} />
       ]}
     />
   );
 }
 
 type CouponActionProps = {
+  epoch: number,
   coupon: any,
   totalRedeemable: BigNumber
 }
 
-function CouponAction({coupon, totalRedeemable}:CouponActionProps) {
+function CouponAction({epoch, coupon, totalRedeemable}:CouponActionProps) {
+  const { onRedeem, onMigrate } = useCoupons();
+  const isRedeemable = !totalRedeemable.isZero() || (coupon.expiration < epoch);
 
   return (
     <>
@@ -95,7 +61,7 @@ function CouponAction({coupon, totalRedeemable}:CouponActionProps) {
       <Button
         icon={<IconRefresh />}
         label="Migrate"
-        onClick={() => migrateCoupons(ESDS.addr, coupon.epoch)}
+        onClick={() => onMigrate(coupon.epoch)}
       />
       /* already redeemed coupons */
       : coupon.principal.isZero() ?
@@ -107,16 +73,15 @@ function CouponAction({coupon, totalRedeemable}:CouponActionProps) {
       /* redeemable coupons */
       :
       <Button
-        icon={totalRedeemable.isZero() ? <IconLock /> : <IconCirclePlus />}
+        icon={isRedeemable ? <IconCirclePlus /> : <IconLock />}
         label="Redeem"
-        onClick={() => redeemCoupons(
-          ESDS.addr,
+        onClick={() => onRedeem(
           coupon.epoch,
-          coupon.principal.isGreaterThan(toBaseUnitBN(totalRedeemable, ESD.decimals))
+          !totalRedeemable.isZero() && coupon.principal.isGreaterThan(toBaseUnitBN(totalRedeemable, ESD.decimals))
             ? toBaseUnitBN(totalRedeemable, ESD.decimals)
             : coupon.principal
         )}
-        disabled={totalRedeemable.isZero()}
+        disabled={!isRedeemable}
       />
     }
     </>

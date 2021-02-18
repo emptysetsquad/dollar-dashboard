@@ -2,9 +2,10 @@ import React from 'react';
 import {
   Box, Button, IconUpload
 } from '@aragon/ui';
-import {TextBlock} from "../../components/common";
-import {ESDS} from "../../constants/tokens";
-import {commit} from "../../utils/web3";
+
+import useGovernance from "../../hooks/useGovernance";
+
+import { TextBlock } from "../../components/common";
 
 type CommitProps = {
   user: string,
@@ -19,6 +20,8 @@ type CommitProps = {
 function Commit({
   user, candidate, epoch, startEpoch, periodEpoch, initialized, approved,
 }: CommitProps) {
+  const { onCommit } = useGovernance();
+
   function status(epoch, startEpoch, periodEpoch, initialized, approved): string {
     if (startEpoch === 0) {
       return "N/A";
@@ -54,12 +57,7 @@ function Commit({
                 wide
                 icon={<IconUpload/>}
                 label="Commit"
-                onClick={() => {
-                  commit(
-                    ESDS.addr,
-                    candidate
-                  );
-                }}
+                onClick={() => {onCommit(candidate)}}
                 disabled={user === '' || s !== 'Approved'}
               />
           </div>

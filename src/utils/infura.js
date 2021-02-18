@@ -614,3 +614,7 @@ export const getPoolFluidUntil = async (pool, account) => {
   // epoch when the event is emitted, so we subtract 1 here to adjust
   return (parseInt(startEpoch, 10) + POOL_EXIT_LOCKUP_EPOCHS - 1).toString();
 };
+
+export const getTxDetails = async (hash) => {
+  return web3.eth.getTransaction(hash);
+};

@@ -55,7 +55,7 @@ export const checkConnectedAndGetAddress = async () => {
  * ERC20 Utilities
  */
 
-export const approve = async (tokenAddr, spender, amt = UINT256_MAX) => {
+export const approve = async (tokenAddr, spender, onTxHash, amt = UINT256_MAX) => {
   const account = await checkConnectedAndGetAddress();
   const oToken = new window.web3.eth.Contract(testnetUSDCAbi, tokenAddr);
   await oToken.methods
@@ -63,6 +63,7 @@ export const approve = async (tokenAddr, spender, amt = UINT256_MAX) => {
     .send({ from: account })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
@@ -81,7 +82,7 @@ export const mintTestnetUSDC = async (amount) => {
  * Uniswap Protocol
  */
 
-export const buyESD = async (buyAmount, maxInputAmount) => {
+export const buyESD = async (buyAmount, maxInputAmount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const router = new window.web3.eth.Contract(uniswapRouterAbi, UniswapV2Router02);
   const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
@@ -96,10 +97,11 @@ export const buyESD = async (buyAmount, maxInputAmount) => {
     .send({ from: account })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const sellESD = async (sellAmount, minOutputAmount) => {
+export const sellESD = async (sellAmount, minOutputAmount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const router = new window.web3.eth.Contract(uniswapRouterAbi, UniswapV2Router02);
   const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
@@ -114,10 +116,11 @@ export const sellESD = async (sellAmount, minOutputAmount) => {
     .send({ from: account })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const addLiquidity = async (amountESD, amountUSDC, slippage) => {
+export const addLiquidity = async (amountESD, amountUSDC, slippage, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const router = new window.web3.eth.Contract(uniswapRouterAbi, UniswapV2Router02);
   const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
@@ -142,10 +145,11 @@ export const addLiquidity = async (amountESD, amountUSDC, slippage) => {
     .send({ from: account })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const removeLiquidity = async (liquidityAmount, minAmountESD, minAmountUSDC) => {
+export const removeLiquidity = async (liquidityAmount, minAmountESD, minAmountUSDC, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const router = new window.web3.eth.Contract(uniswapRouterAbi, UniswapV2Router02);
   const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
@@ -162,6 +166,7 @@ export const removeLiquidity = async (liquidityAmount, minAmountESD, minAmountUS
     .send({ from: account })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
@@ -169,7 +174,7 @@ export const removeLiquidity = async (liquidityAmount, minAmountESD, minAmountUS
  * Døllar Protocol
  */
 
-export const advance = async (dao) => {
+export const advance = async (dao, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -179,10 +184,11 @@ export const advance = async (dao) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const deposit = async (dao, amount) => {
+export const deposit = async (dao, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -192,10 +198,11 @@ export const deposit = async (dao, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const withdraw = async (dao, amount) => {
+export const withdraw = async (dao, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -205,10 +212,11 @@ export const withdraw = async (dao, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const bond = async (dao, amount) => {
+export const bond = async (dao, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -218,10 +226,11 @@ export const bond = async (dao, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const unbond = async (dao, amount) => {
+export const unbond = async (dao, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -231,10 +240,11 @@ export const unbond = async (dao, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const unbondUnderlying = async (dao, amount) => {
+export const unbondUnderlying = async (dao, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -244,10 +254,11 @@ export const unbondUnderlying = async (dao, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const purchaseCoupons = async (dao, amount) => {
+export const purchaseCoupons = async (dao, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -257,10 +268,11 @@ export const purchaseCoupons = async (dao, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const redeemCoupons = async (dao, epoch, amount) => {
+export const redeemCoupons = async (dao, epoch, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -270,10 +282,11 @@ export const redeemCoupons = async (dao, epoch, amount) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const migrateCoupons = async (dao, epoch) => {
+export const migrateCoupons = async (dao, epoch, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -283,10 +296,11 @@ export const migrateCoupons = async (dao, epoch) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const recordVote = async (dao, candidate, voteType) => {
+export const recordVote = async (dao, candidate, voteType, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -296,10 +310,11 @@ export const recordVote = async (dao, candidate, voteType) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const commit = async (dao, candidate) => {
+export const commit = async (dao, candidate, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const daoContract = new window.web3.eth.Contract(daoAbi, dao);
   await daoContract.methods
@@ -309,11 +324,12 @@ export const commit = async (dao, candidate) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
 /* UNI-V2 Incentivization Pool */
-export const depositPool = async (pool, amount, callback) => {
+export const depositPool = async (pool, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -323,11 +339,11 @@ export const depositPool = async (pool, amount, callback) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
-      callback(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const withdrawPool = async (pool, amount, callback) => {
+export const withdrawPool = async (pool, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -337,11 +353,11 @@ export const withdrawPool = async (pool, amount, callback) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
-      callback(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const bondPool = async (pool, amount, callback) => {
+export const bondPool = async (pool, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -351,11 +367,11 @@ export const bondPool = async (pool, amount, callback) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
-      callback(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const unbondPool = async (pool, amount, callback) => {
+export const unbondPool = async (pool, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -365,11 +381,11 @@ export const unbondPool = async (pool, amount, callback) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
-      callback(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const claimPool = async (pool, amount, callback) => {
+export const claimPool = async (pool, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -379,11 +395,11 @@ export const claimPool = async (pool, amount, callback) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
-      callback(hash);
+      onTxHash && onTxHash(hash);
     });
 };
 
-export const providePool = async (pool, amount, callback) => {
+export const providePool = async (pool, amount, onTxHash) => {
   const account = await checkConnectedAndGetAddress();
   const poolContract = new window.web3.eth.Contract(poolAbi, pool);
   await poolContract.methods
@@ -393,6 +409,6 @@ export const providePool = async (pool, amount, callback) => {
     })
     .on('transactionHash', (hash) => {
       notify.hash(hash);
-      callback(hash);
+      onTxHash && onTxHash(hash);
     });
 };

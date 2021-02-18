@@ -5,6 +5,8 @@ import { provider } from "web3-core";
 
 import Context from "./Context";
 
+import useTxHistory from "../../hooks/useTxHistory";
+
 import {
   getEpoch,
   getEpochTime,
@@ -41,6 +43,7 @@ const Provider: React.FC = ({ children }) => {
   const [userLockedUntil, setUserLockedUntil] = useState(0);
 
   const { account, ethereum }: { account: string | null; ethereum: provider } = useWallet();
+  const { onAddTx } = useTxHistory();
 
   const fetchData = useCallback(
     async (provider: provider) => {
@@ -84,40 +87,75 @@ const Provider: React.FC = ({ children }) => {
   );
 
   const handleAdvance = useCallback(async () => {
-    advance(ESDS.addr);
-  }, []);
+    advance(
+      ESDS.addr,
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Advance',
+        status: 'Pending'
+      })
+    );
+  }, [onAddTx]);
 
   const handleApprove = useCallback(async () => {
-    approve(ESD.addr, ESDS.addr);
-  }, []);
+    approve(
+      ESD.addr,
+      ESDS.addr,
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Approve ESD',
+        status: 'Pending'
+      })
+    );
+  }, [onAddTx]);
 
   const handleDeposit = useCallback(async (amount: BigNumber) => {
     deposit(
       ESDS.addr,
       toBaseUnitBN(amount, ESD.decimals),
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Deposit',
+        status: 'Pending'
+      })
     );
-  }, []);
+  }, [onAddTx]);
 
   const handleWithdraw = useCallback(async (amount: BigNumber) => {
     withdraw(
       ESDS.addr,
       toBaseUnitBN(amount, ESD.decimals),
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Withdraw',
+        status: 'Pending'
+      })
     );
-  }, []);
+  }, [onAddTx]);
 
   const handleBond = useCallback(async (amount: BigNumber) => {
     bond(
       ESDS.addr,
       toBaseUnitBN(amount, ESD.decimals),
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Bond',
+        status: 'Pending'
+      })
     );
-  }, []);
+  }, [onAddTx]);
 
   const handleUnbond = useCallback(async (amount: BigNumber) => {
     unbondUnderlying(
       ESDS.addr,
       toBaseUnitBN(amount, ESD.decimals),
+      (hash) => onAddTx({
+        hash: hash,
+        description: 'Unbond',
+        status: 'Pending'
+      })
     );
-  }, []);
+  }, [onAddTx]);
 
   useEffect(() => {
     if (ethereum) {
